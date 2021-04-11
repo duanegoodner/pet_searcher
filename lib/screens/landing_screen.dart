@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pet_searcher/widgets/elevated_button.dart';
 
-class MyHomePage extends StatelessWidget {
-  final String title;
-  MyHomePage({Key key, this.title}) : super(key: key);
+import 'login_screen.dart';
+
+class LandingScreen extends StatelessWidget {
+  static const routeName = '/';
+
+  final String title = 'Pet Matcher';
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class MyHomePage extends StatelessWidget {
           children: <Widget>[
             titleText(),
             logo(),
-            loginButton(),
+            loginButton(context),
             createAccountLink(),
           ],
         ),
@@ -25,24 +28,33 @@ class MyHomePage extends StatelessWidget {
 
   Widget titleText() {
     return Flexible(
-        flex: 1,
-        child: addPadding(
-            Text(title, style: TextStyle(fontSize: 50, color: Colors.white))));
+      flex: 1,
+      child: addPadding(
+        Text(title, style: TextStyle(fontSize: 50, color: Colors.white))
+      )
+    );
   }
 
   //Free Clip Art Reference: https://wikiclipart.com/dog-paw-prints-clip-art_37264/
   Widget logo() {
     return Flexible(
       flex: 2,
-      child: addPadding(Image.network(
-          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')),
+      child: addPadding(
+        Image.network(
+          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')
+      ),
     );
   }
 
-  Widget loginButton() {
+  Widget loginButton(BuildContext context) {
     return Flexible(
       flex: 1,
-      child: addPadding(elevatedButtonStandard('Log in', 'log_in_screen')),
+      child: addPadding(
+        elevatedButtonStandard(
+          'Log in',
+          (() => {Navigator.of(context).pushNamed(LoginScreen.routeName)})
+        ),
+      ),
     );
   }
 
