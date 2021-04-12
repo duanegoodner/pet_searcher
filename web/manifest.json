@@ -1,6 +1,6 @@
 {
-    "name": "pet_searcher",
-    "short_name": "pet_searcher",
+    "name": "pet_matcher",
+    "short_name": "pet_matcher",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
