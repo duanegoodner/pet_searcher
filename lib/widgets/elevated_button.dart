@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-Widget elevatedButtonStandard(String buttonText, String navigationRoute) {
+Widget elevatedButtonStandard(String buttonText, var buttonFunction) {
   return ElevatedButton(
-    onPressed: () {
-      print('Navigating to $navigationRoute');
-      //add navigation push
-    },
+    onPressed: buttonFunction,
     child: Padding(
       padding: EdgeInsets.only(top: 8, bottom: 8, left: 15, right: 15),
       child: Text('Log in'),
