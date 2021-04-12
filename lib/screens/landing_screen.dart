@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pet_searcher/widgets/elevated_button.dart';
+import 'package:pet_matcher/widgets/elevated_button.dart';
 
 import 'login_screen.dart';
 
@@ -28,21 +28,17 @@ class LandingScreen extends StatelessWidget {
 
   Widget titleText() {
     return Flexible(
-      flex: 1,
-      child: addPadding(
-        Text(title, style: TextStyle(fontSize: 50, color: Colors.white))
-      )
-    );
+        flex: 1,
+        child: addPadding(
+            Text(title, style: TextStyle(fontSize: 50, color: Colors.white))));
   }
 
   //Free Clip Art Reference: https://wikiclipart.com/dog-paw-prints-clip-art_37264/
   Widget logo() {
     return Flexible(
       flex: 2,
-      child: addPadding(
-        Image.network(
-          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')
-      ),
+      child: addPadding(Image.network(
+          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')),
     );
   }
 
@@ -50,10 +46,8 @@ class LandingScreen extends StatelessWidget {
     return Flexible(
       flex: 1,
       child: addPadding(
-        elevatedButtonStandard(
-          'Log in',
-          (() => {Navigator.of(context).pushNamed(LoginScreen.routeName)})
-        ),
+        elevatedButtonStandard('Log in',
+            (() => {Navigator.of(context).pushNamed(LoginScreen.routeName)})),
       ),
     );
   }
@@ -61,21 +55,14 @@ class LandingScreen extends StatelessWidget {
   Widget createAccountLink() {
     return Flexible(
       flex: 1,
-      child: addPadding(
-        GestureDetector(
-          onTap: () {
-            print('Create account tapped');
-            //need to add routing to create account form screen
-          },
-          child: Text(
-            'Create Account',
-            style: TextStyle(
-              fontSize: 18, 
-              color: Colors.white
-            )
-          ),
-        )
-      ),
+      child: addPadding(GestureDetector(
+        onTap: () {
+          print('Create account tapped');
+          //need to add routing to create account form screen
+        },
+        child: Text('Create Account',
+            style: TextStyle(fontSize: 18, color: Colors.white)),
+      )),
     );
   }
 
