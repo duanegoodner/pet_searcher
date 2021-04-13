@@ -5,7 +5,7 @@ Widget elevatedButtonStandard(String buttonText, var buttonFunction) {
     onPressed: buttonFunction,
     child: Padding(
       padding: EdgeInsets.only(top: 8, bottom: 8, left: 15, right: 15),
-      child: Text('Log in'),
+      child: Text(buttonText),
     ),
     style: ElevatedButton.styleFrom(
       primary: Colors.grey,
