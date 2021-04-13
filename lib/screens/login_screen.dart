@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,25 +15,40 @@ class _LoginScreenState extends State<LoginScreen> {
   //final loginCredentials = loginCredentials();
 
   final formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue[300],
+      appBar: AppBar(
+        leading: BackButton(),
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            logo(),
-            titleText(),
-            SizedBox(height: 20),
-            emailField(context),
-            passwordField(context),
-            loginButton(context),
-          ],
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              logo(),
+              titleText(),
+              SizedBox(height: 20),
+              emailField(context),
+              passwordField(context),
+              loginButton(context),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   //TO_DO: put logo in an assets file
@@ -51,12 +68,9 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: EdgeInsets.only(top: 5, bottom: 30, left: 10, right: 10),
         child: Text(
           'Pet Matcher',
-          style: TextStyle(
-            fontSize: 35, 
-            color: Colors.white
-          )
-        )
-      )
+          style: TextStyle(fontSize: 35, color: Colors.white),
+        ),
+      ),
     );
   }
 
@@ -66,30 +80,30 @@ class _LoginScreenState extends State<LoginScreen> {
       child: addPadding(
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: new BorderRadius.circular(40.0)
-          ),
+              color: Colors.white,
+              borderRadius: new BorderRadius.circular(40.0)),
           child: Padding(
             padding: EdgeInsets.only(left: 15, right: 15, top: 5),
             child: TextFormField(
+              controller: _emailController,
               decoration: InputDecoration(
                 icon: Icon(Icons.email_outlined),
                 border: InputBorder.none,
                 labelText: 'EMAIL',
               ),
-              onSaved: (value) {
-                //loginCredentials.email = value;
-              },
+              // onSaved: (value) {
+              //   //loginCredentials.email = value;
+              // },
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter your email.';
                 } else {
                   return null; //validation passed
                 }
-              }
-            )
-          )
-        )
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -100,32 +114,36 @@ class _LoginScreenState extends State<LoginScreen> {
       child: addPadding(
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: new BorderRadius.circular(40.0)
-          ),
+              color: Colors.white,
+              borderRadius: new BorderRadius.circular(40.0)),
           child: Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+            padding: EdgeInsets.only(
+              left: 15,
+              right: 15,
+              top: 5,
+            ),
             child: TextFormField(
+              controller: _passwordController,
               decoration: InputDecoration(
                 icon: Icon(Icons.lock_outlined),
                 border: InputBorder.none,
                 labelText: 'PASSWORD',
               ),
-              onSaved: (value) {
-                //loginCredentials.password = value;
-              },
+              // onSaved: (value) {
+              //   //loginCredentials.password = value;
+              // },
               obscureText: true, //obscure text because a password
               validator: (value) {
                 //TO_DO: add validation for checking password length, etc.
                 if (value.isEmpty) {
-                   return 'Please enter password.';
+                  return 'Please enter password.';
                 } else {
-                   return null; //validation passed
+                  return null; //validation passed
                 }
-              }
-            )
-          )
-        )
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -134,15 +152,30 @@ class _LoginScreenState extends State<LoginScreen> {
     return Flexible(
       flex: 1,
       child: addPadding(
-        elevatedButtonStandard(
-          'Login',
-          (() => {
-            //TO_DO: query db, locate user data, check valid user, 
-            //navigate to new screen
-            print('Querying the database. Navigating to animal filter page.')
-          })
-        ),
+        elevatedButtonStandard('Login', signIn),
       ),
+    );
+  }
+
+  void signIn() async {
+    if (formKey.currentState.validate()) {
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        pushUserHomeScreen(context, userCredential.user.email);
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  void pushUserHomeScreen(BuildContext context, String userEmail) {
+    Navigator.of(context).pushNamed(
+      UserHomeScreen.routeName,
+      arguments: userEmail,
     );
   }
 
