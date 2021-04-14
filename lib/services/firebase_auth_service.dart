@@ -17,12 +17,24 @@ class FirebaseAuthService {
     return userCredential.user;
   }
 
+  Future<void> firebaseSignOut() async {
+    _firebaseAuth.signOut();
+  }
+
   Future<AppUser> getAppUser(fb_auth.User user) async {
     if (user == null) {
       return null;
     }
     cf.DocumentSnapshot _appUser = await _users.doc(user.uid).get();
-
     return AppUser.fromJSON(_appUser.data());
+  }
+
+  Future<AppUser> appUserSignIn(String email, String password) async {
+    fb_auth.User user = await firebaseSignIn(
+      email,
+      password,
+    );
+    AppUser appUser = await getAppUser(user);
+    return appUser;
   }
 }

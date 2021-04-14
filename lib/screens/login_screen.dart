@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
@@ -57,8 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget logo() {
     return Flexible(
       flex: 1,
-      child: addPadding(Image.network(
-          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')),
+      child: addPadding(Image.asset('assets/images/paw_logo.png')),
     );
   }
 
@@ -161,20 +159,20 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn() async {
     if (formKey.currentState.validate()) {
       try {
-        fb_auth.User user = await _firebaseAuth.firebaseSignIn(
+        AppUser appUser = await _firebaseAuth.appUserSignIn(
           _emailController.text,
           _passwordController.text,
         );
-        AppUser _appUser = await _firebaseAuth.getAppUser(user);
-        pushUserHomeScreen(context, _appUser);
+        pushUserHomeScreen(context, appUser);
       } catch (e) {
-        print(e);
+        final snackBar = SnackBar(content: Text(e.code));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
   }
 
   void pushUserHomeScreen(BuildContext context, AppUser appUser) {
-    Navigator.of(context).pushNamed(
+    Navigator.of(context).pushReplacementNamed(
       UserHomeScreen.routeName,
       arguments: appUser,
     );

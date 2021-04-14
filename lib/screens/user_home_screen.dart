@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/screens/landing_screen.dart';
 
 import '../models/app_user.dart';
+import '../services/firebase_auth_service.dart';
 
 class UserHomeScreen extends StatefulWidget {
   static const routeName = 'userHomeScreen';
@@ -12,16 +14,25 @@ class UserHomeScreen extends StatefulWidget {
 }
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
+  final _firebaseAuth = FirebaseAuthService();
+
   @override
   Widget build(BuildContext context) {
     final AppUser appUser = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: Colors.blue[300],
       appBar: AppBar(
-        leading: BackButton(),
+        leading: Container(),
         title: Text(
           'User Homescreen',
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            tooltip: 'Log Out',
+            onPressed: _logout,
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -36,6 +47,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _logout() async {
+    await _firebaseAuth.firebaseSignOut();
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName(LandingScreen.routeName),
     );
   }
 }
