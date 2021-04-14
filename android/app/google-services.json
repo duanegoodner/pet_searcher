@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "123567326089",
+    "project_id": "pet-matcher-b534a",
+    "storage_bucket": "pet-matcher-b534a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123567326089:android:f888765be76cafd5775758",
+        "android_client_info": {
+          "package_name": "com.interconpets.pet_matcher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123567326089-np2i6vq0i7ojeagpk1iljbebh3llu9f5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNrsj7s_FfyOKoda9BgB2qBODKK2t2mwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123567326089-np2i6vq0i7ojeagpk1iljbebh3llu9f5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
