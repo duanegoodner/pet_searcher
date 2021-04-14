@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
+
+import '../models/app_user.dart';
+import '../services/firebase_auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = 'loginScreen';
@@ -11,12 +14,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  //TO_DO: need to create a model class for user login credentials
-  //final loginCredentials = loginCredentials();
-
   final formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _firebaseAuth = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -160,22 +161,22 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn() async {
     if (formKey.currentState.validate()) {
       try {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
+        fb_auth.User user = await _firebaseAuth.firebaseSignIn(
+          _emailController.text,
+          _passwordController.text,
         );
-        pushUserHomeScreen(context, userCredential.user.email);
+        AppUser _appUser = await _firebaseAuth.getAppUser(user);
+        pushUserHomeScreen(context, _appUser);
       } catch (e) {
         print(e);
       }
     }
   }
 
-  void pushUserHomeScreen(BuildContext context, String userEmail) {
+  void pushUserHomeScreen(BuildContext context, AppUser appUser) {
     Navigator.of(context).pushNamed(
       UserHomeScreen.routeName,
-      arguments: userEmail,
+      arguments: appUser,
     );
   }
 
