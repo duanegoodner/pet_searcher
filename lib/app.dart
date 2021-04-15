@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'screens/landing_screen.dart';
 import 'screens/login_screen.dart';
 
@@ -6,6 +7,7 @@ class PetMatcherApp extends StatelessWidget {
   static final routes = {
     LandingScreen.routeName: (context) => LandingScreen(),
     LoginScreen.routeName: (context) => LoginScreen(),
+    UserHomeScreen.routeName: (context) => UserHomeScreen(),
     //AccountSetupScreen.routeName: (context) => AccountSetupScreen(),
   };
 
