@@ -38,8 +38,7 @@ class LandingScreen extends StatelessWidget {
   Widget logo() {
     return Flexible(
       flex: 2,
-      child: addPadding(Image.network(
-          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')),
+      child: addPadding(Image.asset('assets/images/paw_logo.png')),
     );
   }
 
