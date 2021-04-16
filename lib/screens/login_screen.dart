@@ -25,19 +25,21 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         leading: BackButton(),
       ),
-      body: Center(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              logo(),
-              titleText(),
-              SizedBox(height: 20),
-              emailField(context),
-              passwordField(context),
-              loginButton(context),
-            ],
+      body: SafeArea(
+        child: Center(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                logo(),
+                titleText(),
+                SizedBox(height: 20),
+                emailField(context),
+                passwordField(context),
+                loginButton(context),
+              ],
+            ),
           ),
         ),
       ),

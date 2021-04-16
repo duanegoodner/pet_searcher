@@ -17,8 +17,16 @@ class FirebaseAuthService {
     return userCredential.user;
   }
 
+  Stream<fb_auth.User> get authStateChange {
+    return _firebaseAuth.authStateChanges();
+  }
+
   Future<void> firebaseSignOut() async {
     _firebaseAuth.signOut();
+  }
+
+  bool get isUserSignedIn {
+    return _firebaseAuth.currentUser != null;
   }
 
   Future<AppUser> getAppUser(fb_auth.User user) async {

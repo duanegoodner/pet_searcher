@@ -34,17 +34,19 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('User Info:'),
-            Text('Name: ${appUser.firstName} ${appUser.lastName}'),
-            Text('email: ${appUser.email}'),
-            Text('User Type: ${appUser.role}'),
-            Text('User Zip Code: ${appUser.zipCode.toString()}'),
-          ],
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('User Info:'),
+              Text('Name: ${appUser.firstName} ${appUser.lastName}'),
+              Text('email: ${appUser.email}'),
+              Text('User Type: ${appUser.role}'),
+              Text('User Zip Code: ${appUser.zipCode.toString()}'),
+            ],
+          ),
         ),
       ),
     );
