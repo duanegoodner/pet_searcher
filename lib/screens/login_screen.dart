@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
+import 'package:pet_matcher/widgets/standard_input_box.dart';
 
 import '../models/app_user.dart';
 import '../services/firebase_auth_service.dart';
+import '../services/app_user_service.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = 'loginScreen';
@@ -16,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _firebaseAuth = FirebaseAuthService();
+  final firebaseAuth = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +27,21 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         leading: BackButton(),
       ),
-      body: Center(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              logo(),
-              titleText(),
-              SizedBox(height: 20),
-              emailField(context),
-              passwordField(context),
-              loginButton(context),
-            ],
+      body: SafeArea(
+        child: Center(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                logo(),
+                titleText(),
+                SizedBox(height: 20),
+                emailField(context),
+                passwordField(context),
+                loginButton(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -73,77 +77,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget emailField(BuildContext context) {
-    return Flexible(
-      flex: 2,
-      child: addPadding(
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: new BorderRadius.circular(40.0)),
-          child: Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-            child: TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.email_outlined),
-                border: InputBorder.none,
-                labelText: 'EMAIL',
-              ),
-              // onSaved: (value) {
-              //   //loginCredentials.email = value;
-              // },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter your email.';
-                } else {
-                  return null; //validation passed
-                }
-              },
-            ),
-          ),
-        ),
-      ),
+    return standardInputBox(
+      labelText: 'EMAIL',
+      validatorPrompt: 'Please enter your last name.',
+      flexVal: 2,
+      onSaved: (value) {},
+      validatorCondition: (value) => value.isEmpty,
+      controller: _emailController,
     );
   }
 
   Widget passwordField(BuildContext context) {
-    return Flexible(
-      flex: 2,
-      child: addPadding(
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: new BorderRadius.circular(40.0)),
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 5,
-            ),
-            child: TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock_outlined),
-                border: InputBorder.none,
-                labelText: 'PASSWORD',
-              ),
-              // onSaved: (value) {
-              //   //loginCredentials.password = value;
-              // },
-              obscureText: true, //obscure text because a password
-              validator: (value) {
-                //TO_DO: add validation for checking password length, etc.
-                if (value.isEmpty) {
-                  return 'Please enter password.';
-                } else {
-                  return null; //validation passed
-                }
-              },
-            ),
-          ),
-        ),
-      ),
-    );
+    return standardInputBox(
+        labelText: 'PASSWORD',
+        validatorPrompt: 'Please enter password',
+        flexVal: 2,
+        onSaved: (value) {},
+        validatorCondition: (value) => value.isEmpty,
+        controller: _passwordController,
+        obscureText: true);
   }
 
   Widget loginButton(BuildContext context) {
@@ -158,16 +110,23 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn() async {
     if (formKey.currentState.validate()) {
       try {
-        AppUser appUser = await _firebaseAuth.appUserSignIn(
-          _emailController.text,
-          _passwordController.text,
-        );
+        await firebaseAuth.firebaseSignIn(
+            _emailController.text, _passwordController.text);
+        final appUserService =
+            AppUserService(firebaseUser: firebaseAuth.currentUser);
+        final AppUser appUser = await appUserService.getCurrentAppUser();
         pushUserHomeScreen(context, appUser);
       } catch (e) {
-        final snackBar = SnackBar(content: Text(e.code));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        displaySnackbar(context, e.code);
       }
     }
+  }
+
+  Widget addPadding(Widget child) {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: child,
+    );
   }
 
   void pushUserHomeScreen(BuildContext context, AppUser appUser) {
@@ -177,10 +136,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget addPadding(Widget child) {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: child,
-    );
+  void displaySnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
