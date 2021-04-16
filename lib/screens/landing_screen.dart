@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
 import 'login_screen.dart';
+import 'account_setup_screen.dart';
 
 class LandingScreen extends StatelessWidget {
   static const routeName = '/';
@@ -19,7 +20,7 @@ class LandingScreen extends StatelessWidget {
             titleText(),
             logo(),
             loginButton(context),
-            createAccountLink(),
+            createAccountLink(context),
           ],
         ),
       ),
@@ -52,13 +53,13 @@ class LandingScreen extends StatelessWidget {
     );
   }
 
-  Widget createAccountLink() {
+  Widget createAccountLink(BuildContext context) {
     return Flexible(
       flex: 1,
       child: addPadding(GestureDetector(
         onTap: () {
           print('Create account tapped');
-          //need to add routing to create account form screen
+          Navigator.of(context).pushNamed(AccountSetupScreen.routeName);
         },
         child: Text('Create Account',
             style: TextStyle(fontSize: 18, color: Colors.white)),
