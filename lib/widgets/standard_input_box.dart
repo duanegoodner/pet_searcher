@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 Widget standardInputBox({
+  @required int flexVal,
+  @required Function validatorCondition,
+  @required Function onSaved,
   String labelText,
   String validatorPrompt,
-  @required int flexVal,
-  EdgeInsets addPadding = const EdgeInsets.all(10),
   TextEditingController controller,
-  TextInputType keyboardType,
-  @required Function onSaved,
-  @required Function validatorCondition,
   bool obscureText = false,
+  EdgeInsets addPadding = const EdgeInsets.all(10),
+  TextInputType keyboardType,
 }) {
   return Flexible(
     flex: flexVal,
