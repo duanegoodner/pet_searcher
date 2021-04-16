@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:cloud_firestore/cloud_firestore.dart' as cf;
+
 import '../models/app_user.dart';
 import '../services/firebase_auth_service.dart';
+import '../services/app_user_service.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = 'loginScreen';
@@ -16,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _firebaseAuth = FirebaseAuthService();
+  final firebaseAuth = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -160,16 +164,23 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn() async {
     if (formKey.currentState.validate()) {
       try {
-        AppUser appUser = await _firebaseAuth.appUserSignIn(
-          _emailController.text,
-          _passwordController.text,
-        );
+        await firebaseAuth.firebaseSignIn(
+            _emailController.text, _passwordController.text);
+        final appUserService =
+            AppUserService(firebaseUser: firebaseAuth.currentUser);
+        final AppUser appUser = await appUserService.getCurrentAppUser();
         pushUserHomeScreen(context, appUser);
       } catch (e) {
-        final snackBar = SnackBar(content: Text(e.code));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        displaySnackbar(context, e.code);
       }
     }
+  }
+
+  Widget addPadding(Widget child) {
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: child,
+    );
   }
 
   void pushUserHomeScreen(BuildContext context, AppUser appUser) {
@@ -179,10 +190,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget addPadding(Widget child) {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: child,
-    );
+  void displaySnackbar(BuildContext context, String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
