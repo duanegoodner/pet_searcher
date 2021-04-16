@@ -44,6 +44,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               Text('Name: ${appUser.firstName} ${appUser.lastName}'),
               Text('email: ${appUser.email}'),
               Text('User Type: ${appUser.role}'),
+              Text('City: ${appUser.city}'),
+              Text('State: ${appUser.state}'),
               Text('User Zip Code: ${appUser.zipCode.toString()}'),
             ],
           ),

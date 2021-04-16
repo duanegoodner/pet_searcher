@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
-import 'firebase_auth_service.dart';
+import './new_app_user_dto.dart';
 
 import '../models/app_user.dart';
 
@@ -11,6 +11,10 @@ class AppUserService {
   final fb_auth.User firebaseUser;
 
   AppUserService({this.firebaseUser});
+
+  Future<void> uploadNewUser(NewAppUserDTO newAppUserData, String uid) async {
+    await _users.doc(uid).set(newAppUserData.toJson());
+  }
 
   Future<AppUser> getCurrentAppUser() async {
     if (firebaseUser == null) {

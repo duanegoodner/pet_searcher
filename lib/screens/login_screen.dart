@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
-
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
-import 'package:cloud_firestore/cloud_firestore.dart' as cf;
+import 'package:pet_matcher/widgets/standard_input_box.dart';
 
 import '../models/app_user.dart';
 import '../services/firebase_auth_service.dart';
@@ -79,77 +77,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget emailField(BuildContext context) {
-    return Flexible(
-      flex: 2,
-      child: addPadding(
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: new BorderRadius.circular(40.0)),
-          child: Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-            child: TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.email_outlined),
-                border: InputBorder.none,
-                labelText: 'EMAIL',
-              ),
-              // onSaved: (value) {
-              //   //loginCredentials.email = value;
-              // },
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter your email.';
-                } else {
-                  return null; //validation passed
-                }
-              },
-            ),
-          ),
-        ),
-      ),
+    return standardInputBox(
+      labelText: 'EMAIL',
+      validatorPrompt: 'Please enter your last name.',
+      flexVal: 2,
+      onSaved: (value) {},
+      validatorCondition: (value) => value.isEmpty,
+      controller: _emailController,
     );
   }
 
   Widget passwordField(BuildContext context) {
-    return Flexible(
-      flex: 2,
-      child: addPadding(
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: new BorderRadius.circular(40.0)),
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 5,
-            ),
-            child: TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock_outlined),
-                border: InputBorder.none,
-                labelText: 'PASSWORD',
-              ),
-              // onSaved: (value) {
-              //   //loginCredentials.password = value;
-              // },
-              obscureText: true, //obscure text because a password
-              validator: (value) {
-                //TO_DO: add validation for checking password length, etc.
-                if (value.isEmpty) {
-                  return 'Please enter password.';
-                } else {
-                  return null; //validation passed
-                }
-              },
-            ),
-          ),
-        ),
-      ),
-    );
+    return standardInputBox(
+        labelText: 'PASSWORD',
+        validatorPrompt: 'Please enter password',
+        flexVal: 2,
+        onSaved: (value) {},
+        validatorCondition: (value) => value.isEmpty,
+        controller: _passwordController,
+        obscureText: true);
   }
 
   Widget loginButton(BuildContext context) {
