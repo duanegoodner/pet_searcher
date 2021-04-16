@@ -51,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  //TO_DO: put logo in an assets file
   //Free Clip Art Reference: https://wikiclipart.com/dog-paw-prints-clip-art_37264/
   Widget logo() {
     return Flexible(
