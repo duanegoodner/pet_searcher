@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
 import 'login_screen.dart';
+import 'package:pet_matcher/models/app_user.dart';
 
 class AccountSetupScreen extends StatefulWidget {
   static const routeName = 'accountSetup';
@@ -12,6 +13,8 @@ class AccountSetupScreen extends StatefulWidget {
 
 class _AccountSetupScreenState extends State<AccountSetupScreen> {
   final formKey = GlobalKey<FormState>();
+  bool adminChecked = false;
+  final newUser = AppUser();
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +35,8 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             lastNameField(context),
             emailField(context),
             cityField(context),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                stateField(context),
-                postalCodeField(context),
-              ],
-            ),
-            //stateField(context),
-            //postalCodeField(context),
+            stateZipRow(context),
+            adminCheckbox(context),
             submitButton(context),
           ],
         ),
@@ -51,9 +47,8 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   Widget logo() {
     return Flexible(
       flex: 2,
-      child: addPadding(Image.network(
-          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')),
-    );
+      child: addPadding(Image.asset('assets/images/paw_logo.png'))
+      );
   }
 
   Widget firstNameField(BuildContext context) {
@@ -73,7 +68,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                         labelText: 'First Name',
                       ),
                       onSaved: (value) {
-                        //firstName = value
+                        //newUser.firstName = value;
                       },
                       validator: (value) {
                         if (value.isEmpty) {
@@ -106,7 +101,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                         labelText: 'Last Name',
                       ),
                       onSaved: (value) {
-                        //lastName = value;
+                        //newUser.lastName = value;
                       },
                       validator: (value) {
                         //TO_DO: add validation for checking password length, etc.
@@ -140,7 +135,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                         labelText: 'Email',
                       ),
                       onSaved: (value) {
-                        //email = value;
+                        //newUser.email = value;
                       },
                       validator: (value) {
                         if (value.isEmpty) {
@@ -173,7 +168,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                         labelText: 'Enter City',
                       ),
                       onSaved: (value) {
-                        //city = value;
+                        //newUser.city = value;
                       },
                       validator: (value) {
                         if (value.isEmpty) {
@@ -207,7 +202,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                       ),
                       keyboardType: TextInputType.number,
                       onSaved: (value) {
-                        //postalCode = value;
+                        //newUser.zipCode = value;
                       },
                       validator: (value) {
                         if (value.isEmpty) {
@@ -240,7 +235,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
                         labelText: 'Enter State',
                       ),
                       onSaved: (value) {
-                        //homeState = value;
+                        //newUser.state = value;
                       },
                       validator: (value) {
                         if (value.isEmpty) {
@@ -269,6 +264,43 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             })
         ),
       ),
+    );
+  }
+
+  Widget stateZipRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        stateField(context),
+        postalCodeField(context),
+      ],
+    );
+  }
+
+  Widget adminCheckbox(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Theme(
+          data: ThemeData(unselectedWidgetColor: Colors.white),
+          child: Checkbox(
+              value: adminChecked,
+              onChanged: (bool value) {
+                setState(() {
+                  adminChecked = value;
+                  /*if (adminChecked == false) {
+                    newUser.role = publicUser;
+                  } else {
+                    newUser.role = admin;
+                  }*/
+                });
+              },
+          ),
+        ),
+        Text('I am a shelter admin',
+          style: TextStyle(fontSize: 18, color: Colors.white)
+        ),
+      ],
     );
   }
 
