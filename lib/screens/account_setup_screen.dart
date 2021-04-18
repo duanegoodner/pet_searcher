@@ -18,6 +18,7 @@ class AccountSetupScreen extends StatefulWidget {
 
 class _AccountSetupScreenState extends State<AccountSetupScreen> {
   final formKey = GlobalKey<FormState>();
+  bool adminChecked = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final newAppUserData = NewAppUserDTO();
@@ -43,20 +44,10 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
               firstNameField(context),
               lastNameField(context),
               cityField(context),
-              Flexible(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    stateField(context),
-                    postalCodeField(context),
-                  ],
-                ),
-              ),
+              stateZipRow(context),
               emailField(context),
               passwordField(context),
-              //stateField(context),
-              //postalCodeField(context),
+              adminCheckbox(context),
               submitButton(context),
             ],
           ),
@@ -75,8 +66,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   Widget logo() {
     return Flexible(
       flex: 2,
-      child: addPadding(Image.network(
-          'https://wikiclipart.com/wp-content/uploads/2017/11/Dog-paw-prints-panther-paw-print-clip-art-clipart-locker.png')),
+      child: addPadding(Image.asset('assets/images/paw_logo.png')),
     );
   }
 
@@ -158,6 +148,46 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
         newAppUserData.state = value;
       },
       validatorCondition: (value) => value.isEmpty,
+    );
+  }
+
+  Widget stateZipRow(BuildContext context) {
+    return Flexible(
+      flex: 1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          stateField(context),
+          postalCodeField(context),
+        ],
+      ),
+    );
+  }
+
+  Widget adminCheckbox(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Theme(
+          data: ThemeData(unselectedWidgetColor: Colors.white),
+          child: Checkbox(
+            value: adminChecked,
+            onChanged: (bool value) {
+              setState(() {
+                adminChecked = value;
+                /*if (adminChecked == false) {
+                    newUser.role = publicUser;
+                  } else {
+                    newUser.role = admin;
+                  }*/
+              });
+            },
+          ),
+        ),
+        Text('I am a shelter admin',
+            style: TextStyle(fontSize: 18, color: Colors.white)
+        ),
+      ],
     );
   }
 
