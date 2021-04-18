@@ -29,18 +29,20 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: SafeArea(
         child: Center(
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                logo(),
-                titleText(),
-                SizedBox(height: 20),
-                emailField(context),
-                passwordField(context),
-                loginButton(context),
-              ],
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  logo(),
+                  titleText(),
+                  SizedBox(height: 20),
+                  emailField(context),
+                  passwordField(context),
+                  loginButton(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -57,30 +59,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //Free Clip Art Reference: https://wikiclipart.com/dog-paw-prints-clip-art_37264/
   Widget logo() {
-    return Flexible(
-      flex: 1,
-      child: addPadding(Image.asset('assets/images/paw_logo.png')),
-    );
+    return Image.asset('assets/images/paw_logo.png',
+        height: 175, width: 150, fit: BoxFit.fitWidth);
   }
 
   Widget titleText() {
-    return Flexible(
-      flex: 1,
-      child: Padding(
-        padding: EdgeInsets.only(top: 5, bottom: 30, left: 10, right: 10),
-        child: Text(
-          'Pet Matcher',
-          style: TextStyle(fontSize: 35, color: Colors.white),
-        ),
-      ),
+    return Padding(
+      padding: EdgeInsets.only(top: 5, bottom: 30, left: 10, right: 10),
+      child: Text(
+        'Pet Matcher',
+        style: TextStyle(fontSize: 35, color: Colors.white),
+      )
     );
   }
 
   Widget emailField(BuildContext context) {
-    return standardInputBox(
-      labelText: 'EMAIL',
+    return standardInputBoxWithoutFlex(
+      labelText: 'Email',
       validatorPrompt: 'Please enter your last name.',
-      flexVal: 2,
       onSaved: (value) {},
       validatorCondition: (value) => value.isEmpty,
       controller: _emailController,
@@ -88,10 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget passwordField(BuildContext context) {
-    return standardInputBox(
-        labelText: 'PASSWORD',
+    return standardInputBoxWithoutFlex(
+        labelText: 'Password',
         validatorPrompt: 'Please enter password',
-        flexVal: 2,
         onSaved: (value) {},
         validatorCondition: (value) => value.isEmpty,
         controller: _passwordController,
@@ -99,11 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget loginButton(BuildContext context) {
-    return Flexible(
-      flex: 1,
-      child: addPadding(
-        elevatedButtonStandard('Login', signIn),
-      ),
+    return addPadding(
+      elevatedButtonStandard('Login', signIn),
     );
   }
 
