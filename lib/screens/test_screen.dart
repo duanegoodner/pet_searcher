@@ -40,7 +40,7 @@ class TestScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('FIrbase Info:'),
+                  Text('Firebase User Info:'),
                   Text('email: ${snapshot.data?.email}'),
                   Text('User ID: ${snapshot.data?.uid}'),
                 ],
