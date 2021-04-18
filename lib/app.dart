@@ -24,10 +24,47 @@ class PetMatcherApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: TestScreen(),
-        // routes: routes,
+        home: StartupScreenSelector(),
+        routes: routes,
         // initialRoute: LandingScreen.routeName,
       ),
+    );
+  }
+}
+
+class StartupScreenSelector extends StatelessWidget {
+  const StartupScreenSelector({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: Provider.of<fb_auth.FirebaseAuth>(context).authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.data == null) {
+            return LandingScreen();
+          }
+          return TestScreen();
+        } else {
+          return Scaffold(
+            backgroundColor: Colors.blue[300],
+            body: Center(
+              child: Column(
+                children: [
+                  Text(
+                    'Wating for Firebase Connection',
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: Colors.white,
+                    ),
+                  ),
+                  CircularProgressIndicator(),
+                ],
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
