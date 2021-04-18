@@ -175,18 +175,17 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             onChanged: (bool value) {
               setState(() {
                 adminChecked = value;
-                /*if (adminChecked == false) {
-                    newUser.role = publicUser;
-                  } else {
-                    newUser.role = admin;
-                  }*/
+                if (adminChecked == false) {
+                  newAppUserData.role = 'publicUser';
+                } else {
+                  newAppUserData.role = 'admin';
+                }
               });
             },
           ),
         ),
         Text('I am a shelter admin',
-            style: TextStyle(fontSize: 18, color: Colors.white)
-        ),
+            style: TextStyle(fontSize: 18, color: Colors.white)),
       ],
     );
   }
