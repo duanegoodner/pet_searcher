@@ -34,7 +34,8 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
       ),
       backgroundColor: Colors.blue[300],
       body: Center(
-        child: Form(
+        child: SingleChildScrollView(
+          child: Form(
           key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -53,6 +54,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
           ),
         ),
       ),
+      ),
     );
   }
 
@@ -64,17 +66,14 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget logo() {
-    return Flexible(
-      flex: 2,
-      child: addPadding(Image.asset('assets/images/paw_logo.png')),
-    );
+    return Image.asset('assets/images/paw_logo.png',
+        height: 175, width: 150, fit: BoxFit.fitWidth);
   }
 
   Widget firstNameField(BuildContext context) {
-    return standardInputBox(
+    return standardInputBoxWithoutFlex(
       labelText: 'First Name',
-      validatorPrompt: 'Please enter your first name.',
-      flexVal: 1,
+      validatorPrompt: 'Enter your first name.',
       onSaved: (value) {
         newAppUserData.firstName = value;
       },
@@ -83,10 +82,9 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget lastNameField(BuildContext context) {
-    return standardInputBox(
+    return standardInputBoxWithoutFlex(
       labelText: 'Last Name',
-      validatorPrompt: 'Please enter your last name.',
-      flexVal: 1,
+      validatorPrompt: 'Enter your last name.',
       onSaved: (value) {
         newAppUserData.lastName = value;
       },
@@ -95,10 +93,9 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget emailField(BuildContext context) {
-    return standardInputBox(
+    return standardInputBoxWithoutFlex(
       labelText: 'Email',
-      validatorPrompt: 'Please enter your email.',
-      flexVal: 1,
+      validatorPrompt: 'Enter your email.',
       onSaved: (value) {},
       validatorCondition: (value) => value.isEmpty,
       controller: _emailController,
@@ -106,10 +103,9 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget passwordField(BuildContext context) {
-    return standardInputBox(
+    return standardInputBoxWithoutFlex(
         labelText: 'Password',
-        validatorPrompt: 'Please enter a valid password',
-        flexVal: 1,
+        validatorPrompt: 'Enter a valid password',
         onSaved: (value) {},
         validatorCondition: (value) => value.isEmpty,
         controller: _passwordController,
@@ -117,10 +113,9 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget cityField(BuildContext context) {
-    return standardInputBox(
-        labelText: 'Enter City',
-        validatorPrompt: 'Please enter your city.',
-        flexVal: 1,
+    return standardInputBoxWithoutFlex(
+        labelText: 'City',
+        validatorPrompt: 'Enter your city.',
         onSaved: (value) {
           newAppUserData.city = value;
         },
@@ -128,9 +123,8 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget postalCodeField(BuildContext context) {
-    return standardInputBox(
-      labelText: 'Enter Postal Code',
-      flexVal: 1,
+    return standardInputBoxWithoutFlex(
+      labelText: 'Postal Code',
       keyboardType: TextInputType.number,
       onSaved: (value) {
         newAppUserData.zipCode = int.parse(value);
@@ -140,10 +134,9 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget stateField(BuildContext context) {
-    return standardInputBox(
-      labelText: 'Enter State',
-      validatorPrompt: 'Please enter your state.',
-      flexVal: 1,
+    return standardInputBoxWithoutFlex(
+      labelText: 'State',
+      validatorPrompt: 'Enter your state.',
       onSaved: (value) {
         newAppUserData.state = value;
       },
@@ -152,15 +145,12 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget stateZipRow(BuildContext context) {
-    return Flexible(
-      flex: 1,
-      child: Row(
+    return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          stateField(context),
-          postalCodeField(context),
+          Flexible(flex: 1, child: stateField(context)),
+          Flexible(flex: 1, child: postalCodeField(context))
         ],
-      ),
     );
   }
 
@@ -192,11 +182,8 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   }
 
   Widget submitButton(BuildContext context) {
-    return Flexible(
-      flex: 1,
-      child: addPadding(
+    return addPadding(
         elevatedButtonStandard('Submit', createUser),
-      ),
     );
   }
 
