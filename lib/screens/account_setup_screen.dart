@@ -165,11 +165,11 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             onChanged: (bool value) {
               setState(() {
                 adminChecked = value;
-                /*if (adminChecked == false) {
-                    newUser.role = publicUser;
+                if (adminChecked == false) {
+                    newAppUserData.role = 'publicUser';
                   } else {
-                    newUser.role = admin;
-                  }*/
+                    newAppUserData.role = 'admin';
+                  }
               });
             },
           ),
