@@ -1,5 +1,7 @@
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
+import 'package:pet_matcher/widgets/standard_dropdown_box.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
 
 class AddPetScreen extends StatefulWidget {
@@ -10,8 +12,14 @@ class AddPetScreen extends StatefulWidget {
 }
 
 class _AddPetScreenState extends State<AddPetScreen> {
+  List<String> items = <String>[
+    'Male',
+    'Female',
+    'Other',
+  ];
   final formKey = GlobalKey<FormState>();
   //final animalData = AnimalDTO();
+  String _animalGenderChosen;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +32,44 @@ class _AddPetScreenState extends State<AddPetScreen> {
       backgroundColor: Colors.blue[300],
       body: Center(
         child: SingleChildScrollView(
-          child: Form(
+        child: Form(
+            //key: formKey,
+            /*code from video starts here
+            autovalidateMode: AutovalidateMode.always,
             key: formKey,
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              children: <Widget>[
+                animalNameField(context),
+                animalGenderDropdownField(context),
+                StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance.collection('age').snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      Text('Error');
+                    } else {
+                      List<DropdownMenuItem> ageTypes = [];
+                      for (int i = 0; i < snapshot.data.documents.length; i++) {
+                        DocumentSnapshot sshot = snapshot.data.document[i];
+                        ageTypes.add(DropdownMenuItem(
+                          child: Text(
+                            sshot.documentID,
+                          ),
+                          value: '${sshot.documentID}',
+                        ));
+                      }
+                    }
+                  },
+                )
+              ],
+            )
+*/
+            
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               logo(),
               animalNameField(context),
-              dispositionField(context),
+              animalGenderDropdownField(context),
               addAnimalButton(context),
             ]),
           ),
@@ -54,6 +93,16 @@ class _AddPetScreenState extends State<AddPetScreen> {
         onSaved: (value) {
           //
         });
+  }
+
+  Widget animalGenderDropdownField(BuildContext context) {
+    return standardDropdownBox(
+        labelText: 'Gender',
+        validatorPrompt: 'Select a gender.',
+        validatorCondition: (value) => value.isEmpty,
+        onSaved: (value) {},
+        onChanged: (value) => _animalGenderChosen = value,
+        items: items);
   }
 
   Widget dispositionField(BuildContext context) {
@@ -82,5 +131,4 @@ class _AddPetScreenState extends State<AddPetScreen> {
       child: child,
     );
   }
-  
 }
