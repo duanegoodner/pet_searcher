@@ -3,7 +3,6 @@ import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
-
 import '../models/app_user.dart';
 import '../services/app_user_service.dart';
 

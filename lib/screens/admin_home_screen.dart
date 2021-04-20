@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,13 +5,13 @@ import 'package:provider/provider.dart';
 import '../models/app_user.dart';
 import '../services/app_user_service.dart';
 
-class UserHomeScreen extends StatelessWidget {
-  static const routeName = 'userHomeScreen';
+class AdminHomeScreen extends StatelessWidget {
+  static const routeName = 'adminHomeScreen';
 
   @override
   Widget build(BuildContext context) {
-    Stream<DocumentSnapshot> appUserDataStream =
-        Provider.of<AppUserService>(context).userDataStream;
+    Stream<AppUser> appUser =
+        Provider.of<AppUserService>(context).currentAppUser;
     return Scaffold(
       backgroundColor: Colors.blue[300],
       appBar: AppBar(
@@ -33,12 +32,12 @@ class UserHomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: StreamBuilder(
-            stream: appUserDataStream,
+            stream: appUser,
             builder: (context, snapshot) {
               if (snapshot.data == null) {
                 return CircularProgressIndicator();
               } else {
-                AppUser currentUser = AppUser.fromJSON(snapshot.data.data());
+                AppUser currentUser = snapshot.data;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
