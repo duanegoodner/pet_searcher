@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pet_matcher/screens/admin_home_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
 import '../models/app_user.dart';
 import '../services/app_user_service.dart';
@@ -103,15 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn() async {
     if (formKey.currentState.validate()) {
       try {
-        await Provider.of<fb_auth.FirebaseAuth>(context, listen: false)
-            .signInWithEmailAndPassword(
-                email: _emailController.text,
-                password: _passwordController.text);
-        String userRole =
-            await Provider.of<AppUserService>(context, listen: false).userRole;
-        pushUserHomeScreen(context, userRole);
+        await firebaseAuth.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+        final appUserService = AppUserService(firebaseAuth: firebaseAuth);
+        final AppUser appUser = await appUserService.appUserSnapshot();
+        pushUserHomeScreen(context, appUser);
       } catch (e) {
-        print(e);
+        displaySnackbar(context, e.code);
       }
     }
   }
@@ -123,14 +119,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void pushUserHomeScreen(BuildContext context, String userRole) {
-    if (userRole == 'publicUser') {
-      Navigator.of(context).pushReplacementNamed(
-        UserHomeScreen.routeName,
-      );
-    } else if (userRole == 'admin') {
-      Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);
-    }
+  void pushUserHomeScreen(BuildContext context, AppUser appUser) {
+    Navigator.of(context).pushReplacementNamed(
+      UserHomeScreen.routeName,
+      arguments: appUser,
+    );
   }
 
   void displaySnackbar(BuildContext context, String message) {
