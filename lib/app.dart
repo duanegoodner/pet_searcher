@@ -4,6 +4,7 @@ import 'screens/add_pet_screen.dart';
 import 'screens/landing_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/account_setup_screen.dart';
+import 'screens/admin_home_screen.dart';
 
 class PetMatcherApp extends StatelessWidget {
   static final routes = {
@@ -12,6 +13,7 @@ class PetMatcherApp extends StatelessWidget {
     AccountSetupScreen.routeName: (context) => AccountSetupScreen(),
     AddPetScreen.routeName: (context) => AddPetScreen(),
     UserHomeScreen.routeName: (context) => UserHomeScreen(),
+    AdminHomeScreen.routeName: (context) => AdminHomeScreen(),
   };
 
   @override
@@ -22,8 +24,9 @@ class PetMatcherApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      initialRoute: LandingScreen.routeName,
+      //initialRoute: LandingScreen.routeName,
       //initialRoute: AddPetScreen.routeName,
+      initialRoute: AdminHomeScreen.routeName,
     );
   }
 }
