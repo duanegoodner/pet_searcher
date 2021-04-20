@@ -1,5 +1,5 @@
-import 'package:pet_matcher/services/firebase_auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:cloud_firestore/cloud_firestore.dart' as cf;
 import 'package:flutter/material.dart';
@@ -11,6 +11,8 @@ import 'screens/account_setup_screen.dart';
 import 'screens/test_screen.dart';
 
 class PetMatcherApp extends StatelessWidget {
+  final Future<FirebaseApp> _initializeFirebase = Firebase.initializeApp();
+
   static final routes = {
     LandingScreen.routeName: (context) => LandingScreen(),
     LoginScreen.routeName: (context) => LoginScreen(),
