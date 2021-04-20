@@ -36,24 +36,24 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              logo(),
-              SizedBox(height: 20),
-              firstNameField(context),
-              lastNameField(context),
-              cityField(context),
-              stateZipRow(context),
-              emailField(context),
-              passwordField(context),
-              adminCheckbox(context),
-              submitButton(context),
-            ],
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                logo(),
+                SizedBox(height: 20),
+                firstNameField(context),
+                lastNameField(context),
+                cityField(context),
+                stateZipRow(context),
+                emailField(context),
+                passwordField(context),
+                adminCheckbox(context),
+                submitButton(context),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -146,11 +146,11 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
 
   Widget stateZipRow(BuildContext context) {
     return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Flexible(flex: 1, child: stateField(context)),
-          Flexible(flex: 1, child: postalCodeField(context))
-        ],
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Flexible(flex: 1, child: stateField(context)),
+        Flexible(flex: 1, child: postalCodeField(context))
+      ],
     );
   }
 
@@ -166,24 +166,23 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
               setState(() {
                 adminChecked = value;
                 if (adminChecked == false) {
-                    newAppUserData.role = 'publicUser';
-                  } else {
-                    newAppUserData.role = 'admin';
-                  }
+                  newAppUserData.role = 'publicUser';
+                } else {
+                  newAppUserData.role = 'admin';
+                }
               });
             },
           ),
         ),
         Text('I am a shelter admin',
-            style: TextStyle(fontSize: 18, color: Colors.white)
-        ),
+            style: TextStyle(fontSize: 18, color: Colors.white)),
       ],
     );
   }
 
   Widget submitButton(BuildContext context) {
     return addPadding(
-        elevatedButtonStandard('Submit', createUser),
+      elevatedButtonStandard('Submit', createUser),
     );
   }
 
