@@ -22,7 +22,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final newAppUserData = NewAppUserDTO();
-  final firebaseAuth = FirebaseAuthService();
+  final firebaseAuth = fb_auth.FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -190,10 +190,13 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     if (formKey.currentState.validate()) {
       try {
         formKey.currentState.save();
-        fb_auth.User newFirebaseUser = await firebaseAuth.createFirebaseUser(
-            _emailController.text, _passwordController.text);
+        fb_auth.UserCredential newUserCredential =
+            await firebaseAuth.createUserWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text);
+        fb_auth.User newFirebaseUser = newUserCredential.user;
         newAppUserData.email = newFirebaseUser.email;
-        final appUserService = AppUserService(firebaseUser: newFirebaseUser);
+        final appUserService = AppUserService(firebaseAuth: firebaseAuth);
         await appUserService.uploadNewUser(newAppUserData, newFirebaseUser.uid);
         Navigator.of(context).pushNamed(LoginScreen.routeName);
       } catch (e) {

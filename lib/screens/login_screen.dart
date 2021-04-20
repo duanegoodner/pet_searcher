@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
 import '../models/app_user.dart';
-import '../services/firebase_auth_service.dart';
 import '../services/app_user_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final firebaseAuth = FirebaseAuthService();
+  final firebaseAuth = fb_auth.FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget titleText() {
     return Padding(
-      padding: EdgeInsets.only(top: 5, bottom: 30, left: 10, right: 10),
-      child: Text(
-        'Pet Matcher',
-        style: TextStyle(fontSize: 35, color: Colors.white),
-      )
-    );
+        padding: EdgeInsets.only(top: 5, bottom: 30, left: 10, right: 10),
+        child: Text(
+          'Pet Matcher',
+          style: TextStyle(fontSize: 35, color: Colors.white),
+        ));
   }
 
   Widget emailField(BuildContext context) {
@@ -102,11 +101,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn() async {
     if (formKey.currentState.validate()) {
       try {
-        await firebaseAuth.firebaseSignIn(
-            _emailController.text, _passwordController.text);
-        final appUserService =
-            AppUserService(firebaseUser: firebaseAuth.currentUser);
-        final AppUser appUser = await appUserService.getCurrentAppUser();
+        await firebaseAuth.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+        final appUserService = AppUserService(firebaseAuth: firebaseAuth);
+        final AppUser appUser = await appUserService.appUserSnapshot();
         pushUserHomeScreen(context, appUser);
       } catch (e) {
         displaySnackbar(context, e.code);

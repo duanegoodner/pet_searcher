@@ -56,9 +56,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   void _logout() async {
     await _firebaseAuth.firebaseSignOut();
-    Navigator.popUntil(
-      context,
-      ModalRoute.withName(LandingScreen.routeName),
-    );
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }
