@@ -1,24 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
-import 'package:pet_matcher/screens/landing_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../models/app_user.dart';
-import '../services/firebase_auth_service.dart';
+import '../services/app_user_service.dart';
 
-class UserHomeScreen extends StatefulWidget {
+class UserHomeScreen extends StatelessWidget {
   static const routeName = 'userHomeScreen';
-
-  UserHomeScreen({Key key}) : super(key: key);
-
-  @override
-  _UserHomeScreenState createState() => _UserHomeScreenState();
-}
-
-class _UserHomeScreenState extends State<UserHomeScreen> {
-  final _firebaseAuth = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
-    final AppUser appUser = ModalRoute.of(context).settings.arguments;
+    Stream<DocumentSnapshot> appUserDataStream =
+        Provider.of<AppUserService>(context).userDataStream;
     return Scaffold(
       backgroundColor: Colors.blue[300],
       appBar: AppBar(
@@ -30,32 +24,45 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           IconButton(
             icon: Icon(Icons.logout),
             tooltip: 'Log Out',
-            onPressed: _logout,
+            onPressed: () {
+              _logout(context);
+            },
           ),
         ],
       ),
       body: SafeArea(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('User Info:'),
-              Text('Name: ${appUser.firstName} ${appUser.lastName}'),
-              Text('email: ${appUser.email}'),
-              Text('User Type: ${appUser.role}'),
-              Text('City: ${appUser.city}'),
-              Text('State: ${appUser.state}'),
-              Text('User Zip Code: ${appUser.zipCode.toString()}'),
-            ],
+          child: StreamBuilder(
+            stream: appUserDataStream,
+            builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return CircularProgressIndicator();
+              } else {
+                AppUser currentUser = AppUser.fromJSON(snapshot.data.data());
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('User Info:'),
+                    Text(
+                        'Name: ${currentUser?.firstName} ${currentUser?.lastName}'),
+                    Text('email: ${currentUser?.email}'),
+                    Text('User Type: ${currentUser?.role}'),
+                    Text('City: ${currentUser?.city}'),
+                    Text('State: ${currentUser?.state}'),
+                    Text('User Zip Code: ${currentUser?.zipCode.toString()}'),
+                  ],
+                );
+              }
+            },
           ),
         ),
       ),
     );
   }
 
-  void _logout() async {
-    await _firebaseAuth.firebaseSignOut();
+  void _logout(BuildContext context) async {
+    await Provider.of<fb_auth.FirebaseAuth>(context, listen: false).signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }
