@@ -1,24 +1,38 @@
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:cloud_firestore/cloud_firestore.dart' as cf;
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
+import 'models/app_user.dart';
+import 'screens/add_pet_screen.dart';
 import 'screens/landing_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/account_setup_screen.dart';
 import 'screens/test_screen.dart';
 
 class PetMatcherApp extends StatelessWidget {
+  // final Future<FirebaseApp> _initializeFirebase = Firebase.initializeApp();
+
   static final routes = {
     LandingScreen.routeName: (context) => LandingScreen(),
     LoginScreen.routeName: (context) => LoginScreen(),
     AccountSetupScreen.routeName: (context) => AccountSetupScreen(),
+    AddPetScreen.routeName: (context) => AddPetScreen(),
     UserHomeScreen.routeName: (context) => UserHomeScreen(),
   };
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => fb_auth.FirebaseAuth.instance,
+    return MultiProvider(
+      providers: [
+        Provider(
+          create: (_) => fb_auth.FirebaseAuth.instance,
+        ),
+        Provider(
+          create: (_) => cf.FirebaseFirestore.instance,
+        ),
+      ],
       child: MaterialApp(
         title: 'Pet Matcher',
         theme: ThemeData(
