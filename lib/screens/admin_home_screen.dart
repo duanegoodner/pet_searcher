@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 
 class AdminHomeScreen extends StatefulWidget {
-
   static const routeName = 'adminHome';
 
   @override
@@ -17,15 +16,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   //Map<String, dynamic> newsData;
   final String heading = "Happy National Pet Day!";
   final String body = "Show us your best pictures of your furry friends!\n"
-                      "Don't currently have a fluffy friend to love?\n"
-                      "Browse through our available pets and arrange\n "
-                      "a date today!";
-
-
+      "Don't currently have a fluffy friend to love?\n"
+      "Browse through our available pets and arrange\n "
+      "a date today!";
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
+    return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text('Admin'),
@@ -46,27 +43,29 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Newsfeed:',
+                    Text(
+                      'Newsfeed:',
                       style: TextStyle(
-                        color:Colors.white,
+                        color: Colors.white,
                         fontSize: 25,
                       ),
                     ),
                     IconButton(
-                       icon: Icon(Icons.edit,
-                         color: Colors.white,
-                         size: 20,
-                       ),
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                         onPressed: () {
-                         //Popup form???
-                         }
-                    ),
+                          //Popup form???
+                        }),
                   ],
                 ),
                 Row(
                   children: <Widget>[
                     Expanded(
-                      child: Text('${heading}',
+                      child: Text(
+                        '${heading}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -79,25 +78,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 Row(
                   children: <Widget>[
                     Expanded(
-                      child: Text('${body}',
-                       textAlign: TextAlign.center,
-                       style: TextStyle(
-                         color: Colors.white,
-                         fontSize: 14,
+                      child: Text(
+                        '${body}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
                     ),
                   ],
                 ),
-               ],
-              ),
+              ],
+            ),
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.white,
               ),
             ),
-            ),
-          )
-        );
+          ),
+        ));
   }
 }

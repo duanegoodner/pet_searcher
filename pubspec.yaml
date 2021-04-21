@@ -37,6 +37,8 @@ dependencies:
   #more fonts
   font_awesome_flutter: ^9.0.0
 
+  #provider
+  provider: ^4.3.0
 
 dev_dependencies:
   flutter_test:

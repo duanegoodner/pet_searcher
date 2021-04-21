@@ -22,7 +22,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final newAppUserData = NewAppUserDTO();
-  final firebaseAuth = FirebaseAuthService();
+  final firebaseAuth = fb_auth.FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +36,24 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              logo(),
-              SizedBox(height: 20),
-              firstNameField(context),
-              lastNameField(context),
-              cityField(context),
-              stateZipRow(context),
-              emailField(context),
-              passwordField(context),
-              adminCheckbox(context),
-              submitButton(context),
-            ],
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                logo(),
+                SizedBox(height: 20),
+                firstNameField(context),
+                lastNameField(context),
+                cityField(context),
+                stateZipRow(context),
+                emailField(context),
+                passwordField(context),
+                adminCheckbox(context),
+                submitButton(context),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -146,11 +146,11 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
 
   Widget stateZipRow(BuildContext context) {
     return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Flexible(flex: 1, child: stateField(context)),
-          Flexible(flex: 1, child: postalCodeField(context))
-        ],
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Flexible(flex: 1, child: stateField(context)),
+        Flexible(flex: 1, child: postalCodeField(context))
+      ],
     );
   }
 
@@ -166,24 +166,23 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
               setState(() {
                 adminChecked = value;
                 if (adminChecked == false) {
-                    newAppUserData.role = 'publicUser';
-                  } else {
-                    newAppUserData.role = 'admin';
-                  }
+                  newAppUserData.role = 'publicUser';
+                } else {
+                  newAppUserData.role = 'admin';
+                }
               });
             },
           ),
         ),
         Text('I am a shelter admin',
-            style: TextStyle(fontSize: 18, color: Colors.white)
-        ),
+            style: TextStyle(fontSize: 18, color: Colors.white)),
       ],
     );
   }
 
   Widget submitButton(BuildContext context) {
     return addPadding(
-        elevatedButtonStandard('Submit', createUser),
+      elevatedButtonStandard('Submit', createUser),
     );
   }
 
@@ -191,10 +190,13 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     if (formKey.currentState.validate()) {
       try {
         formKey.currentState.save();
-        fb_auth.User newFirebaseUser = await firebaseAuth.createFirebaseUser(
-            _emailController.text, _passwordController.text);
+        fb_auth.UserCredential newUserCredential =
+            await firebaseAuth.createUserWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text);
+        fb_auth.User newFirebaseUser = newUserCredential.user;
         newAppUserData.email = newFirebaseUser.email;
-        final appUserService = AppUserService(firebaseUser: newFirebaseUser);
+        final appUserService = AppUserService(firebaseAuth: firebaseAuth);
         await appUserService.uploadNewUser(newAppUserData, newFirebaseUser.uid);
         Navigator.of(context).pushNamed(LoginScreen.routeName);
       } catch (e) {

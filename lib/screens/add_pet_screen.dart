@@ -34,7 +34,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
       backgroundColor: Colors.blue[300],
       body: Center(
         child: SingleChildScrollView(
-        child: Form(
+          child: Form(
+            key: formKey,
             //key: formKey,
             /*code from video starts here
             autovalidateMode: AutovalidateMode.always,
@@ -167,7 +168,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
     return addPadding(elevatedButtonStandard('Add animal', createAnimal));
   }
 
-  void createAnimal() async {
+  Future<void> createAnimal() async {
     if (formKey.currentState.validate()) {
       try {
         //save form
