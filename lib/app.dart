@@ -30,6 +30,29 @@ class PetMatcherApp extends StatelessWidget {
   }
 }
 
+class DummyApp extends StatelessWidget {
+  final Future<FirebaseApp> _initializeFirebase = Firebase.initializeApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _initializeFirebase,
+      builder: (context, snapshot) {
+        return FirebaseServiceProviders(
+          child: AppUserServiceProvider(
+            child: MaterialApp(
+              title: 'Pet Matcher',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class FirebaseServiceProviders extends StatelessWidget {
   final Widget child;
 
@@ -82,11 +105,13 @@ class ExistingLoginChecker extends StatelessWidget {
             backgroundColor: Colors.blue[300],
             body: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Wating for Firebase Connection',
                     style: TextStyle(
-                      fontSize: 50,
+                      fontSize: 30,
                       color: Colors.white,
                     ),
                   ),
