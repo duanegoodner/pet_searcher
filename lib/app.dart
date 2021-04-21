@@ -64,11 +64,6 @@ class FirebaseServiceProviders extends StatelessWidget {
       Provider(
         create: (_) => fb_auth.FirebaseAuth.instance,
       ),
-<<<<<<< HEAD
-      routes: routes,
-      //initialRoute: LandingScreen.routeName,
-      initialRoute: AddPetScreen.routeName,
-=======
       Provider(
         create: (_) => cf.FirebaseFirestore.instance,
       ),
@@ -164,7 +159,6 @@ class StartupScreenSelector extends StatelessWidget {
           );
         }
       },
->>>>>>> auth_user_provider_2
     );
   }
 }
