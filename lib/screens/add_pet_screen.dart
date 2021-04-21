@@ -1,5 +1,8 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/models/animal_category_constants.dart';
+import 'package:pet_matcher/services/new_animal_dto.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_dropdown_box.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
@@ -12,17 +15,16 @@ class AddPetScreen extends StatefulWidget {
 }
 
 class _AddPetScreenState extends State<AddPetScreen> {
-  List<String> items = <String>[
-    'Male',
-    'Female',
-    'Other',
-  ];
   final formKey = GlobalKey<FormState>();
-  //final animalData = AnimalDTO();
-  String _animalGenderChosen;
+  final newAnimalData = AnimalDTO();
 
   @override
   Widget build(BuildContext context) {
+    newAnimalData.dateAdded = DateTime.now();
+    //NOTE: will need to change this when we have an actual image
+    newAnimalData.imageURL = 'fakeanimalimageurl.com';
+    //NOTE: will get type from navigator from admin home page
+    newAnimalData.type = 'dog';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -64,12 +66,17 @@ class _AddPetScreenState extends State<AddPetScreen> {
               ],
             )
 */
-            
+
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               logo(),
               animalNameField(context),
-              animalGenderDropdownField(context),
+              //FIX: add logic to determine which breed list is displayed
+              animalBreedField(context, dogBreeds),
+              animalAgeField(context, age),
+              animalGenderDropdownField(context, gender),
+              animalStatusField(context, adoptionStatus),
+              animalDispositionField(context, disposition),
               addAnimalButton(context),
             ]),
           ),
@@ -91,28 +98,69 @@ class _AddPetScreenState extends State<AddPetScreen> {
         validatorPrompt: 'Enter animal name.',
         validatorCondition: (value) => value.isEmpty,
         onSaved: (value) {
-          //
+          newAnimalData.name = value;
         });
   }
 
-  Widget animalGenderDropdownField(BuildContext context) {
+  Widget animalBreedField(context, categories) {
     return standardDropdownBox(
-        labelText: 'Gender',
-        validatorPrompt: 'Select a gender.',
-        validatorCondition: (value) => value.isEmpty,
-        onSaved: (value) {},
-        onChanged: (value) => _animalGenderChosen = value,
-        items: items);
+      labelText: 'Breed',
+      validatorPrompt: 'Select a breed/type.',
+      validatorCondition: (value) => value.isEmpty,
+      onSaved: (value) {
+        newAnimalData.breed = value;
+      },
+      items: categories,
+    );
   }
 
-  Widget dispositionField(BuildContext context) {
-    return standardInputBoxWithoutFlex(
-        labelText: 'Disposition',
-        validatorPrompt: 'Enter animal disposition.',
-        validatorCondition: (value) => value.isEmpty,
-        onSaved: (value) {
-          //
-        });
+  Widget animalAgeField(context, categories) {
+    return standardDropdownBox(
+      labelText: 'Age',
+      validatorPrompt: 'Select age category.',
+      validatorCondition: (value) => value.isEmpty,
+      onSaved: (value) {
+        newAnimalData.age = value;
+      },
+      items: categories,
+    );
+  }
+
+  Widget animalGenderDropdownField(BuildContext context, categories) {
+    return standardDropdownBox(
+      labelText: 'Gender',
+      validatorPrompt: 'Select a gender.',
+      validatorCondition: (value) => value.isEmpty,
+      onSaved: (value) {
+        newAnimalData.gender = value;
+      },
+      items: categories,
+    );
+  }
+
+  Widget animalStatusField(context, categories) {
+    return standardDropdownBox(
+      labelText: 'Status',
+      validatorPrompt: 'Select an animal status.',
+      validatorCondition: (value) => value.isEmpty,
+      onSaved: (value) {
+        newAnimalData.status = value;
+      },
+      items: categories,
+    );
+  }
+
+  //NOTE: need to change to a dropdown with checkboxes
+  Widget animalDispositionField(context, categories) {
+    return standardDropdownBox(
+      labelText: 'Disposition',
+      validatorPrompt: 'Select all that apply.',
+      validatorCondition: (value) => value.isEmpty,
+      onSaved: (value) {
+        newAnimalData.disposition = value;
+      },
+      items: categories,
+    );
   }
 
   Widget addAnimalButton(BuildContext context) {
@@ -120,9 +168,28 @@ class _AddPetScreenState extends State<AddPetScreen> {
   }
 
   void createAnimal() async {
-    //save form
-    //add animal to database
-    //go to next screen
+    if (formKey.currentState.validate()) {
+      try {
+        //save form
+        formKey.currentState.save();
+        //add animal to database
+        FirebaseFirestore.instance.collection('animals').add({
+          'name': newAnimalData.name,
+          'dateAdded': DateTime.parse('${newAnimalData.dateAdded}'),
+          'type': newAnimalData.type,
+          'breed': newAnimalData.breed,
+          'age': newAnimalData.age,
+          'gender': newAnimalData.gender,
+          'status': newAnimalData.status,
+          'disposition': newAnimalData.disposition,
+          'imageURL': newAnimalData.imageURL,
+        });
+        //NOTE: go back to admin homescreen
+        //Navigator.of(context).pushNamed(AdminScreen.routeName);
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
   Widget addPadding(Widget child) {

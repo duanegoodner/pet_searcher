@@ -22,8 +22,8 @@ class PetMatcherApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      initialRoute: LandingScreen.routeName,
-      //initialRoute: AddPetScreen.routeName,
+      //initialRoute: LandingScreen.routeName,
+      initialRoute: AddPetScreen.routeName,
     );
   }
 }

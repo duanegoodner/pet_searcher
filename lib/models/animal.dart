@@ -1,14 +1,13 @@
-import 'animal_enums.dart';
-
 class Animal {
   String name;
   DateTime dateAdded;
-  AnimalType type;
-  AdoptionStatus status;
-  AnimalBreed breed;
+  String type;
+  String status;
+  String breed;
   String disposition;
-  Age age;
-  Gender gender;
+  //List<String> disposition;
+  String age;
+  String gender;
   String imageURL;
 
   Animal(
@@ -35,17 +34,4 @@ class Animal {
       imageURL: json['imageURL'],
     );
   }
-
-  //may need to move to animal_dto.dart file
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'dateAdded': dateAdded,
-        'type': type,
-        'adoptionStatus': status,
-        'breed': breed,
-        'disposition': disposition,
-        'age': age,
-        'gender': gender,
-        'imageURL': imageURL,
-      };
 }
