@@ -29,6 +29,13 @@ class AppUserService {
     return AppUser.fromJSON(_appUser.data());
   }
 
+  Future<String> get isUserAdmin async {
+    AppUser appUser = await appUserSnapshot();
+    String userRole = appUser.role;
+    userRole ??= 'unknown';
+    return userRole;
+  }
+
   Stream<cf.DocumentSnapshot> get userDataStream {
     return _users.doc(firebaseAuth.currentUser.uid).snapshots();
   }
