@@ -5,7 +5,7 @@ import 'login_screen.dart';
 import 'account_setup_screen.dart';
 
 class LandingScreen extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = 'landingScreen';
 
   final String title = 'Pet Matcher';
 
