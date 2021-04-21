@@ -29,7 +29,7 @@ class AppUserService {
     return AppUser.fromJSON(_appUser.data());
   }
 
-  Future<String> get isUserAdmin async {
+  Future<String> get userRole async {
     AppUser appUser = await appUserSnapshot();
     String userRole = appUser.role;
     userRole ??= 'unknown';

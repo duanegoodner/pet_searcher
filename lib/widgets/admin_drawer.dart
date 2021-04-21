@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
@@ -61,6 +62,13 @@ class AdminDrawer extends StatelessWidget {
               },
             ),
             buildListTile(
+              title: 'Add New Animal',
+              icon: FontAwesomeIcons.star,
+              onTap: () {
+                pushAddPetScreen(context);
+              },
+            ),
+            buildListTile(
               title: 'Log Out',
               icon: Icons.logout,
               onTap: () {
@@ -90,6 +98,10 @@ class AdminDrawer extends StatelessWidget {
 
   void pushAdminHome(BuildContext context) {
     Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+  }
+
+  void pushAddPetScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(AddPetScreen.routeName);
   }
 
   void logout(BuildContext context) async {

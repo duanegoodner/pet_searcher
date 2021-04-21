@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/app_user_service.dart';
+import '../services/app_user_service.dart';
 
 class AppUserServiceProvider extends StatelessWidget {
   final Widget child;
