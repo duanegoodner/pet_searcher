@@ -7,7 +7,6 @@ import '../models/app_user.dart';
 
 class AdminDrawer extends StatelessWidget {
 
-  //Refactor code; create 2 listTile functions
 
   @override
   Widget build(BuildContext context) {
@@ -33,79 +32,30 @@ class AdminDrawer extends StatelessWidget {
               ),
               SizedBox(
                 height: 10),
-                ListTile(
-                  leading: Icon(Icons.home,
-                  color: Colors.white,
-                  size: 20,
-                  ),
-                  title: Text('Home',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
-                  },
-                ),
-                ListTile(
-                    leading: Icon(Icons.rss_feed,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    title: Text('News Feed',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      //Navigate to news feed update page?
-                  },
-                ),
-                ListTile(
-                  leading: FaIcon(FontAwesomeIcons.paw,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  title: Text('Inventory',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    //Navigate to inventory page
-                  },
-                ),
-                ListTile(
-                  leading: FaIcon(FontAwesomeIcons.dog,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  title: Text('Featured Animals',
-                    style: TextStyle(color: Colors.white),
-                    ),
-                  onTap: () {
-                    //Navigate to featured animal page?
-                  },
-                ),
-              ListTile(
-                leading: Icon(Icons.logout,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                title: Text('Log Out',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  //Log out of app
-                },
-              ),
+                buildListTile(context, 'Home', Icons.home),
+                buildListTile(context, 'News Feed', Icons.rss_feed),
+                buildListTile(context, 'Inventory', FontAwesomeIcons.paw),
+                buildListTile(context, 'Featured Animals', FontAwesomeIcons.dog),
+                buildListTile(context, 'Log Out', Icons.logout),
             ],
           ),
         ),
     );
   }
 
-
-
-  /*void _logout() async {
-    await _firebaseAuth.firebaseSignOut();
-    Navigator.popUntil(
-      context,
-      ModalRoute.withName(LandingScreen.routeName),
+  Widget buildListTile(BuildContext context, String title, IconData icon) {
+    return ListTile(
+      leading: Icon(icon,
+        color: Colors.white,
+        size: 20,
+      ),
+      title: Text(title,
+        style: TextStyle(color: Colors.white),
+      ),
+      onTap: () {
+        Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+      },
     );
-  }*/
+  }
+
 }
