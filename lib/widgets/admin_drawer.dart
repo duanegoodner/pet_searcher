@@ -1,61 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
 import '../models/app_user.dart';
 
-
 class AdminDrawer extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blue[300],
-          ),
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 120,
-                width: double.infinity,
-                padding: EdgeInsets.only(top: 50, left: 15, right: 20, bottom: 20),
-                alignment: Alignment.centerLeft,
-                child: Text('Menu',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue[300],
+        ),
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 120,
+              width: double.infinity,
+              padding:
+                  EdgeInsets.only(top: 50, left: 15, right: 20, bottom: 20),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-              SizedBox(
-                height: 10),
-                buildListTile(context, 'Home', Icons.home),
-                buildListTile(context, 'News Feed', Icons.rss_feed),
-                buildListTile(context, 'Inventory', FontAwesomeIcons.paw),
-                buildListTile(context, 'Featured Animals', FontAwesomeIcons.dog),
-                buildListTile(context, 'Log Out', Icons.logout),
-            ],
-          ),
+            ),
+            SizedBox(height: 10),
+            buildListTile(
+              title: 'Home',
+              icon: Icons.home,
+              onTap: () {
+                pushAdminHome(context);
+              },
+            ),
+            buildListTile(
+              title: 'News Feed',
+              icon: Icons.rss_feed,
+              onTap: () {
+                pushAdminHome(context);
+              },
+            ),
+            buildListTile(
+              title: 'Inventory',
+              icon: FontAwesomeIcons.paw,
+              onTap: () {
+                pushAdminHome(context);
+              },
+            ),
+            buildListTile(
+              title: 'Featured Animals',
+              icon: FontAwesomeIcons.dog,
+              onTap: () {
+                pushAdminHome(context);
+              },
+            ),
+            buildListTile(
+              title: 'Log Out',
+              icon: Icons.logout,
+              onTap: () {
+                logout(context);
+              },
+            ),
+          ],
         ),
+      ),
     );
   }
 
-  Widget buildListTile(BuildContext context, String title, IconData icon) {
+  Widget buildListTile({String title, IconData icon, Function onTap}) {
     return ListTile(
-      leading: Icon(icon,
+      leading: Icon(
+        icon,
         color: Colors.white,
         size: 20,
       ),
-      title: Text(title,
+      title: Text(
+        title,
         style: TextStyle(color: Colors.white),
       ),
-      onTap: () {
-        Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
-      },
+      onTap: onTap,
     );
   }
 
+  void pushAdminHome(BuildContext context) {
+    Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+  }
+
+  void logout(BuildContext context) async {
+    await Provider.of<fb_auth.FirebaseAuth>(context, listen: false).signOut();
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
 }
