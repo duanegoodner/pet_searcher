@@ -34,8 +34,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
       backgroundColor: Colors.blue[300],
       body: Center(
         child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
+        child: Form(
+            //key: formKey,
             /*code from video starts here
             autovalidateMode: AutovalidateMode.always,
             key: formKey,
