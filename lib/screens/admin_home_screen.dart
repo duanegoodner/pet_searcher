@@ -31,72 +31,37 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         drawer: AdminDrawer(),
         backgroundColor: Colors.blue[300],
         body: Center(
-          child: Container(
-            height: 275,
-            width: 275,
-            padding: EdgeInsets.all(15),
+          child: Card(
             child: Column(
-              children: [
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      'Newsfeed:',
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  title: Text('${heading}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 26,
+                      ),
+                    ),
+                    subtitle: Text('${body}',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
+                        fontSize: 16,
                       ),
                     ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
                     IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        onPressed: () {
-                          //Popup form???
-                        }),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        '${heading}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                        ),
-                      ),
+                        icon: Icon(Icons.edit),
+                        onPressed: () {},
                     ),
                   ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        '${body}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                )
               ],
-            ),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-              ),
-            ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
