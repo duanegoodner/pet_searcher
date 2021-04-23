@@ -40,6 +40,9 @@ dependencies:
   #provider
   provider: ^4.3.0
 
+  #GetIt
+  get_it: ^6.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -5,7 +5,10 @@ import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
-import '../models/app_user.dart';
+import 'package:pet_matcher/models/app_user.dart';
+import 'package:pet_matcher/locator.dart';
+
+import 'package:pet_matcher/services/app_user_service.dart';
 
 class AdminDrawer extends StatelessWidget {
   @override
@@ -105,7 +108,7 @@ class AdminDrawer extends StatelessWidget {
   }
 
   void logout(BuildContext context) async {
-    await Provider.of<fb_auth.FirebaseAuth>(context, listen: false).signOut();
+    await locator<AppUserService>().firebaseAuth.signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }
