@@ -42,6 +42,8 @@ dependencies:
 
   #camera/photos
   image_picker: ^0.7.4
+  #GetIt
+  get_it: ^6.1.0
 
 dev_dependencies:
   flutter_test:
