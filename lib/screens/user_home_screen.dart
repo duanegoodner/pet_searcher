@@ -6,6 +6,8 @@ import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
 
+import 'package:pet_matcher/screens/landing_screen.dart';
+
 class UserHomeScreen extends StatelessWidget {
   static const routeName = 'userHomeScreen';
 
@@ -64,5 +66,6 @@ class UserHomeScreen extends StatelessWidget {
   void _logout(BuildContext context) async {
     await locator<AppUserService>().firebaseAuth.signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushReplacementNamed(LandingScreen.routeName);
   }
 }

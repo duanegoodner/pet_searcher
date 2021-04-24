@@ -21,17 +21,27 @@ class Animal {
       this.gender,
       this.imageURL});
 
-  factory Animal.fromJSON(Map<String, dynamic> json) {
-    return Animal(
-      name: json['name'],
-      dateAdded: json['dateAdded'],
-      type: json['type'],
-      status: json['status'],
-      breed: json['breed'],
-      disposition: json['disposition'],
-      age: json['age'],
-      gender: json['gender'],
-      imageURL: json['imageURL'],
-    );
+  Animal.nullAnimal()
+      : name = '',
+        dateAdded = DateTime.fromMicrosecondsSinceEpoch(0),
+        type = '',
+        status = '',
+        breed = '',
+        disposition = '',
+        age = '',
+        gender = '',
+        imageURL = '';
+
+  Animal.fromJSON(Map<String, dynamic> json) {
+    name = json['name'];
+    dateAdded = DateTime.fromMicrosecondsSinceEpoch(
+        json['dateAdded'].microsecondsSinceEpoch);
+    type = json['type'];
+    status = json['status'];
+    breed = json['breed'];
+    disposition = json['disposition'];
+    age = json['age'];
+    gender = json['gender'];
+    imageURL = json['imageURL'];
   }
 }

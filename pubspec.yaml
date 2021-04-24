@@ -42,6 +42,8 @@ dependencies:
 
   #camera/photos
   image_picker: ^0.7.4
+  cached_network_image: ^2.5.0
+  
   #GetIt
   get_it: ^6.1.0
 
@@ -64,6 +66,7 @@ flutter:
   - assets/dog_landscape.jpg
   - assets/dog_portrait.jpg
   - assets/guinea_pig_landscape.jpg
+  - assets/db/schema/animal_attributes.json
  
 
   # To add custom fonts to your application, add a fonts section here,

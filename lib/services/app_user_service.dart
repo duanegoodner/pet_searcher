@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart' as cf;
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/services/new_app_user_dto.dart';
 
 class AppUserService {
-  final cf.CollectionReference _users =
-      cf.FirebaseFirestore.instance.collection('users');
+  final CollectionReference _users =
+      FirebaseFirestore.instance.collection('users');
 
-  final fb_auth.FirebaseAuth firebaseAuth;
+  final FirebaseAuth firebaseAuth;
 
   AppUserService({this.firebaseAuth});
 
@@ -21,14 +21,14 @@ class AppUserService {
     if (firebaseAuth.currentUser == null) {
       return null;
     }
-    cf.DocumentSnapshot _appUser =
+    DocumentSnapshot _appUser =
         await _users.doc(firebaseAuth.currentUser.uid).get();
     return AppUser.fromJSON(_appUser.data());
   }
 
   Stream<AppUser> get appUserAuthStateChange {
     return firebaseAuth.authStateChanges().asyncMap((e) async {
-      cf.DocumentSnapshot appUserData = await _users.doc(e.uid).get();
+      DocumentSnapshot appUserData = await _users.doc(e.uid).get();
       return AppUser.fromJSON(appUserData.data());
     });
   }
@@ -47,7 +47,7 @@ class AppUserService {
     );
   }
 
-  Stream<cf.DocumentSnapshot> get userDataStream {
+  Stream<DocumentSnapshot> get userDataStream {
     return _users.doc(firebaseAuth.currentUser.uid).snapshots();
   }
 
