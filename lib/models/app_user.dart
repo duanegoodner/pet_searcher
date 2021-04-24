@@ -1,13 +1,13 @@
 //import 'package:intl/intl.dart';
 
 class AppUser {
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String city;
-  final String state;
-  final int zipCode;
-  final String role;
+  String email;
+  String firstName;
+  String lastName;
+  String city;
+  String state;
+  int zipCode;
+  String role;
 
   AppUser({
     this.email,
@@ -19,15 +19,32 @@ class AppUser {
     this.role,
   });
 
-  factory AppUser.fromJSON(Map<String, dynamic> json) {
-    return AppUser(
-      email: json['email'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      city: json['city'],
-      state: json['state'],
-      zipCode: json['zipCode'],
-      role: json['role'],
-    );
+  AppUser.initial()
+      : email = '',
+        firstName = '',
+        lastName = '',
+        city = '',
+        state = '',
+        zipCode = 0,
+        role = '';
+
+  AppUser.fromJSON(Map<String, dynamic> json) {
+    email = json['email'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+    city = json['city'];
+    state = json['state'];
+    zipCode = json['zipCode'];
+    role = json['role'];
   }
+
+  Map<String, dynamic> toJson() => {
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'city': city,
+        'state': state,
+        'zipCode': zipCode,
+        'role': role,
+      };
 }
