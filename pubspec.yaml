@@ -54,12 +54,16 @@ flutter:
 
   assets:
   - assets/paw_logo.png
+  - assets/news.json
+  - assets/frenchie_in_costume.jpg
+  - assets/puppy.jpg
   - assets/cat_landscape.jpg
   - assets/cat_portrait.jpg
   - assets/dog_landscape.jpg
   - assets/dog_portrait.jpg
   - assets/guinea_pig_landscape.jpg
  
+
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
