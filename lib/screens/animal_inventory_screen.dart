@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/rendering.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
 import 'package:pet_matcher/locator.dart';
-
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/services/animal_service.dart';
-
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 
 class AnimalInventoryScreen extends StatelessWidget {
@@ -29,11 +26,11 @@ class AnimalInventoryScreen extends StatelessWidget {
 }
 
 Widget buildInventoryList(BuildContext context) {
-  return StreamBuilder(
-    stream: locator<AnimalService>().animalDataStream(),
+  return FutureBuilder(
+    future: locator<AnimalService>().getAllAnimals(),
     builder: (context, snapshot) {
-      if (snapshot.hasData && snapshot.data.docs.length != 0) {
-        return postList(snapshot, context);
+      if (snapshot.hasData && snapshot.data.length != 0) {
+        return animalList(snapshot, context);
       } else {
         return Center(
           child: CircularProgressIndicator(),
@@ -43,14 +40,14 @@ Widget buildInventoryList(BuildContext context) {
   );
 }
 
-Column postList(AsyncSnapshot<dynamic> snapshot, BuildContext context) {
+Column animalList(AsyncSnapshot<List<Animal>> animals, BuildContext context) {
   return Column(
     children: [
       Expanded(
         child: ListView.builder(
-          itemCount: snapshot.data.docs.length,
+          itemCount: animals.data.length,
           itemBuilder: (context, index) {
-            Animal animal = Animal.fromJSON(snapshot.data.docs[index].data());
+            Animal animal = animals.data[index];
             return inventoryListTile(context, animal);
           },
         ),
@@ -74,14 +71,71 @@ Widget inventoryListTile(BuildContext context, Animal animal) {
               children: <Widget>[
                 Expanded(
                   flex: 3,
-                  child: CachedNetworkImage(imageUrl: animal.imageURL),
+                  child: CachedNetworkImage(
+                    imageUrl: animal.imageURL,
+                  ),
                 ),
                 Expanded(
                   flex: 2,
                   child: Padding(
                     padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${animal.name}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          'Breed: ${animal.breed}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15,
+                          ),
+                        ),
+                        Text(
+                          'Age: ${animal.age}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget noAnimalsFoundTile() {
+  return GestureDetector(
+    onTap: () {},
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: SizedBox(
+            height: 150,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
                     child: Text(
-                      '${animal.name}',
+                      'Sorry. No animals found.',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,

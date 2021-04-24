@@ -1,5 +1,3 @@
-import 'package:pet_matcher/screens/animal_inventory_screen.dart';
-
 import '../screens/account_setup_screen.dart';
 import '../screens/add_pet_screen.dart';
 import '../screens/admin_home_screen.dart';

@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:flutter/services.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AnimalService {
   static const _animal_schema_path = 'assets/db/schema/animal_attributes.json';
