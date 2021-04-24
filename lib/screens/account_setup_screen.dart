@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
-import 'package:pet_matcher/services/firebase_auth_service.dart';
+//import 'package:pet_matcher/services/firebase_auth_service.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
 

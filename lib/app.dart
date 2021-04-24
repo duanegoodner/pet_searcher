@@ -23,10 +23,9 @@ class PetMatcherApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          //home: StartupScreenSelector(),
-          home: AdminHomeScreen(),
+          home: StartupScreenSelector(),
+          //home: AdminHomeScreen(),
           routes: RouteNames.routes,
-          // initialRoute: AddPetScreen.routeName,
         ),
       ),
     );

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
-
-
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 
 class AdminHomeScreen extends StatefulWidget {
@@ -24,12 +22,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Admin'),
-          backgroundColor: Colors.blue[300],
-        ),
-        drawer: AdminDrawer(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Admin'),
         backgroundColor: Colors.blue[300],
         body: SingleChildScrollView(
           child: Column(
@@ -202,4 +197,5 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           )),
     );
   }
+
 }
