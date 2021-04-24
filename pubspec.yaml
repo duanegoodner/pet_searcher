@@ -64,6 +64,7 @@ flutter:
   - assets/dog_landscape.jpg
   - assets/dog_portrait.jpg
   - assets/guinea_pig_landscape.jpg
+  - assets/db/schema/animal_attributes.json
  
 
   # To add custom fonts to your application, add a fonts section here,
