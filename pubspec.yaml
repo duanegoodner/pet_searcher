@@ -59,6 +59,9 @@ flutter:
 
   assets:
    - assets/paw_logo.png
+   - assets/news.json
+   - assets/frenchie_in_costume.jpg
+   - assets/puppy.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
