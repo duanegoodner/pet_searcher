@@ -27,6 +27,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         title: Text('Admin'),
         backgroundColor: Colors.blue[300],
       ),
+      drawer: AdminDrawer(),
+      backgroundColor: Colors.blue[300],
       body: SingleChildScrollView(
         child: Column(
           children: [
