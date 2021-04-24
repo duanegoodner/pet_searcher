@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pet_matcher/screens/add_pet_screen.dart';
+//import 'package:pet_matcher/screens/add_pet_screen.dart';
+import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
-import 'package:pet_matcher/screens/landing_screen.dart';
-import '../models/app_user.dart';
+//import 'package:pet_matcher/screens/landing_screen.dart';
+//import '../models/app_user.dart';
 
 class AdminDrawer extends StatelessWidget {
   @override
@@ -65,7 +66,7 @@ class AdminDrawer extends StatelessWidget {
               title: 'Add New Animal',
               icon: FontAwesomeIcons.star,
               onTap: () {
-                pushAddPetScreen(context);
+                pushChooseAnimalTypeScreen(context);
               },
             ),
             buildListTile(
@@ -100,8 +101,8 @@ class AdminDrawer extends StatelessWidget {
     Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
   }
 
-  void pushAddPetScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(AddPetScreen.routeName);
+  void pushChooseAnimalTypeScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(ChooseAnimalTypeScreen.routeName);
   }
 
   void logout(BuildContext context) async {
