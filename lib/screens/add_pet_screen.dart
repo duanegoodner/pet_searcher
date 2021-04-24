@@ -2,6 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/models/animal_category_constants.dart';
+import 'package:pet_matcher/screens/admin_home_screen.dart';
+import 'package:pet_matcher/services/image_service.dart';
 import 'package:pet_matcher/services/new_animal_dto.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_dropdown_box.dart';
@@ -17,18 +19,31 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final formKey = GlobalKey<FormState>();
   final newAnimalData = AnimalDTO();
+  String imageUrl;
 
   @override
+  void initState() {
+    super.initState();
+    getImageUrl();
+  }
+
+  void getImageUrl() async {
+    imageUrl = await retrieveImageUrl();
+    setState(() {});
+  }
+
   Widget build(BuildContext context) {
+    if (imageUrl == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+    String receivedAnimalType = ModalRoute.of(context).settings.arguments;
     newAnimalData.dateAdded = DateTime.now();
-    //NOTE: will need to change this when we have an actual image
-    newAnimalData.imageURL = 'fakeanimalimageurl.com';
-    //NOTE: will get type from navigator from admin home page
-    newAnimalData.type = 'dog';
+    newAnimalData.imageURL = imageUrl;
+    newAnimalData.type = '$receivedAnimalType';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Add Animal'),
+        title: Text('Add $receivedAnimalType'),
         backgroundColor: Colors.blue[300],
       ),
       backgroundColor: Colors.blue[300],
@@ -36,44 +51,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
         child: SingleChildScrollView(
           child: Form(
             key: formKey,
-            //key: formKey,
-            /*code from video starts here
-            autovalidateMode: AutovalidateMode.always,
-            key: formKey,
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              children: <Widget>[
-                animalNameField(context),
-                animalGenderDropdownField(context),
-                StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance.collection('age').snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      Text('Error');
-                    } else {
-                      List<DropdownMenuItem> ageTypes = [];
-                      for (int i = 0; i < snapshot.data.documents.length; i++) {
-                        DocumentSnapshot sshot = snapshot.data.document[i];
-                        ageTypes.add(DropdownMenuItem(
-                          child: Text(
-                            sshot.documentID,
-                          ),
-                          value: '${sshot.documentID}',
-                        ));
-                      }
-                    }
-                  },
-                )
-              ],
-            )
-*/
-
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              logo(),
+              getChosenAnimalImage(),
               animalNameField(context),
-              //FIX: add logic to determine which breed list is displayed
-              animalBreedField(context, dogBreeds),
+              chooseAnimalBreedField(context, receivedAnimalType),
               animalAgeField(context, age),
               animalGenderDropdownField(context, gender),
               animalStatusField(context, adoptionStatus),
@@ -86,12 +68,21 @@ class _AddPetScreenState extends State<AddPetScreen> {
     );
   }
 
+  Widget getChosenAnimalImage() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20, bottom: 10),
+      child: Image.network('$imageUrl',
+        height: 250, width: 200, fit: BoxFit.fitWidth
+      )
+    );
+  }
+
+  /*
   Widget logo() {
     return Image.asset('assets/images/paw_logo.png',
         height: 250, width: 200, fit: BoxFit.fitWidth);
-    //IDEA: wrap the image in a gestureDetector for selecting animal
-    //image and then display in place of the image logo
   }
+  */
 
   Widget animalNameField(BuildContext context) {
     return standardInputBoxWithoutFlex(
@@ -101,6 +92,16 @@ class _AddPetScreenState extends State<AddPetScreen> {
         onSaved: (value) {
           newAnimalData.name = value;
         });
+  }
+
+  Widget chooseAnimalBreedField(context, animalType) {
+    if (animalType == 'Dog') {
+      return animalBreedField(context, dogBreeds);
+    } else if (animalType == 'Cat') {
+      return animalBreedField(context, catBreeds);
+    } else {
+      return animalBreedField(context, otherAnimalTypes);
+    }
   }
 
   Widget animalBreedField(context, categories) {
@@ -185,8 +186,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
           'disposition': newAnimalData.disposition,
           'imageURL': newAnimalData.imageURL,
         });
-        //NOTE: go back to admin homescreen
-        //Navigator.of(context).pushNamed(AdminScreen.routeName);
+        //navigate back to admin home screen
+        Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
       } catch (e) {
         print(e);
       }
