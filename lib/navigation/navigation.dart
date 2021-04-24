@@ -1,9 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-
-import 'package:pet_matcher/locator.dart';
-import 'package:pet_matcher/services/app_user_service.dart';
-
 import 'package:pet_matcher/screens/account_setup_screen.dart';
 import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
