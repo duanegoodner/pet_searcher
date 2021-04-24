@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/navigation/routes.dart';
 
 import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
@@ -6,6 +7,7 @@ import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
 import 'package:pet_matcher/locator.dart';
+
 import 'package:pet_matcher/navigation/navigation.dart';
 
 class PetMatcherApp extends StatelessWidget {
@@ -17,7 +19,7 @@ class PetMatcherApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: startupScreenSelector(context),
-      routes: Navigation.routes,
+      routes: RouteNames.routes,
     );
   }
 }
