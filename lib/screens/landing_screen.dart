@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
-import 'login_screen.dart';
-import 'account_setup_screen.dart';
+import 'package:pet_matcher/screens/login_screen.dart';
+import 'package:pet_matcher/screens/account_setup_screen.dart';
 
 class LandingScreen extends StatelessWidget {
   static const routeName = 'landingScreen';

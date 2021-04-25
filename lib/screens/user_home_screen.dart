@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../models/app_user.dart';
-import '../services/app_user_service.dart';
+import 'package:flutter/material.dart';
+
+import 'package:pet_matcher/locator.dart';
+import 'package:pet_matcher/models/app_user.dart';
+import 'package:pet_matcher/services/app_user_service.dart';
+
+import 'package:pet_matcher/screens/landing_screen.dart';
 
 class UserHomeScreen extends StatelessWidget {
   static const routeName = 'userHomeScreen';
@@ -12,7 +14,7 @@ class UserHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Stream<DocumentSnapshot> appUserDataStream =
-        Provider.of<AppUserService>(context).userDataStream;
+        locator<AppUserService>().userDataStream;
     return Scaffold(
       backgroundColor: Colors.blue[300],
       appBar: AppBar(
@@ -62,7 +64,8 @@ class UserHomeScreen extends StatelessWidget {
   }
 
   void _logout(BuildContext context) async {
-    await Provider.of<fb_auth.FirebaseAuth>(context, listen: false).signOut();
+    await locator<AppUserService>().firebaseAuth.signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushReplacementNamed(LandingScreen.routeName);
   }
 }
