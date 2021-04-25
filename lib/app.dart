@@ -1,5 +1,6 @@
 import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
+import 'package:pet_matcher/screens/user_home_screen_UI.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class PetMatcherApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           //home: StartupScreenSelector(),
-          home: AdminHomeScreen(),
+          home: UserHomeScreen(),
           routes: RouteNames.routes,
           // initialRoute: AddPetScreen.routeName,
         ),
