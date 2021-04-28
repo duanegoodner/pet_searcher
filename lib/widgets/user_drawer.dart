@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:pet_matcher/screens/user_home_screen_UI.dart';
+import 'package:pet_matcher/locator.dart';
+import 'package:pet_matcher/screens/user_home_screen.dart';
+import 'package:pet_matcher/screens/landing_screen.dart';
+import 'package:pet_matcher/services/app_user_service.dart';
 
 class UserDrawer extends StatelessWidget {
   @override
@@ -19,7 +21,7 @@ class UserDrawer extends StatelessWidget {
               height: 120,
               width: double.infinity,
               padding:
-              EdgeInsets.only(top: 50, left: 15, right: 20, bottom: 20),
+                  EdgeInsets.only(top: 50, left: 15, right: 20, bottom: 20),
               alignment: Alignment.centerLeft,
               child: Text(
                 'Menu',
@@ -53,12 +55,11 @@ class UserDrawer extends StatelessWidget {
               },
             ),
             buildListTile(
-              title: 'News Feed',
-              icon: Icons.rss_feed,
-              onTap: () {
-                pushNewsScreen(context);
-              }
-            ),
+                title: 'News Feed',
+                icon: Icons.rss_feed,
+                onTap: () {
+                  pushNewsScreen(context);
+                }),
             buildListTile(
               title: 'View Favorites',
               icon: Icons.favorite,
@@ -107,7 +108,8 @@ class UserDrawer extends StatelessWidget {
   }*/
 
   void logout(BuildContext context) async {
-    await Provider.of<fb_auth.FirebaseAuth>(context, listen: false).signOut();
+    await locator<AppUserService>().firebaseAuth.signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushReplacementNamed(LandingScreen.routeName);
   }
 }

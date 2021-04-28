@@ -6,7 +6,7 @@ import '../screens/choose_animal_type_screen.dart';
 import '../screens/landing_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/news_screen.dart';
-import '../screens/user_home_screen_UI.dart';
+import '../screens/user_home_screen.dart';
 
 class RouteNames {
   static final routes = {
