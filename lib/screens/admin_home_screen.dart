@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:convert';
+//import 'package:flutter/services.dart';
+//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'dart:convert';
 
 
 
@@ -52,7 +52,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget headingText(String heading) {
     return Container(
       margin: EdgeInsets.only(top: 20.0),
-      child: Text('${heading}',
+      child: Text('$heading',
         style: TextStyle(
           fontSize: 26,
           color: Colors.white,
@@ -70,13 +70,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              title: Text('${heading}',
+              title: Text('$heading',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 26,
                 ),
               ),
-              subtitle: Text('${body}',
+              subtitle: Text('$body',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -198,7 +198,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget animalCardText(String animalText, double size) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text('${animalText}',
+      child: Text('$animalText',
           style: TextStyle(
               fontSize: size
           )),

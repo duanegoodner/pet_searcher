@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pet_matcher/screens/add_pet_screen.dart';
+import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/user_home_screen_UI.dart';
-import 'package:pet_matcher/screens/landing_screen.dart';
-import '../models/app_user.dart';
 
 class UserDrawer extends StatelessWidget {
   @override
@@ -55,6 +53,13 @@ class UserDrawer extends StatelessWidget {
               },
             ),
             buildListTile(
+              title: 'News Feed',
+              icon: Icons.rss_feed,
+              onTap: () {
+                pushNewsScreen(context);
+              }
+            ),
+            buildListTile(
               title: 'View Favorites',
               icon: Icons.favorite,
               onTap: () {
@@ -91,6 +96,10 @@ class UserDrawer extends StatelessWidget {
 
   void pushUserHome(BuildContext context) {
     Navigator.of(context).pushNamed(UserHomeScreen.routeName);
+  }
+
+  void pushNewsScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(NewsScreen.routeName);
   }
 
   /*void pushFavoritesScreen(BuildContext context) {

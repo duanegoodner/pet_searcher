@@ -47,6 +47,9 @@ dependencies:
   #GetIt
   get_it: ^6.1.0
 
+  #date manipulation
+  intl: ^0.17.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
