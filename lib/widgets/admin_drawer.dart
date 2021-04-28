@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+//import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
-//import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
+import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:pet_matcher/services/animal_service.dart';
-import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
-import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/locator.dart';
 
 import 'package:pet_matcher/services/app_user_service.dart';
@@ -50,7 +48,7 @@ class AdminDrawer extends StatelessWidget {
               title: 'News Feed',
               icon: Icons.rss_feed,
               onTap: () {
-                pushAdminHome(context);
+                pushNewsScreen(context);
               },
             ),
             buildListTile(
@@ -110,6 +108,10 @@ class AdminDrawer extends StatelessWidget {
 
   void pushAdminHome(BuildContext context) {
     Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+  }
+
+  void pushNewsScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(NewsScreen.routeName);
   }
 
   void pushAnimalInventoryScreen(BuildContext context) {
