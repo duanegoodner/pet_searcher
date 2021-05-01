@@ -27,8 +27,14 @@ class AnimalInventoryScreen extends StatelessWidget {
 }
 
 Widget buildInventoryList(BuildContext context) {
-  return FutureBuilder(
-    future: locator<AnimalService>().getAllAnimals(),
+  Stream animalDataStream = locator<AnimalService>().animalDataStream();
+  Stream animalListStream = locator<AnimalService>().animalStream();
+  Stream dogListStream = locator<AnimalService>().dogListStream();
+  Stream filteredAnimalStream =
+      locator<AnimalService>().filteredAnimalStream(type: 'Dog');
+
+  return StreamBuilder(
+    stream: filteredAnimalStream,
     builder: (context, snapshot) {
       if (snapshot.hasData && snapshot.data.length != 0) {
         return animalList(snapshot, context);
@@ -41,7 +47,7 @@ Widget buildInventoryList(BuildContext context) {
   );
 }
 
-Column animalList(AsyncSnapshot<List<Animal>> animals, BuildContext context) {
+Column animalList(AsyncSnapshot<dynamic> animals, BuildContext context) {
   return Column(
     children: [
       Expanded(
@@ -60,7 +66,7 @@ Column animalList(AsyncSnapshot<List<Animal>> animals, BuildContext context) {
 Widget inventoryListTile(BuildContext context, Animal animal) {
   return GestureDetector(
     onTap: () {
-     Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => AnimalDetailScreen(animal: animal)),
@@ -157,5 +163,4 @@ Widget noAnimalsFoundTile() {
       ),
     ),
   );
-
 }

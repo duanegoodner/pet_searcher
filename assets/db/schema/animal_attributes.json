@@ -4,6 +4,11 @@
         "adult",
         "senior"
     ],
+    "gender": [
+        "male",
+        "felale",
+        "other"
+    ],
     "type": {
         "dog": {
             "breed": [
@@ -83,11 +88,11 @@
                 "guinea pig",
                 "rodent"
             ]
-        },
-        "disposition": [
-            "Good with other animals.",
-            "Good with children.",
-            "Animal must be leashed at all times."
-        ]
-    }
+        }
+    },
+    "disposition": [
+        "Good with other animals.",
+        "Good with children.",
+        "Animal must be leashed at all times."
+    ]
 }
