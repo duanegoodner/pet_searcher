@@ -70,11 +70,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
   Widget getChosenAnimalImage() {
     return Padding(
-      padding: EdgeInsets.only(top: 20, bottom: 10),
-      child: Image.network('$imageUrl',
-        height: 250, width: 200, fit: BoxFit.fitWidth
-      )
-    );
+        padding: EdgeInsets.only(top: 20, bottom: 10),
+        child: Image.network('$imageUrl',
+            height: 250, width: 200, fit: BoxFit.fitWidth));
   }
 
   /*
@@ -187,7 +185,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
           'imageURL': newAnimalData.imageURL,
         });
         //navigate back to admin home screen
-        Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+        Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);
       } catch (e) {
         print(e);
       }
