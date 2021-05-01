@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 import 'package:pet_matcher/models/news_item.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
+import 'package:pet_matcher/widgets/user_drawer.dart';
 
 class NewsScreen extends StatefulWidget {
   static const routeName = 'newsScreen';
@@ -14,19 +16,30 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
+    String userType = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('News Feed'),
         backgroundColor: Colors.blue[300],
       ),
-      drawer: AdminDrawer(),
+      drawer: getDrawerType(userType),
       backgroundColor: Colors.blue[300],
-      body: buildListFromStream(context),
+      body: buildListFromStream(context, userType),
     );
   }
 
-  Widget buildListFromStream(BuildContext context) {
+  //function returning user or admin drawer
+  Widget getDrawerType(userType) {
+    if (userType == 'admin') {
+      return AdminDrawer();
+    } else {
+      return UserDrawer();
+    }
+  }
+
+  Widget buildListFromStream(BuildContext context, String userType) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('newsPost')
@@ -40,8 +53,8 @@ class _NewsScreenState extends State<NewsScreen> {
               padding: EdgeInsets.all(10),
               child: ListView.builder(
                 itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) =>
-                    _buildNewsItem(context, snapshot.data.docs[index]),
+                itemBuilder: (context, index) => _buildNewsItem(
+                    context, snapshot.data.docs[index], userType),
               ),
             );
           } else if (snapshot.hasError) {
@@ -53,9 +66,9 @@ class _NewsScreenState extends State<NewsScreen> {
         });
   }
 
-  Widget _buildNewsItem(BuildContext context, DocumentSnapshot document) {
+  Widget _buildNewsItem(
+      BuildContext context, DocumentSnapshot document, String userType) {
     DateTime date = convertTimestampToDateTime(document['date']);
-    String formattedDate = formatDate(date);
 
     NewsItem post = NewsItem.fromMap({
       'date': date,
@@ -64,10 +77,10 @@ class _NewsScreenState extends State<NewsScreen> {
       'body': document['body'],
     });
 
-    return newsCard(post.imageUrl, post.title, post.body, formattedDate);
+    return newsCard(post, userType);
   }
 
-  Widget newsCard(String imageUrl, String title, String body, String date) {
+  Widget newsCard(NewsItem post, String userType) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       width: 275,
@@ -75,11 +88,11 @@ class _NewsScreenState extends State<NewsScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(child: Image.network('$imageUrl')),
+            Container(child: Image.network('${post.imageUrl}')),
             ListTile(
                 title: addPadding(
                   Text(
-                    '$title',
+                    '${post.title}',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 26,
@@ -88,7 +101,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 ),
                 subtitle: addPadding(
                   Text(
-                    '$body',
+                    '${post.body}',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 16,
@@ -102,40 +115,67 @@ class _NewsScreenState extends State<NewsScreen> {
                 children: <Widget>[
                   Container(
                     child: Text(
-                      '$date',
+                      '${formatDate(post.date)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.favorite_border_outlined),
-                        onPressed: () {
-                          //NOTE: Still need to allow for selecting favorites
-                          //and adding to favorite screen if we want to do that
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.share_outlined),
-                        onPressed: () {
-                          //NOTE: Still need to allow for sharing article
-                        },
-                      ),
-                      //NOTE: will not need this icon for the user news feed page
-                      IconButton(
-                        icon: Icon(Icons.edit_outlined),
-                        onPressed: () {
-                          //NOTE: Still need to allow for editing article
-                        },
-                      )
-                    ],
-                  ),
+                  articleIconLayout(userType, post)
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget articleIconLayout(String userType, NewsItem post) {
+    if (userType == 'admin') {
+      return Row(
+        children: [
+          favoriteIcon(),
+          shareIcon(post),
+          editIcon(),
+        ], 
+      );
+    } else {
+      return Row(
+        children: [
+          favoriteIcon(),
+          shareIcon(post),
+        ],
+      );
+    }
+  }
+
+  Widget favoriteIcon() {
+    return IconButton(
+      icon: Icon(Icons.favorite_border_outlined),
+      onPressed: () {
+        //NOTE: Still need to allow for selecting favorites
+        //and adding to favorite screen if we want to do that
+      },
+    );
+  }
+
+  Widget shareIcon(NewsItem post) {
+    return IconButton(
+      icon: Icon(Icons.share_outlined),
+      onPressed: () {
+        Share.share(
+            'Check out this article from Pet Matcher!\n\n${post.body} ' +
+                '\n\n${post.date}.',
+            subject: '${post.title}');
+      },
+    );
+  }
+
+  Widget editIcon() {
+    return  IconButton(
+      icon: Icon(Icons.edit_outlined),
+      onPressed: () {
+        //NOTE: Still need to allow for editing article
+      },
     );
   }
 
