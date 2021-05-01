@@ -28,6 +28,54 @@ class AnimalService {
     return dataList.map((entry) => Animal.fromJSON(entry.data())).toList();
   }
 
+  Stream<List<Animal>> animalStream() {
+    return _animalCollection.snapshots().map((snapshot) => snapshot.docs
+        .map((animalEntry) => Animal.fromJSON(animalEntry.data()))
+        .toList());
+  }
+
+  Stream<List<Animal>> filteredAnimalStream({
+    String age,
+    String breed,
+    String disposition,
+    String gender,
+    String type,
+  }) {
+    Map<String, dynamic> queriedParams = Map();
+    ({
+      'age': age,
+      'breed': breed,
+      'disposition': disposition,
+      'gender': gender,
+      'type': type
+    }).forEach((key, value) {
+      if (value != null) queriedParams[key] = value;
+    });
+
+    return _animalCollection.snapshots().map((snapshot) => snapshot.docs
+        .map((animalEntry) {
+          if (queriedParams.entries
+              .every((entry) => animalEntry[entry.key] == entry.value)) {
+            return Animal.fromJSON(animalEntry.data());
+          }
+        })
+        .toList()
+        .whereType<Animal>()
+        .toList());
+  }
+
+  Stream<List<Animal>> dogListStream() {
+    return _animalCollection.snapshots().map((snapshot) => snapshot.docs
+        .map((animalEntry) {
+          if (animalEntry['type'] == 'Dog') {
+            return Animal.fromJSON(animalEntry.data());
+          }
+        })
+        .toList()
+        .whereType<Animal>()
+        .toList());
+  }
+
   Future<QuerySnapshot> allAnimalSnapshot() async {
     QuerySnapshot _allAnimalData = await _animalCollection.get();
     return _allAnimalData;
