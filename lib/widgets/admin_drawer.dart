@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
@@ -23,27 +24,25 @@ class AdminDrawer extends StatelessWidget {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(color: Colors.blue[700]),
-              child: Column(
-                children: [
-                  Container(
-                    height: 90,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset('assets/images/paw_logo.png'),
-                  ),
-                  Container(
-                    padding:
-                    EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 10),
-                    child: Text(
-                      'Menu',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+              child: Column(children: [
+                Container(
+                  height: 90,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset('assets/images/paw_logo.png'),
+                ),
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 10),
+                  child: Text(
+                    'Menu',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                ]
-              ),
+                ),
+              ]),
             ),
             buildListTile(
               title: 'Home',
@@ -115,19 +114,21 @@ class AdminDrawer extends StatelessWidget {
   }
 
   void pushAdminHome(BuildContext context) {
-    Navigator.of(context).pushNamed(AdminHomeScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);
   }
 
   void pushNewsScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(NewsScreen.routeName, arguments: 'admin');
+    Navigator.of(context)
+        .pushReplacementNamed(NewsScreen.routeName, arguments: 'admin');
   }
 
   void pushAnimalInventoryScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(AnimalInventoryScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(AnimalInventoryScreen.routeName);
   }
 
   void pushChooseAnimalTypeScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(ChooseAnimalTypeScreen.routeName);
+    Navigator.of(context)
+        .pushReplacementNamed(ChooseAnimalTypeScreen.routeName);
   }
 
   void resetAnimalAttributes(BuildContext context) async {
