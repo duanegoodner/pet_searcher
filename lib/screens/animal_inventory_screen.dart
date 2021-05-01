@@ -5,6 +5,7 @@ import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
+import 'package:pet_matcher/screens/animal_detail_screen.dart';
 
 class AnimalInventoryScreen extends StatelessWidget {
   static const routeName = 'animalInventoryScreen';
@@ -58,7 +59,13 @@ Column animalList(AsyncSnapshot<List<Animal>> animals, BuildContext context) {
 
 Widget inventoryListTile(BuildContext context, Animal animal) {
   return GestureDetector(
-    onTap: () {},
+    onTap: () {
+     Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AnimalDetailScreen(animal: animal)),
+      );
+    },
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Card(
@@ -150,4 +157,5 @@ Widget noAnimalsFoundTile() {
       ),
     ),
   );
+
 }

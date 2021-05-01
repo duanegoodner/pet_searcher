@@ -1,7 +1,9 @@
 import 'package:pet_matcher/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
-//import 'package:pet_matcher/screens/news_screen.dart';
+import 'package:pet_matcher/screens/animal_inventory_screen.dart';
+import 'package:pet_matcher/screens/news_screen.dart';
+import 'package:pet_matcher/screens/animal_detail_screen.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
@@ -15,8 +17,8 @@ class PetMatcherApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: startupScreenSelector(context),
-      //home: NewsScreen(),
+      //home: startupScreenSelector(context)
+      home: AnimalInventoryScreen(),
       routes: RouteNames.routes,
     );
   }
