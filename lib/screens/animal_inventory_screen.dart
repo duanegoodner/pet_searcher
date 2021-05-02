@@ -5,6 +5,7 @@ import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
+import 'package:pet_matcher/widgets/animal_filter_form.dart';
 import 'package:pet_matcher/screens/animal_detail_screen.dart';
 
 class AnimalInventoryScreen extends StatelessWidget {
@@ -34,7 +35,7 @@ Widget buildInventoryList(BuildContext context) {
       locator<AnimalService>().filteredAnimalStream(type: 'Dog');
 
   return StreamBuilder(
-    stream: filteredAnimalStream,
+    stream: animalListStream,
     builder: (context, snapshot) {
       if (snapshot.hasData && snapshot.data.length != 0) {
         return animalList(snapshot, context);
@@ -47,18 +48,23 @@ Widget buildInventoryList(BuildContext context) {
   );
 }
 
-Column animalList(AsyncSnapshot<dynamic> animals, BuildContext context) {
+Widget animalList(AsyncSnapshot<dynamic> animals, BuildContext context) {
   return Column(
     children: [
+      Container(
+        color: Colors.white70,
+        child: AnimalFilterForm(),
+      ),
       Expanded(
         child: ListView.builder(
+          shrinkWrap: true,
           itemCount: animals.data.length,
           itemBuilder: (context, index) {
             Animal animal = animals.data[index];
             return inventoryListTile(context, animal);
           },
         ),
-      )
+      ),
     ],
   );
 }
