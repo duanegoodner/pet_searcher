@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+//import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
@@ -11,7 +12,7 @@ class UserDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
+     child: Container(
         decoration: BoxDecoration(
           color: Colors.blue[300],
         ),
@@ -96,11 +97,12 @@ class UserDrawer extends StatelessWidget {
   }
 
   void pushUserHome(BuildContext context) {
-    Navigator.of(context).pushNamed(UserHomeScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(UserHomeScreen.routeName);
   }
 
   void pushNewsScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(NewsScreen.routeName);
+    Navigator.of(context)
+        .pushReplacementNamed(NewsScreen.routeName, arguments: 'user');
   }
 
   /*void pushFavoritesScreen(BuildContext context) {

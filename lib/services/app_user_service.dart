@@ -17,6 +17,14 @@ class AppUserService {
     await _users.doc(uid).set(newAppUserData.toJson());
   }
 
+  Future<AppUser> getAppUser(String uid) async {
+    if (uid == null) {
+      return AppUser.initial();
+    }
+    DocumentSnapshot _userData = await _users.doc(uid).get();
+    return AppUser.fromJSON(_userData.data());
+  }
+
   Future<AppUser> appUserSnapshot() async {
     if (firebaseAuth.currentUser == null) {
       return null;
@@ -28,6 +36,9 @@ class AppUserService {
 
   Stream<AppUser> get appUserAuthStateChange {
     return firebaseAuth.authStateChanges().asyncMap((e) async {
+      if (e == null) {
+        return AppUser.initial();
+      }
       DocumentSnapshot appUserData = await _users.doc(e.uid).get();
       return AppUser.fromJSON(appUserData.data());
     });

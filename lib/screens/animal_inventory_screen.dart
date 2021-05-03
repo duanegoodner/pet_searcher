@@ -5,6 +5,8 @@ import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
+import 'package:pet_matcher/widgets/animal_filter_form.dart';
+import 'package:pet_matcher/screens/animal_detail_screen.dart';
 
 class AnimalInventoryScreen extends StatelessWidget {
   static const routeName = 'animalInventoryScreen';
@@ -26,8 +28,14 @@ class AnimalInventoryScreen extends StatelessWidget {
 }
 
 Widget buildInventoryList(BuildContext context) {
-  return FutureBuilder(
-    future: locator<AnimalService>().getAllAnimals(),
+  Stream animalDataStream = locator<AnimalService>().animalDataStream();
+  Stream animalListStream = locator<AnimalService>().animalStream();
+  Stream dogListStream = locator<AnimalService>().dogListStream();
+  Stream filteredAnimalStream =
+      locator<AnimalService>().filteredAnimalStream(type: 'Dog');
+
+  return StreamBuilder(
+    stream: animalListStream,
     builder: (context, snapshot) {
       if (snapshot.hasData && snapshot.data.length != 0) {
         return animalList(snapshot, context);
@@ -40,25 +48,36 @@ Widget buildInventoryList(BuildContext context) {
   );
 }
 
-Column animalList(AsyncSnapshot<List<Animal>> animals, BuildContext context) {
+Widget animalList(AsyncSnapshot<dynamic> animals, BuildContext context) {
   return Column(
     children: [
+      Container(
+        color: Colors.white70,
+        child: AnimalFilterForm(),
+      ),
       Expanded(
         child: ListView.builder(
+          shrinkWrap: true,
           itemCount: animals.data.length,
           itemBuilder: (context, index) {
             Animal animal = animals.data[index];
             return inventoryListTile(context, animal);
           },
         ),
-      )
+      ),
     ],
   );
 }
 
 Widget inventoryListTile(BuildContext context, Animal animal) {
   return GestureDetector(
-    onTap: () {},
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AnimalDetailScreen(animal: animal)),
+      );
+    },
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Card(

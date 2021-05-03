@@ -195,7 +195,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
         newAppUserData.email = newFirebaseUser.email;
         final appUserService = AppUserService(firebaseAuth: firebaseAuth);
         await appUserService.uploadNewUser(newAppUserData, newFirebaseUser.uid);
-        Navigator.of(context).pushNamed(LoginScreen.routeName);
+        Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
       } catch (e) {
         print(e);
       }

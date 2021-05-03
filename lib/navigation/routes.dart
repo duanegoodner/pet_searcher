@@ -1,3 +1,5 @@
+import '../screens/animal_detail_screen.dart';
+import '../navigation/startup_screen_controller.dart';
 import '../screens/account_setup_screen.dart';
 import '../screens/add_pet_screen.dart';
 import '../screens/admin_home_screen.dart';
@@ -10,6 +12,7 @@ import '../screens/user_home_screen.dart';
 
 class RouteNames {
   static final routes = {
+    StartUpScreenController.routeName: (context) => StartUpScreenController(),
     LandingScreen.routeName: (context) => LandingScreen(),
     LoginScreen.routeName: (context) => LoginScreen(),
     AccountSetupScreen.routeName: (context) => AccountSetupScreen(),
@@ -18,6 +21,7 @@ class RouteNames {
     UserHomeScreen.routeName: (context) => UserHomeScreen(),
     AdminHomeScreen.routeName: (context) => AdminHomeScreen(),
     AnimalInventoryScreen.routeName: (context) => AnimalInventoryScreen(),
+    AnimalDetailScreen.routename: (context) => AnimalDetailScreen(),
     NewsScreen.routeName: (context) => NewsScreen(),
   };
 }
