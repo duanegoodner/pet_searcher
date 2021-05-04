@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
-import 'dart:convert';
+//import 'dart:convert';
 
 class UserHomeScreen extends StatefulWidget {
   static const routeName = 'userHomeScreen';
@@ -51,7 +51,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return Container(
       margin: EdgeInsets.only(top: 20.0),
       child: Text(
-        '${heading}',
+        '$heading',
         style: TextStyle(
           fontSize: 26,
           color: Colors.white,
@@ -106,14 +106,14 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           children: <Widget>[
             ListTile(
               title: Text(
-                '${heading}',
+                '$heading',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 26,
                 ),
               ),
               subtitle: Text(
-                '${body}',
+                '$body',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -218,7 +218,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget animalCardText(String animalText, double size) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text('${animalText}', style: TextStyle(fontSize: size)),
+      child: Text('$animalText', style: TextStyle(fontSize: size)),
     );
   }
 }
