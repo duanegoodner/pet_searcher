@@ -1,6 +1,8 @@
+
 import '../screens/animal_detail_screen.dart';
 import '../navigation/startup_screen_controller.dart';
 import '../screens/account_setup_screen.dart';
+import '../screens/add_news_item_screen.dart';
 import '../screens/add_pet_screen.dart';
 import '../screens/admin_home_screen.dart';
 import '../screens/animal_inventory_screen.dart';
@@ -20,6 +22,7 @@ class RouteNames {
     ChooseAnimalTypeScreen.routeName: (context) => ChooseAnimalTypeScreen(),
     UserHomeScreen.routeName: (context) => UserHomeScreen(),
     AdminHomeScreen.routeName: (context) => AdminHomeScreen(),
+    AddNewsItemScreen.routeName: (context) => AddNewsItemScreen(),
     AnimalInventoryScreen.routeName: (context) => AnimalInventoryScreen(),
     AnimalDetailScreen.routename: (context) => AnimalDetailScreen(),
     NewsScreen.routeName: (context) => NewsScreen(),
