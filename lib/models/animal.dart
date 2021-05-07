@@ -10,6 +10,18 @@ class Animal {
   String gender;
   String imageURL;
 
+  static const allFields = [
+    'name',
+    'dateAdded',
+    'type',
+    'status',
+    'breed',
+    'disposition',
+    'age',
+    'gender',
+    'imageURL',
+  ];
+
   Animal(
       {this.name,
       this.dateAdded,
@@ -24,7 +36,7 @@ class Animal {
   Animal.nullAnimal()
       : name = '',
         dateAdded = DateTime.fromMicrosecondsSinceEpoch(0),
-        type = '',
+        type = 'nullType',
         status = '',
         breed = '',
         disposition = '',
@@ -44,4 +56,16 @@ class Animal {
     gender = json['gender'];
     imageURL = json['imageURL'];
   }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'dateAdded': dateAdded,
+        'type': type,
+        'status': status,
+        'breed': breed,
+        'disposition': disposition,
+        'age': age,
+        'gender': gender,
+        'imageURL': imageURL
+      };
 }
