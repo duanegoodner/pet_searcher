@@ -23,10 +23,13 @@ Widget standardInputBox({
         child: Padding(
           padding: EdgeInsets.only(left: 15, right: 15, top: 5),
           child: TextFormField(
+            //textAlign: TextAlign.start,
+            //textAlignVertical: TextAlignVertical.top,
             controller: controller,
             decoration: InputDecoration(
               border: InputBorder.none,
               labelText: labelText,
+              alignLabelWithHint: true,
             ),
             keyboardType: keyboardType,
             onSaved: onSaved,
@@ -54,6 +57,8 @@ Widget standardInputBoxWithoutFlex({
   bool obscureText = false,
   EdgeInsets addPadding = const EdgeInsets.all(10),
   TextInputType keyboardType,
+  int maxLines,
+  bool alignLabelWithHint = false,
 }) {
   return Padding(
       padding: addPadding,
@@ -67,10 +72,12 @@ Widget standardInputBoxWithoutFlex({
           child: TextFormField(
             controller: controller,
             decoration: InputDecoration(
+              alignLabelWithHint: alignLabelWithHint,
               border: InputBorder.none,
               labelText: labelText,
             ),
             keyboardType: keyboardType,
+            maxLines: maxLines,
             onSaved: onSaved,
             obscureText: obscureText,
             validator: (value) {

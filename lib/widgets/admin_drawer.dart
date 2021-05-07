@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pet_matcher/navigation/startup_screen_controller.dart';
+//import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/screens/news_screen.dart';

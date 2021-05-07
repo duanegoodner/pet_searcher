@@ -28,11 +28,11 @@ class AnimalInventoryScreen extends StatelessWidget {
 }
 
 Widget buildInventoryList(BuildContext context) {
-  Stream animalDataStream = locator<AnimalService>().animalDataStream();
+  //Stream animalDataStream = locator<AnimalService>().animalDataStream();
   Stream animalListStream = locator<AnimalService>().animalStream();
-  Stream dogListStream = locator<AnimalService>().dogListStream();
-  Stream filteredAnimalStream =
-      locator<AnimalService>().filteredAnimalStream(type: 'Dog');
+  //Stream dogListStream = locator<AnimalService>().dogListStream();
+  //Stream filteredAnimalStream =
+  //    locator<AnimalService>().filteredAnimalStream(type: 'Dog');
 
   return StreamBuilder(
     stream: animalListStream,
