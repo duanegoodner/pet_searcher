@@ -10,6 +10,8 @@ class AnimalService {
       FirebaseFirestore.instance.collection('schema');
   final CollectionReference _animalCollection =
       FirebaseFirestore.instance.collection('animals');
+  final Query _availableAnimalCollection =
+    FirebaseFirestore.instance.collection('animals').where('status', isEqualTo: 'Available');
 
   final List<String> args;
 
@@ -58,6 +60,12 @@ class AnimalService {
         .where((animal) =>
             queriedParams.entries.every((param) => param.value(animal) == true))
         .toList();
+  }
+
+  Stream<List<Animal>> availableAnimalStream() {
+    return _availableAnimalCollection.snapshots().map((snapshot) => snapshot.docs
+        .map((animalEntry) => Animal.fromJSON(animalEntry.data()))
+        .toList());
   }
 
   Stream<List<Animal>> filteredAnimalStream({
