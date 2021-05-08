@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/models/app_user.dart';
+import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
@@ -16,5 +17,12 @@ void setupLocator() {
 
   locator.registerSingleton(() => AppUser());
   locator.registerFactory(() => Animal());
+
+  locator.registerLazySingleton(() => AnimalFilter());
+
+  // locator.registerFactoryParam<AnimalFilter, String, String>(
+  //     (screenName, viewName) =>
+  //         AnimalFilter(screenName: screenName, viewName: viewName));
+
   locator.registerSingleton(() => StartUpScreenController());
 }

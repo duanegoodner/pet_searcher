@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
-import 'package:pet_matcher/models/inventory_filter.dart';
+import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/screens/animal_detail_screen.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
@@ -17,7 +17,7 @@ class AnimalInventoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => InventoryFilter(),
+      create: (context) => AnimalFilter(),
       child: Scaffold(
         appBar: inventoryAppBar(),
         drawer: AdminDrawer(),
@@ -56,7 +56,7 @@ class AnimalInventoryScreen extends StatelessWidget {
 }
 
 Widget animalList(BuildContext context) {
-  return Consumer<InventoryFilter>(
+  return Consumer<AnimalFilter>(
     builder: (context, filter, __) {
       List<Animal> animals = locator<AnimalService>().filterAnimalList(
         filter.searchCriteria,

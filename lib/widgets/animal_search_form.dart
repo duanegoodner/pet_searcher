@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal_category_constants.dart';
+import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/widgets/filter_dropdown_box.dart';
 
 class AnimalSearchForm extends StatefulWidget {
@@ -12,13 +14,12 @@ class AnimalSearchForm extends StatefulWidget {
 class _AnimalSearchFormState extends State<AnimalSearchForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final breedFieldKey = GlobalKey<FormFieldState>();
-  bool isChecked = false;
+
   String selectedType;
   String selectedBreed;
   String breedFieldLabel = 'Choose animal type to view breeds';
   Function breedOnChanged;
   String selectedGender;
-  String selectedDisposition;
   Map<String, bool> dispositionValues =
       Map.fromIterable(disposition, key: (e) => e, value: (e) => false);
   List<String> selectedDispositions = [];
@@ -42,38 +43,13 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Column(
-              //   children: [
               typeField(),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               breedField(),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               genderField(),
               SizedBox(height: 5),
-              //   ],
-              // ),
-              ListView(
-                shrinkWrap: true,
-                children: dispositionValues.keys.map(
-                  (key) {
-                    return CheckboxListTile(
-                      title: Text(key),
-                      value: dispositionValues[key],
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            dispositionValues[key] = value;
-                          },
-                        );
-                      },
-                    );
-                  },
-                ).toList(),
-              ),
+              dispositionField(),
             ],
           ),
         ),
@@ -84,12 +60,37 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           child: Text('Submit'),
           onPressed: () {
             if (_formKey.currentState.validate()) {
-              // Do something like updating SharedPreferences or User Settings etc.
+              if (selectedType != null) {
+                locator<AnimalFilter>().update({
+                  'type': (animal) => animal.type == selectedType ? true : false
+                });
+              }
               Navigator.of(context).pop();
             }
           },
         ),
       ],
+    );
+  }
+
+  Widget dispositionField() {
+    return ListView(
+      shrinkWrap: true,
+      children: dispositionValues.keys.map(
+        (key) {
+          return CheckboxListTile(
+            title: Text(key),
+            value: dispositionValues[key],
+            onChanged: (value) {
+              setState(
+                () {
+                  dispositionValues[key] = value;
+                },
+              );
+            },
+          );
+        },
+      ).toList(),
     );
   }
 
@@ -115,7 +116,6 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
       items: breedOptions(),
       value: selectedBreed,
       onChanged: breedOnChanged,
-      // disabledHint: 'Choose an animal type to view breeds'
     );
   }
 
@@ -137,15 +137,6 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
       labelText: 'Gender',
       items: gender,
       value: selectedGender,
-      onChanged: (value) {},
-    );
-  }
-
-  Widget dispositionField() {
-    return filterDropDownBox(
-      labelText: 'Disposition',
-      items: disposition,
-      value: selectedDisposition,
       onChanged: (value) {},
     );
   }

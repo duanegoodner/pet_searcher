@@ -50,8 +50,10 @@ class AnimalService {
     Map<String, Function> queriedParams = Map();
 
     Animal.allFields.forEach((property) {
-      if (searchCriteria[property] != null)
+      if (searchCriteria[property] != null) {
+        print(property);
         queriedParams[property] = searchCriteria[property];
+      }
     });
 
     return animals
