@@ -106,6 +106,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
         onSaved: (value) {},
         validatorCondition: (value) => value.isEmpty,
         controller: _passwordController,
+        maxLines: 1,
         obscureText: true);
   }
 

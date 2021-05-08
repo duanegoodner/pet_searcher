@@ -90,6 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onSaved: (value) {},
         validatorCondition: (value) => value.isEmpty,
         controller: _passwordController,
+        maxLines: 1,
         obscureText: true);
   }
 
