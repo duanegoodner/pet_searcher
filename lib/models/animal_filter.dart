@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pet_matcher/models/animal.dart';
 
 class AnimalFilter extends ChangeNotifier {
-  // final String screenName;
-  // final String viewName;
+  final String label;
 
-  AnimalFilter();
+  AnimalFilter({this.label});
 
   Map<String, bool Function(Animal)> _searchCriteria = Map.fromIterable(
     Animal.allFields,
