@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal_category_constants.dart';
 import 'package:pet_matcher/models/animal_filter.dart';
@@ -61,9 +62,9 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           onPressed: () {
             if (_formKey.currentState.validate()) {
               if (selectedType != null) {
-                locator<AnimalFilter>().update(
-                    // 'type': (animal) => animal.type == selectedType ? true : false
-                    );
+                Provider.of<AnimalFilter>(context, listen: false).update({
+                  'type': (animal) => animal.type == selectedType ? true : false
+                });
               }
               Navigator.of(context).pop();
             }

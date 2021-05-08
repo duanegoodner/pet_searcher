@@ -16,21 +16,15 @@ class AnimalInventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AnimalFilter(),
-      child: Scaffold(
-          appBar: inventoryAppBar(),
-          drawer: AdminDrawer(),
-          backgroundColor: Colors.blue[200],
-          body: Consumer<AnimalFilter>(
-            builder: (context, filter, __) => Text(filter.state),
-          )
-          // body: Column(
-          //   children: [
-          //     animalList(context),
-          //   ],
-          // ),
-          ),
+    return Scaffold(
+      appBar: inventoryAppBar(),
+      drawer: AdminDrawer(),
+      backgroundColor: Colors.blue[200],
+      body: Column(
+        children: [
+          animalList(context),
+        ],
+      ),
     );
   }
 
