@@ -18,7 +18,7 @@ void setupLocator() {
   locator.registerSingleton(() => AppUser());
   locator.registerFactory(() => Animal());
 
-  locator.registerLazySingleton(() => AnimalFilter());
+  locator.registerFactory(() => AnimalFilter());
 
   // locator.registerFactoryParam<AnimalFilter, String, String>(
   //     (screenName, viewName) =>

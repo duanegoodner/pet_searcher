@@ -51,7 +51,7 @@ class AnimalService {
 
     Animal.allFields.forEach((property) {
       if (searchCriteria[property] != null) {
-        print(property);
+        // print(property);
         queriedParams[property] = searchCriteria[property];
       }
     });

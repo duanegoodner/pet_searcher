@@ -61,9 +61,9 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           onPressed: () {
             if (_formKey.currentState.validate()) {
               if (selectedType != null) {
-                locator<AnimalFilter>().update({
-                  'type': (animal) => animal.type == selectedType ? true : false
-                });
+                locator<AnimalFilter>().update(
+                    // 'type': (animal) => animal.type == selectedType ? true : false
+                    );
               }
               Navigator.of(context).pop();
             }

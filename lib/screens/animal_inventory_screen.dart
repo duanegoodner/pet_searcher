@@ -19,15 +19,18 @@ class AnimalInventoryScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AnimalFilter(),
       child: Scaffold(
-        appBar: inventoryAppBar(),
-        drawer: AdminDrawer(),
-        backgroundColor: Colors.blue[200],
-        body: Column(
-          children: [
-            animalList(context),
-          ],
-        ),
-      ),
+          appBar: inventoryAppBar(),
+          drawer: AdminDrawer(),
+          backgroundColor: Colors.blue[200],
+          body: Consumer<AnimalFilter>(
+            builder: (context, filter, __) => Text(filter.state),
+          )
+          // body: Column(
+          //   children: [
+          //     animalList(context),
+          //   ],
+          // ),
+          ),
     );
   }
 
@@ -56,11 +59,12 @@ class AnimalInventoryScreen extends StatelessWidget {
 }
 
 Widget animalList(BuildContext context) {
+  List<Animal> allAnimals = Provider.of<List<Animal>>(context);
   return Consumer<AnimalFilter>(
     builder: (context, filter, __) {
       List<Animal> animals = locator<AnimalService>().filterAnimalList(
         filter.searchCriteria,
-        Provider.of<List<Animal>>(context),
+        allAnimals,
       );
       return Expanded(
         child: ListView.builder(
