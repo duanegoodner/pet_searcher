@@ -20,9 +20,8 @@ void setupLocator() {
 
   locator.registerFactory(() => AnimalFilter());
 
-  // locator.registerFactoryParam<AnimalFilter, String, String>(
-  //     (screenName, viewName) =>
-  //         AnimalFilter(screenName: screenName, viewName: viewName));
+  // locator.registerFactoryParam<AnimalFilter, String, void>(
+  //     (screenName, _) => AnimalFilter(screenName: screenName));
 
   locator.registerSingleton(() => StartUpScreenController());
 }

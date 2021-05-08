@@ -65,6 +65,10 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
                 Provider.of<AnimalFilter>(context, listen: false).update({
                   'type': (animal) => animal.type == selectedType ? true : false
                 });
+
+                // locator<AnimalFilter>(instanceName: 'Inventory').update({
+                //   'type': (animal) => animal.type == selectedType ? true : false
+                // });
               }
               Navigator.of(context).pop();
             }
