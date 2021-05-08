@@ -59,6 +59,7 @@ Widget standardInputBoxWithoutFlex({
   TextInputType keyboardType,
   int maxLines,
   bool alignLabelWithHint = false,
+  String initialValue,
 }) {
   return Padding(
       padding: addPadding,
@@ -71,6 +72,7 @@ Widget standardInputBoxWithoutFlex({
           padding: EdgeInsets.only(left: 15, right: 15, top: 5),
           child: TextFormField(
             controller: controller,
+            initialValue: initialValue,
             decoration: InputDecoration(
               alignLabelWithHint: alignLabelWithHint,
               border: InputBorder.none,

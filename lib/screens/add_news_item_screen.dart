@@ -24,6 +24,12 @@ class _AddNewsItemScreenState extends State<AddNewsItemScreen> {
   }
 
   Widget build(BuildContext context) {
+    NewsItem receivedNewsItem = ModalRoute.of(context).settings.arguments;
+    if (receivedNewsItem != null) {
+      newNewsPost.imageUrl = receivedNewsItem.imageUrl;
+      newNewsPost.docID = receivedNewsItem.docID;
+      fabLabel = 'Image Selected!';
+    }
     newNewsPost.date = DateTime.now();
     print('$newNewsPost.date');
     return Scaffold(
@@ -40,20 +46,18 @@ class _AddNewsItemScreenState extends State<AddNewsItemScreen> {
             key: formKey,
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              titleField(context),
-              bodyField(context),
+              titleField(context, receivedNewsItem),
+              bodyField(context, receivedNewsItem),
               Padding(
-                padding: EdgeInsets.only(left: 20), 
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start, 
-                  children: [
-                    addImageFAB(context),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: addFABLabelText(context, fabLabel),
-                    ),
-                  ]
-                ),
+                padding: EdgeInsets.only(left: 20),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  addImageFAB(context),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: addFABLabelText(context, fabLabel),
+                  ),
+                ]),
               ),
               postArticleButton(context),
             ]),
@@ -63,20 +67,30 @@ class _AddNewsItemScreenState extends State<AddNewsItemScreen> {
     );
   }
 
-  Widget titleField(BuildContext context) {
+  Widget titleField(BuildContext context, NewsItem receivedNewsItem) {
+    String initialValue;
+    if (receivedNewsItem != null) {
+      initialValue = receivedNewsItem.title;
+    }
     return standardInputBoxWithoutFlex(
         labelText: 'Title',
         validatorPrompt: 'Enter the title.',
+        initialValue: initialValue,
         validatorCondition: (value) => value.isEmpty,
         onSaved: (value) {
           newNewsPost.title = value;
         });
   }
 
-  Widget bodyField(BuildContext context) {
+  Widget bodyField(BuildContext context, NewsItem receivedNewsItem) {
+    String initialValue;
+    if (receivedNewsItem != null) {
+      initialValue = receivedNewsItem.body;
+    }
     return standardInputBoxWithoutFlex(
         labelText: 'Post',
         validatorPrompt: 'Enter the post text.',
+        initialValue: initialValue,
         alignLabelWithHint: true,
         keyboardType: TextInputType.multiline,
         maxLines: 17,
@@ -101,19 +115,28 @@ class _AddNewsItemScreenState extends State<AddNewsItemScreen> {
 
   void getImageUrl(String imageUrl) async {
     imageUrl = await retrieveImageUrl();
-    fabLabel = 'Got it!';
+    fabLabel = 'Image Selected!';
     newNewsPost.imageUrl = imageUrl;
     setState(() {});
   }
 
   Widget addFABLabelText(BuildContext context, String text) {
-    return Text('$text', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold));
+    return Text('$text',
+        style: TextStyle(
+            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold));
   }
 
   Widget postArticleButton(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: elevatedButtonStandard('Submit', createNewsItem));
+    //determine if a new post is being added or a previous post is being edited
+    if (newNewsPost.docID == null) {
+      return Padding(
+          padding: EdgeInsets.all(10),
+          child: elevatedButtonStandard('Submit', createNewsItem));
+    } else {
+      return Padding(
+          padding: EdgeInsets.all(10),
+          child: elevatedButtonStandard('Submit', editNewsItem));
+    }
   }
 
   Future<void> createNewsItem() async {
@@ -123,6 +146,29 @@ class _AddNewsItemScreenState extends State<AddNewsItemScreen> {
         formKey.currentState.save();
         //add news item to database
         FirebaseFirestore.instance.collection('newsPost').add({
+          'title': newNewsPost.title,
+          'date': DateTime.parse('${newNewsPost.date}'),
+          'body': newNewsPost.body,
+          'imageUrl': newNewsPost.imageUrl,
+        });
+        //navigate back to admin home screen
+        Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> editNewsItem() async {
+    if (formKey.currentState.validate()) {
+      try {
+        //save form
+        formKey.currentState.save();
+        //update news item in the database
+        FirebaseFirestore.instance
+            .collection('newsPost')
+            .doc('${newNewsPost.docID}')
+            .set({
           'title': newNewsPost.title,
           'date': DateTime.parse('${newNewsPost.date}'),
           'body': newNewsPost.body,
