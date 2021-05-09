@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal_category_constants.dart';
+import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/widgets/filter_dropdown_box.dart';
 
 class AnimalSearchForm extends StatefulWidget {
@@ -12,24 +15,33 @@ class AnimalSearchForm extends StatefulWidget {
 class _AnimalSearchFormState extends State<AnimalSearchForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final breedFieldKey = GlobalKey<FormFieldState>();
-  bool isChecked = false;
+
   String selectedType;
   String selectedBreed;
-  String breedFieldLabel = 'Choose animal type to view breeds';
-  Function breedOnChanged;
   String selectedGender;
-  String selectedDisposition;
   Map<String, bool> dispositionValues =
       Map.fromIterable(disposition, key: (e) => e, value: (e) => false);
-  List<String> selectedDispositions = [];
 
-  void getSelectedDispositions() {
-    dispositionValues.forEach((key, value) {
-      if (value) {
-        selectedDispositions.add(key);
-      }
-    });
-  }
+  Map<String, dynamic> searchTerms = {
+    'type': null,
+    'breed': null,
+    'gender': null,
+    // 'disposition':
+    // Map.fromIterable(disposition, key: (e) => e, value: (e) => false),
+  };
+
+  // List<String> selectedDispositions = [];
+
+  String breedFieldLabel = 'Choose animal type to view breeds';
+  Function breedOnChanged;
+
+  // void getSelectedDispositions() {
+  //   dispositionValues.forEach((key, value) {
+  //     if (value) {
+  //       selectedDispositions.add(key);
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -42,38 +54,13 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Column(
-              //   children: [
               typeField(),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               breedField(),
-              SizedBox(
-                height: 5,
-              ),
+              SizedBox(height: 5),
               genderField(),
               SizedBox(height: 5),
-              //   ],
-              // ),
-              ListView(
-                shrinkWrap: true,
-                children: dispositionValues.keys.map(
-                  (key) {
-                    return CheckboxListTile(
-                      title: Text(key),
-                      value: dispositionValues[key],
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            dispositionValues[key] = value;
-                          },
-                        );
-                      },
-                    );
-                  },
-                ).toList(),
-              ),
+              dispositionField(),
             ],
           ),
         ),
@@ -84,7 +71,24 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           child: Text('Submit'),
           onPressed: () {
             if (_formKey.currentState.validate()) {
-              // Do something like updating SharedPreferences or User Settings etc.
+              Provider.of<AnimalFilter>(context, listen: false)
+                  .update(searchTerms);
+
+              // if (searchTerms['breed'] != null) {
+              //   Provider.of<AnimalFilter>(context, listen: false).update({
+              //     'breed': (animal) =>
+              //         animal.type == searchTerms['breed'] ? true : false
+              //   });
+              // }
+
+              // if (searchTerms['gender'] != null) {
+              //   Provider.of<AnimalFilter>(context, listen: false).update(
+              //     {
+              //       'gender': (animal) =>
+              //           animal.type == searchTerms['gender'] ? true : false
+              //     },
+              //   );
+              // }
               Navigator.of(context).pop();
             }
           },
@@ -93,15 +97,38 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
     );
   }
 
+  Widget dispositionField() {
+    return ListView(
+      shrinkWrap: true,
+      children: dispositionValues.keys.map(
+        (key) {
+          return CheckboxListTile(
+            title: Text(key),
+            value: dispositionValues[key],
+            onChanged: (value) {
+              setState(
+                () {
+                  // dispositionValues[key] = value;
+                },
+              );
+            },
+          );
+        },
+      ).toList(),
+    );
+  }
+
   Widget typeField() {
     return filterDropDownBox(
       labelText: 'Animal type',
       items: animalType,
-      value: selectedType,
+      value: searchTerms['type'],
       onChanged: (value) {
-        selectedType = value;
+        searchTerms['type'] = value;
         breedFieldKey.currentState.reset();
-        breedOnChanged = (value) {};
+        breedOnChanged = (value) {
+          searchTerms['breed'] = value;
+        };
         breedFieldLabel = 'Breed';
         setState(() {});
       },
@@ -113,20 +140,19 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
       key: breedFieldKey,
       labelText: breedFieldLabel,
       items: breedOptions(),
-      value: selectedBreed,
+      value: searchTerms['breed'],
       onChanged: breedOnChanged,
-      // disabledHint: 'Choose an animal type to view breeds'
     );
   }
 
   List<String> breedOptions() {
-    if (selectedType == 'Dog') {
+    if (searchTerms['type'] == 'Dog') {
       return dogBreeds;
     }
-    if (selectedType == 'Cat') {
+    if (searchTerms['type'] == 'Cat') {
       return catBreeds;
     }
-    if (selectedType == 'Other') {
+    if (searchTerms['type'] == 'Other') {
       return otherAnimalTypes;
     }
     return [''];
@@ -136,17 +162,10 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
     return filterDropDownBox(
       labelText: 'Gender',
       items: gender,
-      value: selectedGender,
-      onChanged: (value) {},
-    );
-  }
-
-  Widget dispositionField() {
-    return filterDropDownBox(
-      labelText: 'Disposition',
-      items: disposition,
-      value: selectedDisposition,
-      onChanged: (value) {},
+      value: searchTerms['gender'],
+      onChanged: (value) {
+        searchTerms['gender'] = value;
+      },
     );
   }
 }

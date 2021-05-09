@@ -10,8 +10,9 @@ class AnimalService {
       FirebaseFirestore.instance.collection('schema');
   final CollectionReference _animalCollection =
       FirebaseFirestore.instance.collection('animals');
-  final Query _availableAnimalCollection =
-    FirebaseFirestore.instance.collection('animals').where('status', isEqualTo: 'Available');
+  final Query _availableAnimalCollection = FirebaseFirestore.instance
+      .collection('animals')
+      .where('status', isEqualTo: 'Available');
 
   final List<String> args;
 
@@ -48,24 +49,42 @@ class AnimalService {
   }
 
   List<Animal> filterAnimalList(
-      Map<String, Function> searchCriteria, List<Animal> animals) {
-    Map<String, Function> queriedParams = Map();
+      Map<String, dynamic> searchCriteria, List<Animal> animals) {
+    Map<String, dynamic> queriedParams = Map();
 
     Animal.allFields.forEach((property) {
-      if (searchCriteria[property] != null)
+      if (searchCriteria[property] != null) {
         queriedParams[property] = searchCriteria[property];
+      }
     });
 
     return animals
-        .where((animal) =>
-            queriedParams.entries.every((param) => param.value(animal) == true))
+        .map((animal) {
+          if (queriedParams.entries.every((entry) =>
+              meetsCriteria(animal.toJson()[entry.key], entry.value))) {
+            return animal;
+          }
+        })
+        .toList()
+        .whereType<Animal>()
         .toList();
   }
 
   Stream<List<Animal>> availableAnimalStream() {
-    return _availableAnimalCollection.snapshots().map((snapshot) => snapshot.docs
+    return _availableAnimalCollection.snapshots().map((snapshot) => snapshot
+        .docs
         .map((animalEntry) => Animal.fromJSON(animalEntry.data()))
         .toList());
+  }
+
+  bool meetsCriteria(dynamic animalValue, dynamic searchValue) {
+    if (animalValue.runtimeType == String) {
+      return animalValue == searchValue;
+    }
+    if (animalValue.runtimeType == List) {
+      return (animalValue.any((item) => searchValue.contains(item)));
+    }
+    return animalValue == searchValue;
   }
 
   Stream<List<Animal>> filteredAnimalStream({

@@ -53,6 +53,8 @@ dependencies:
   #share
   share: ^2.0.1
 
+  multi_select_flutter: ^4.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
