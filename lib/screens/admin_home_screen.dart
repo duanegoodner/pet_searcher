@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:share/share.dart';
+import 'package:pet_matcher/locator.dart';
+import 'package:pet_matcher/models/animal.dart';
+import 'package:pet_matcher/models/news_item.dart';
+import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/screens/add_news_item_screen.dart';
-//import 'package:flutter/services.dart';
-//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'dart:convert';
-
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
@@ -15,12 +18,6 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
-  //Map<String, dynamic> newsData;
-  final String heading = "Happy National Pet Day!";
-  final String body = "Show us your best pictures of your furry friends! "
-      "Don't currently have a fluffy friend to love? "
-      "Browse through our available pets and arrange "
-      "a date today!";
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +33,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: Column(
           children: [
             headingText('News Feed:'),
-            Center(
-              child: newsCard(),
-            ),
-            addNewsItemButton(),
+            buildListFromStream(context),
+            //addNewsItemButton(),
             headingText('Manage Inventory:'),
             inventoryCard(),
             headingText('Featured Animals:'),
-            featuredAnimals(),
+            buildFeaturedAnimalsCard(context),
           ],
         ),
       ),
@@ -63,7 +58,51 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
-  Widget newsCard() {
+  Widget buildListFromStream(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('newsPost')
+            .orderBy('date', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData &&
+              snapshot.data.docs != null &&
+              snapshot.data.docs.length > 0) {
+            return Padding(
+              padding: EdgeInsets.all(10),
+              child: SizedBox(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: 1,
+                  itemBuilder: (context, index) => _buildNewsItem(
+                      context, snapshot.data.docs[index]),
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            print(snapshot.error);
+            return Text('Error!');
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
+  }
+
+  Widget _buildNewsItem(
+      BuildContext context, DocumentSnapshot document) {
+    DateTime date = convertTimestampToDateTime(document['date']);
+
+    NewsItem post = NewsItem.fromMap({
+      'date': date,
+      'imageUrl': document['imageUrl'],
+      'title': document['title'],
+      'body': document['body'],
+    });
+
+    return newsCard(post);
+  }
+
+  Widget newsCard(NewsItem post) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       width: 275,
@@ -71,38 +110,79 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            Container(child: Image.network('${post.imageUrl}')),
             ListTile(
-              title: Text(
-                '$heading',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
+                title: addPadding(
+                  Text(
+                    '${post.title}',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 26,
+                    ),
+                  ),
                 ),
+                subtitle: addPadding(
+                  Text(
+                    '${post.body}',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                )),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      '${formatDate(post.date)}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  articleIconLayout(post)
+                ],
               ),
-              subtitle: Text(
-                '$body',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    //Do we want a popup window? New page?
-                  },
-                ),
-              ],
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget buildFeaturedAnimalsCard(BuildContext context) {
+    Stream animalListStream = locator<AnimalService>().availableAnimalStream();
+
+    return StreamBuilder(
+        stream: animalListStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasData &&
+              snapshot.data != null &&
+              snapshot.data.length > 0) {
+            return Padding(
+              padding: EdgeInsets.all(10),
+              child: SizedBox(
+                height: 320,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    Animal animal = snapshot.data[index];
+                    return featuredAnimalCard(animal);
+                  },
+                ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            print(snapshot.error);
+            return Text('Error!');
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
+  }
+
 
   Widget addNewsItemButton() {
     return elevatedButtonStandard('Add News Post', () {
@@ -143,22 +223,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
-  Widget featuredAnimals() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      height: 285,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          featuredAnimalCard(),
-          featuredAnimalCard(),
-          featuredAnimalCard(),
-        ],
-      ),
-    );
-  }
-
-  Widget featuredAnimalCard() {
+  Widget featuredAnimalCard(Animal animal) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       width: 160,
@@ -168,19 +233,26 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Card(
-                child: Wrap(children: <Widget>[
-              Image.asset('assets/images/puppy.jpg',
-                  height: 165, width: 275, fit: BoxFit.fitHeight),
-            ])),
+            Container(
+              child: Card(
+                  child: Wrap(children: <Widget>[
+                    Image.network(animal.imageURL,
+                        height: 165, width: 275, fit: BoxFit.fitHeight),
+                  ])),
+            ),
             Row(
-              children: <Widget>[animalCardText('Rufus', 16.0)],
+              children: <Widget>[animalCardText(animal.name, 16.0)],
             ),
             Row(
               children: <Widget>[
-                animalCardText('Adult male', 14.0),
+                animalCardText(animal.type, 14.0),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                animalCardText(animal.gender, 14.0),
                 Padding(
-                  padding: const EdgeInsets.only(left: 20),
+                  padding: const EdgeInsets.only(left: 40),
                   child: IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
@@ -209,6 +281,54 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       onPressed: () {
         //NOTE: Still need to allow for editing article
       },
+    );
+  }
+
+  Widget articleIconLayout(NewsItem post) {
+    return Row(
+      children: [
+        editNewsIcon(post),
+        shareIcon(post),
+      ],
+    );
+  }
+  
+  Widget shareIcon(NewsItem post) {
+    return IconButton(
+      icon: Icon(Icons.share_outlined),
+      onPressed: () {
+        Share.share(
+            'Check out this article from Pet Matcher!\n\n${post.body} ' +
+                '\n\n${post.date}.',
+            subject: '${post.title}');
+      },
+    );
+  }
+
+  Widget editNewsIcon(NewsItem post) {
+    return IconButton(
+      icon: Icon(Icons.edit_outlined),
+      onPressed: () {
+        Navigator.of(context)
+            .pushNamed(AddNewsItemScreen.routeName, arguments: post);
+      },
+    );
+  }
+
+  //function to convert Timestamp to DateTime
+  DateTime convertTimestampToDateTime(Timestamp time) {
+    return DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
+  }
+
+  //function to format date
+  String formatDate(DateTime date) {
+    return DateFormat.yMMMMd('en_US').format(date);
+  }
+
+  Widget addPadding(Widget item) {
+    return Padding(
+      padding: EdgeInsets.all(5),
+      child: item,
     );
   }
 }

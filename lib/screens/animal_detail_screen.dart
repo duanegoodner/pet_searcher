@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
+import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 
 class AnimalDetailScreen extends StatefulWidget {
@@ -20,13 +21,14 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String userType = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('Meet ${widget.animal.name}!'),
         backgroundColor: Colors.blue[300],
       ),
-      drawer: AdminDrawer(),
+      drawer: getDrawerType(userType),
       backgroundColor: Colors.blue[300],
       body: SingleChildScrollView(
         child: Center(
@@ -44,11 +46,21 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     );
   }
 
+  //function returning user or admin drawer
+  Widget getDrawerType(userType) {
+    if (userType == 'admin') {
+      return AdminDrawer();
+    } else {
+      return UserDrawer();
+    }
+  }
+
+
   Widget displayImage(Animal animal) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       width: 350,
-      height: 372,
+      height: 325,
       child: Card(
         color: Colors.white,
         elevation: 0,
@@ -57,9 +69,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             Card(
                 child: Wrap(children: <Widget>[
               Image.network(animal.imageURL,
-                  height: 300,
+                  height: 225,
                   width: 350,
-                  fit: BoxFit.fitWidth, loadingBuilder: (BuildContext context,
+                  fit: BoxFit.fill, loadingBuilder: (BuildContext context,
                       Widget child, ImageChunkEvent loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Center(child: CircularProgressIndicator());
@@ -79,13 +91,13 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               ),
             ),
           ]),
-          tempermentRow(animal),
+          temperamentRow(animal),
         ]),
       ),
     );
   }
 
-  Widget tempermentRow(Animal animal) {
+  Widget temperamentRow(Animal animal) {
     return Container(
       child: ListTile(
         leading: setIcon(animal),
