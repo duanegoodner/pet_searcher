@@ -22,6 +22,16 @@ class Animal {
     'imageURL',
   ];
 
+  static const sortOptions = [
+    {'name': 'Name'},
+    {'dateAdded': 'Date Added'},
+    {'type': 'Animal Type'},
+    {'status': 'Status'},
+    {'breed': 'Breed'},
+    {'age': 'Age Category'},
+    {'gender': 'Gender'},
+  ];
+
   Animal(
       {this.name,
       this.dateAdded,

@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget passwordField(BuildContext context) {
     return standardInputBoxWithoutFlex(
         labelText: 'Password',
-        validatorPrompt: 'Please enter password',
+        validatorPrompt: 'Enter password',
         onSaved: (value) {},
         validatorCondition: (value) => value.isEmpty,
         controller: _passwordController,
