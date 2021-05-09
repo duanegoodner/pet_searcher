@@ -30,8 +30,8 @@ class PetMatcherApp extends StatelessWidget {
         ),
         // home: startupScreenSelector(context),
         routes: RouteNames.routes,
-        //initialRoute: StartUpScreenController.routeName,
-        initialRoute: UserHomeScreen.routeName,
+        initialRoute: StartUpScreenController.routeName,
+        //initialRoute: UserHomeScreen.routeName,
       ),
     );
   }

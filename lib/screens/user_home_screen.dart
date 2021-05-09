@@ -6,6 +6,8 @@ import 'package:pet_matcher/locator.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/models/animal.dart';
+import 'package:pet_matcher/screens/animal_detail_screen.dart';
+import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:pet_matcher/models/news_item.dart';
 
@@ -63,7 +65,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget animalSearch() {
     return GestureDetector(
       onTap: () {
-        //Go to search screen
+        Navigator.of(context)
+            .pushReplacementNamed(AnimalInventoryScreen.routeName);
         print('Going to search!');
       },
       child: Container(
@@ -208,7 +211,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   itemCount: 5,
                     itemBuilder: (context, index) {
                       Animal animal = snapshot.data[index];
-                      return featuredAnimalCard(animal);
+                      return featuredAnimalCard(context, animal);
                     },
                 ),
               ),
@@ -247,35 +250,43 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 
-  Widget featuredAnimalCard(Animal animal) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      width: 160,
-      child: Card(
-        color: Colors.white,
-        elevation: 0,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Card(
-                child: Wrap(children: <Widget>[
-              Image.network(animal.imageURL,
-                  height: 165, width: 275, fit: BoxFit.fitHeight),
-            ])),
-            Row(
-              children: <Widget>[animalCardText(animal.name, 16.0)],
-            ),
-            Row(
-              children: <Widget>[
-                animalCardText(animal.type, 14.0),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                animalCardText(animal.gender, 14.0),
-              ],
-            ),
-          ],
+  Widget featuredAnimalCard(BuildContext context, Animal animal) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AnimalDetailScreen(animal: animal)),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10.0),
+        width: 160,
+        child: Card(
+          color: Colors.white,
+          elevation: 0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Card(
+                  child: Wrap(children: <Widget>[
+                Image.network(animal.imageURL,
+                    height: 165, width: 275, fit: BoxFit.fitHeight),
+              ])),
+              Row(
+                children: <Widget>[animalCardText(animal.name, 16.0)],
+              ),
+              Row(
+                children: <Widget>[
+                  animalCardText(animal.type, 14.0),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  animalCardText(animal.gender, 14.0),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
