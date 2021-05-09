@@ -202,4 +202,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       child: Text('$animalText', style: TextStyle(fontSize: size)),
     );
   }
+
+  Widget editIcon() {
+    return  IconButton(
+      icon: Icon(Icons.edit_outlined),
+      onPressed: () {
+        //NOTE: Still need to allow for editing article
+      },
+    );
+  }
 }

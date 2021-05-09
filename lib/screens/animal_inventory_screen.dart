@@ -3,10 +3,12 @@ import 'package:flutter/rendering.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
+import 'package:pet_matcher/models/inventory_filter.dart';
+import 'package:pet_matcher/screens/animal_detail_screen.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
-import 'package:pet_matcher/widgets/animal_filter_form.dart';
-import 'package:pet_matcher/screens/animal_detail_screen.dart';
+import 'package:pet_matcher/widgets/animal_search_popup.dart';
+import 'package:provider/provider.dart';
 
 class AnimalInventoryScreen extends StatelessWidget {
   static const routeName = 'animalInventoryScreen';
@@ -14,58 +16,63 @@ class AnimalInventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Animal Inventory'),
-        backgroundColor: Colors.blue[300],
+    return ChangeNotifierProvider(
+      create: (context) => InventoryFilter(),
+      child: Scaffold(
+        appBar: inventoryAppBar(),
+        drawer: AdminDrawer(),
+        backgroundColor: Colors.blue[200],
+        body: Column(
+          children: [
+            animalList(context),
+          ],
+        ),
       ),
-      drawer: AdminDrawer(),
+    );
+  }
+
+  Widget inventoryAppBar() {
+    return AppBar(
+      centerTitle: false,
+      title: Text(
+        'Animal Inventory',
+        textAlign: TextAlign.start,
+      ),
       backgroundColor: Colors.blue[300],
-      body: buildInventoryList(context),
+      actions: [
+        AnimalSearchButton(),
+        IconButton(
+          icon: Icon(Icons.sort),
+          tooltip: 'Sort',
+          onPressed: () {},
+        ),
+        IconButton(
+            icon: Icon(Icons.edit),
+            tooltip: 'Add or remove animals',
+            onPressed: () {})
+      ],
     );
   }
 }
 
-Widget buildInventoryList(BuildContext context) {
-  //Stream animalDataStream = locator<AnimalService>().animalDataStream();
-  Stream animalListStream = locator<AnimalService>().animalStream();
-  //Stream dogListStream = locator<AnimalService>().dogListStream();
-  //Stream filteredAnimalStream =
-  //    locator<AnimalService>().filteredAnimalStream(type: 'Dog');
-
-  return StreamBuilder(
-    stream: animalListStream,
-    builder: (context, snapshot) {
-      if (snapshot.hasData && snapshot.data.length != 0) {
-        return animalList(snapshot, context);
-      } else {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-    },
-  );
-}
-
-Widget animalList(AsyncSnapshot<dynamic> animals, BuildContext context) {
-  return Column(
-    children: [
-      Container(
-        color: Colors.white70,
-        child: AnimalFilterForm(),
-      ),
-      Expanded(
+Widget animalList(BuildContext context) {
+  return Consumer<InventoryFilter>(
+    builder: (context, filter, __) {
+      List<Animal> animals = locator<AnimalService>().filterAnimalList(
+        filter.searchCriteria,
+        Provider.of<List<Animal>>(context),
+      );
+      return Expanded(
         child: ListView.builder(
           shrinkWrap: true,
-          itemCount: animals.data.length,
+          itemCount: animals.length,
           itemBuilder: (context, index) {
-            Animal animal = animals.data[index];
+            Animal animal = animals[index];
             return inventoryListTile(context, animal);
           },
         ),
-      ),
-    ],
+      );
+    },
   );
 }
 

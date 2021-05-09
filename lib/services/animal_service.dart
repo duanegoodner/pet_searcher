@@ -10,6 +10,8 @@ class AnimalService {
       FirebaseFirestore.instance.collection('schema');
   final CollectionReference _animalCollection =
       FirebaseFirestore.instance.collection('animals');
+  final Query _availableAnimalCollection =
+    FirebaseFirestore.instance.collection('animals').where('status', isEqualTo: 'Available');
 
   final List<String> args;
 
@@ -29,7 +31,39 @@ class AnimalService {
   }
 
   Stream<List<Animal>> animalStream() {
-    return _animalCollection.snapshots().map((snapshot) => snapshot.docs
+    return _animalCollection.snapshots().map((snapshot) {
+      if (snapshot.docs.length != 0) {
+        return snapshot.docs
+            .map(
+              (animalEntry) => Animal.fromJSON(
+                animalEntry.data(),
+              ),
+            )
+            .toList();
+      } else {
+        // TO DO: change logic for no animals in database
+        return [null];
+      }
+    });
+  }
+
+  List<Animal> filterAnimalList(
+      Map<String, Function> searchCriteria, List<Animal> animals) {
+    Map<String, Function> queriedParams = Map();
+
+    Animal.allFields.forEach((property) {
+      if (searchCriteria[property] != null)
+        queriedParams[property] = searchCriteria[property];
+    });
+
+    return animals
+        .where((animal) =>
+            queriedParams.entries.every((param) => param.value(animal) == true))
+        .toList();
+  }
+
+  Stream<List<Animal>> availableAnimalStream() {
+    return _availableAnimalCollection.snapshots().map((snapshot) => snapshot.docs
         .map((animalEntry) => Animal.fromJSON(animalEntry.data()))
         .toList());
   }
@@ -74,11 +108,6 @@ class AnimalService {
         .toList()
         .whereType<Animal>()
         .toList());
-  }
-
-  Future<QuerySnapshot> allAnimalSnapshot() async {
-    QuerySnapshot _allAnimalData = await _animalCollection.get();
-    return _allAnimalData;
   }
 
   Stream animalDataStream() {

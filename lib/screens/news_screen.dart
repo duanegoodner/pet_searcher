@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pet_matcher/screens/add_news_item_screen.dart';
 import 'package:share/share.dart';
 import 'package:pet_matcher/models/news_item.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
@@ -69,8 +70,11 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget _buildNewsItem(
       BuildContext context, DocumentSnapshot document, String userType) {
     DateTime date = convertTimestampToDateTime(document['date']);
+    String documentID = document.id;
+    //print('The document ID is: $documentID');
 
     NewsItem post = NewsItem.fromMap({
+      'docID': documentID,
       'date': date,
       'imageUrl': document['imageUrl'],
       'title': document['title'],
@@ -135,8 +139,8 @@ class _NewsScreenState extends State<NewsScreen> {
         children: [
           favoriteIcon(),
           shareIcon(post),
-          editIcon(),
-        ], 
+          editIcon(post),
+        ],
       );
     } else {
       return Row(
@@ -170,11 +174,12 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 
-  Widget editIcon() {
-    return  IconButton(
+  Widget editIcon(NewsItem post) {
+    return IconButton(
       icon: Icon(Icons.edit_outlined),
       onPressed: () {
-        //NOTE: Still need to allow for editing article
+        Navigator.of(context)
+            .pushNamed(AddNewsItemScreen.routeName, arguments: post);
       },
     );
   }
