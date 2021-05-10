@@ -22,6 +22,8 @@ class PetMatcherApp extends StatelessWidget {
           create: (context) => locator<AnimalService>().animalStream(),
           initialData: [Animal.nullAnimal()],
         ),
+        // ChangeNotifierProvider<AnimalFilter>(
+        //     create: (context) => locator<AnimalFilter>())
       ],
       child: MaterialApp(
         title: 'Pet Matcher',
@@ -30,8 +32,8 @@ class PetMatcherApp extends StatelessWidget {
         ),
         // home: startupScreenSelector(context),
         routes: RouteNames.routes,
-        //initialRoute: StartUpScreenController.routeName,
-        initialRoute: UserHomeScreen.routeName,
+        initialRoute: StartUpScreenController.routeName,
+        //initialRoute: UserHomeScreen.routeName,
       ),
     );
   }

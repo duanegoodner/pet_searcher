@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
-import 'package:pet_matcher/models/inventory_filter.dart';
+import 'package:pet_matcher/models/animal_category_constants.dart';
+import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/screens/animal_detail_screen.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
-import 'package:pet_matcher/widgets/animal_search_popup.dart';
+import 'package:pet_matcher/widgets/animal_filter_button.dart';
+import 'package:pet_matcher/widgets/animal_search_button.dart';
 import 'package:provider/provider.dart';
 
 class AnimalInventoryScreen extends StatelessWidget {
@@ -17,9 +20,9 @@ class AnimalInventoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => InventoryFilter(),
+      create: (context) => AnimalFilter(),
       child: Scaffold(
-        appBar: inventoryAppBar(),
+        appBar: inventoryAppBar(context),
         drawer: AdminDrawer(),
         backgroundColor: Colors.blue[200],
         body: Column(
@@ -31,7 +34,7 @@ class AnimalInventoryScreen extends StatelessWidget {
     );
   }
 
-  Widget inventoryAppBar() {
+  Widget inventoryAppBar(BuildContext context) {
     return AppBar(
       centerTitle: false,
       title: Text(
@@ -41,11 +44,7 @@ class AnimalInventoryScreen extends StatelessWidget {
       backgroundColor: Colors.blue[300],
       actions: [
         AnimalSearchButton(),
-        IconButton(
-          icon: Icon(Icons.sort),
-          tooltip: 'Sort',
-          onPressed: () {},
-        ),
+        AnimalFilterButton(),
         IconButton(
             icon: Icon(Icons.edit),
             tooltip: 'Add or remove animals',
@@ -56,7 +55,8 @@ class AnimalInventoryScreen extends StatelessWidget {
 }
 
 Widget animalList(BuildContext context) {
-  return Consumer<InventoryFilter>(
+  // List<Animal> allAnimals = Provider.of<List<Animal>>(context);
+  return Consumer<AnimalFilter>(
     builder: (context, filter, __) {
       List<Animal> animals = locator<AnimalService>().filterAnimalList(
         filter.searchCriteria,
