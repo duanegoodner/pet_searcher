@@ -19,6 +19,8 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final formKey = GlobalKey<FormState>();
   final newAnimalData = AnimalDTO();
+  final Map<String, bool> dispositionValues =
+      Map.fromIterable(disposition, key: (e) => e, value: (e) => false);
   String imageUrl;
 
   @override
@@ -59,7 +61,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
               animalAgeField(context, age),
               animalGenderDropdownField(context, gender),
               animalStatusField(context, adoptionStatus),
-              animalDispositionField(context, disposition),
+              dispositionField(),
+              // animalDispositionField(context, disposition),
               addAnimalButton(context),
             ]),
           ),
@@ -163,6 +166,37 @@ class _AddPetScreenState extends State<AddPetScreen> {
     );
   }
 
+  Widget dispositionField() {
+    return ListView(
+      shrinkWrap: true,
+      children: dispositionValues.keys.map(
+        (key) {
+          return CheckboxListTile(
+            title: Text(key),
+            value: dispositionValues[key],
+            onChanged: (value) {
+              setState(
+                () {
+                  dispositionValues[key] = value;
+                },
+              );
+            },
+          );
+        },
+      ).toList(),
+    );
+  }
+
+  void collectDispositions() {
+    dispositionValues.forEach(
+      (key, value) {
+        if (value) {
+          newAnimalData.disposition.add(key.toString());
+        }
+      },
+    );
+  }
+
   Widget addAnimalButton(BuildContext context) {
     return addPadding(elevatedButtonStandard('Add animal', createAnimal));
   }
@@ -172,6 +206,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
       try {
         //save form
         formKey.currentState.save();
+        collectDispositions();
         //add animal to database
         FirebaseFirestore.instance.collection('animals').add({
           'name': newAnimalData.name,
