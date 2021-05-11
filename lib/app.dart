@@ -1,9 +1,9 @@
 import 'package:pet_matcher/navigation/routes.dart';
 import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_matcher/screens/admin_home_screen.dart';
-import 'package:pet_matcher/screens/user_home_screen.dart';
-//import 'package:pet_matcher/screens/add_news_item_screen.dart';
+// import 'package:pet_matcher/screens/admin_home_screen.dart';
+// import 'package:pet_matcher/screens/user_home_screen.dart';
+// import 'package:pet_matcher/screens/add_news_item_screen.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +22,6 @@ class PetMatcherApp extends StatelessWidget {
           create: (context) => locator<AnimalService>().animalStream(),
           initialData: [Animal.nullAnimal()],
         ),
-        // ChangeNotifierProvider<AnimalFilter>(
-        //     create: (context) => locator<AnimalFilter>())
       ],
       child: MaterialApp(
         title: 'Pet Matcher',

@@ -53,18 +53,19 @@ class _AddPetScreenState extends State<AddPetScreen> {
         child: SingleChildScrollView(
           child: Form(
             key: formKey,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              getChosenAnimalImage(),
-              animalNameField(context),
-              chooseAnimalBreedField(context, receivedAnimalType),
-              animalAgeField(context, age),
-              animalGenderDropdownField(context, gender),
-              animalStatusField(context, adoptionStatus),
-              dispositionField(),
-              // animalDispositionField(context, disposition),
-              addAnimalButton(context),
-            ]),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                getChosenAnimalImage(),
+                animalNameField(context),
+                chooseAnimalBreedField(context, receivedAnimalType),
+                animalAgeField(context, age),
+                animalGenderDropdownField(context, gender),
+                animalStatusField(context, adoptionStatus),
+                animalDispositionField(),
+                addAnimalButton(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -153,20 +154,20 @@ class _AddPetScreenState extends State<AddPetScreen> {
     );
   }
 
-  //NOTE: need to change to a dropdown with checkboxes
-  Widget animalDispositionField(context, categories) {
-    return standardDropdownBox(
-      labelText: 'Disposition',
-      validatorPrompt: 'Select all that apply.',
-      validatorCondition: (value) => value.isEmpty,
-      onSaved: (value) {
-        newAnimalData.disposition = value;
-      },
-      items: categories,
-    );
-  }
+  //NOTE: This is the single-option dropdown version originally used
+  // Widget animalDispositionField(context, categories) {
+  //   return standardDropdownBox(
+  //     labelText: 'Disposition',
+  //     validatorPrompt: 'Select all that apply.',
+  //     validatorCondition: (value) => value.isEmpty,
+  //     onSaved: (value) {
+  //       newAnimalData.disposition = value;
+  //     },
+  //     items: categories,
+  //   );
+  // }
 
-  Widget dispositionField() {
+  Widget animalDispositionField() {
     return ListView(
       shrinkWrap: true,
       children: dispositionValues.keys.map(

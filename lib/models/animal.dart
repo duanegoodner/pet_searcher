@@ -4,8 +4,7 @@ class Animal {
   String type;
   String status;
   String breed;
-  List<dynamic> disposition;
-  //List<String> disposition;
+  List<dynamic> disposition = [];
   String age;
   String gender;
   String imageURL;

@@ -24,13 +24,6 @@ class AnimalService {
     await _schema.doc('animals').set(_attributeJson);
   }
 
-  Future<List<Animal>> getAllAnimals() async {
-    QuerySnapshot _allAnimalData = await _animalCollection.get();
-    List<QueryDocumentSnapshot> dataList = _allAnimalData.docs;
-
-    return dataList.map((entry) => Animal.fromJSON(entry.data())).toList();
-  }
-
   Stream<List<Animal>> animalStream() {
     return _animalCollection.snapshots().map((snapshot) {
       if (snapshot.docs.length != 0) {
@@ -46,6 +39,13 @@ class AnimalService {
         return [null];
       }
     });
+  }
+
+  Stream<List<Animal>> availableAnimalStream() {
+    return _availableAnimalCollection.snapshots().map((snapshot) => snapshot
+        .docs
+        .map((animalEntry) => Animal.fromJSON(animalEntry.data()))
+        .toList());
   }
 
   List<Animal> filterAnimalList(
@@ -70,18 +70,14 @@ class AnimalService {
         .toList();
   }
 
-  Stream<List<Animal>> availableAnimalStream() {
-    return _availableAnimalCollection.snapshots().map((snapshot) => snapshot
-        .docs
-        .map((animalEntry) => Animal.fromJSON(animalEntry.data()))
-        .toList());
-  }
-
   bool meetsCriteria(dynamic animalValue, dynamic searchValue) {
-    if (animalValue.runtimeType == String) {
+    if (animalValue is String) {
       return animalValue == searchValue;
     }
-    if (animalValue.runtimeType == List) {
+    if (animalValue is List) {
+      if (searchValue.length == 0) {
+        return true;
+      }
       return (animalValue.any((item) => searchValue.contains(item)));
     }
     return animalValue == searchValue;

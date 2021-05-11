@@ -55,7 +55,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     }
   }
 
-
   Widget displayImage(Animal animal) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
@@ -99,18 +98,22 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
   Widget temperamentRow(Animal animal) {
     return Container(
-      child: ListTile(
-        leading: setIcon(animal),
-        title: Align(
-          alignment: Alignment(-1.5, 0),
-          child: Text('${animal.disposition}',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              )),
-        ),
-      ),
-    );
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: animal.disposition.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: setIcon(animal.disposition[index]),
+                title: Align(
+                  alignment: Alignment(-1.5, 0),
+                  child: Text('${animal.disposition[index]}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                      )),
+                ),
+              );
+            }));
   }
 
   Widget datingBlerb(Animal animal) {
@@ -129,16 +132,23 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     );
   }
 
-  Widget setIcon(Animal animal) {
-    if (animal.disposition == 'Good with children') {
+  Widget setIcon(String disposition) {
+    List<String> happyDispositions = [
+      'Good with children',
+      'Good with other animals',
+    ];
+
+    List<String> warningDispositions = [
+      'Animal must be leashed at all times',
+    ];
+
+    if (happyDispositions.contains(disposition)) {
       return Icon(Icons.sentiment_very_satisfied,
           color: Colors.green, size: 18);
-    } else if (animal.disposition == 'Good with other animals') {
-      return Icon(Icons.sentiment_very_satisfied,
-          color: Colors.green, size: 18);
-    } else {
+    } else if (warningDispositions.contains(disposition)) {
       return Icon(Icons.warning, color: Colors.yellow, size: 18);
-    }
+    } else
+      return Icon(Icons.sentiment_neutral, color: Colors.white, size: 18);
   }
 
   Widget detailsBox(Animal animal) {
