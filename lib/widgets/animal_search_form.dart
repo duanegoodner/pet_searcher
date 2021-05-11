@@ -16,9 +16,6 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final breedFieldKey = GlobalKey<FormFieldState>();
 
-  String selectedType;
-  String selectedBreed;
-  String selectedGender;
   Map<String, bool> dispositionValues =
       Map.fromIterable(disposition, key: (e) => e, value: (e) => false);
 
@@ -26,22 +23,11 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
     'type': null,
     'breed': null,
     'gender': null,
-    // 'disposition':
-    // Map.fromIterable(disposition, key: (e) => e, value: (e) => false),
+    'disposition': [],
   };
-
-  // List<String> selectedDispositions = [];
 
   String breedFieldLabel = 'Choose animal type to view breeds';
   Function breedOnChanged;
-
-  // void getSelectedDispositions() {
-  //   dispositionValues.forEach((key, value) {
-  //     if (value) {
-  //       selectedDispositions.add(key);
-  //     }
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -71,24 +57,9 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           child: Text('Submit'),
           onPressed: () {
             if (_formKey.currentState.validate()) {
+              collectDispositions();
               Provider.of<AnimalFilter>(context, listen: false)
                   .update(searchTerms);
-
-              // if (searchTerms['breed'] != null) {
-              //   Provider.of<AnimalFilter>(context, listen: false).update({
-              //     'breed': (animal) =>
-              //         animal.type == searchTerms['breed'] ? true : false
-              //   });
-              // }
-
-              // if (searchTerms['gender'] != null) {
-              //   Provider.of<AnimalFilter>(context, listen: false).update(
-              //     {
-              //       'gender': (animal) =>
-              //           animal.type == searchTerms['gender'] ? true : false
-              //     },
-              //   );
-              // }
               Navigator.of(context).pop();
             }
           },
@@ -108,13 +79,23 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
             onChanged: (value) {
               setState(
                 () {
-                  // dispositionValues[key] = value;
+                  dispositionValues[key] = value;
                 },
               );
             },
           );
         },
       ).toList(),
+    );
+  }
+
+  void collectDispositions() {
+    dispositionValues.forEach(
+      (key, value) {
+        if (value) {
+          searchTerms[disposition].add(key);
+        }
+      },
     );
   }
 

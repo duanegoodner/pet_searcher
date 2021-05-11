@@ -4,7 +4,7 @@ class Animal {
   String type;
   String status;
   String breed;
-  String disposition;
+  List<dynamic> disposition;
   //List<String> disposition;
   String age;
   String gender;
@@ -49,7 +49,7 @@ class Animal {
         type = 'nullType',
         status = '',
         breed = '',
-        disposition = '',
+        disposition = [''],
         age = '',
         gender = '',
         imageURL = '';
