@@ -19,6 +19,8 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final formKey = GlobalKey<FormState>();
   final newAnimalData = AnimalDTO();
+  final Map<String, bool> dispositionValues =
+      Map.fromIterable(disposition, key: (e) => e, value: (e) => false);
   String imageUrl;
 
   @override
@@ -51,17 +53,19 @@ class _AddPetScreenState extends State<AddPetScreen> {
         child: SingleChildScrollView(
           child: Form(
             key: formKey,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              getChosenAnimalImage(),
-              animalNameField(context),
-              chooseAnimalBreedField(context, receivedAnimalType),
-              animalAgeField(context, age),
-              animalGenderDropdownField(context, gender),
-              animalStatusField(context, adoptionStatus),
-              animalDispositionField(context, disposition),
-              addAnimalButton(context),
-            ]),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                getChosenAnimalImage(),
+                animalNameField(context),
+                chooseAnimalBreedField(context, receivedAnimalType),
+                animalAgeField(context, age),
+                animalGenderDropdownField(context, gender),
+                animalStatusField(context, adoptionStatus),
+                animalDispositionField(),
+                addAnimalButton(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -150,16 +154,47 @@ class _AddPetScreenState extends State<AddPetScreen> {
     );
   }
 
-  //NOTE: need to change to a dropdown with checkboxes
-  Widget animalDispositionField(context, categories) {
-    return standardDropdownBox(
-      labelText: 'Disposition',
-      validatorPrompt: 'Select all that apply.',
-      validatorCondition: (value) => value.isEmpty,
-      onSaved: (value) {
-        newAnimalData.disposition = value;
+  //NOTE: This is the single-option dropdown version originally used
+  // Widget animalDispositionField(context, categories) {
+  //   return standardDropdownBox(
+  //     labelText: 'Disposition',
+  //     validatorPrompt: 'Select all that apply.',
+  //     validatorCondition: (value) => value.isEmpty,
+  //     onSaved: (value) {
+  //       newAnimalData.disposition = value;
+  //     },
+  //     items: categories,
+  //   );
+  // }
+
+  Widget animalDispositionField() {
+    return ListView(
+      shrinkWrap: true,
+      children: dispositionValues.keys.map(
+        (key) {
+          return CheckboxListTile(
+            title: Text(key),
+            value: dispositionValues[key],
+            onChanged: (value) {
+              setState(
+                () {
+                  dispositionValues[key] = value;
+                },
+              );
+            },
+          );
+        },
+      ).toList(),
+    );
+  }
+
+  void collectDispositions() {
+    dispositionValues.forEach(
+      (key, value) {
+        if (value) {
+          newAnimalData.disposition.add(key.toString());
+        }
       },
-      items: categories,
     );
   }
 
@@ -172,6 +207,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
       try {
         //save form
         formKey.currentState.save();
+        collectDispositions();
         //add animal to database
         FirebaseFirestore.instance.collection('animals').add({
           'name': newAnimalData.name,

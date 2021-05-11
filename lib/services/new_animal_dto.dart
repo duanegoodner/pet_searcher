@@ -4,8 +4,7 @@ class AnimalDTO {
   String type;
   String status;
   String breed;
-  //List<String> disposition;
-  String disposition;
+  List<String> disposition = [];
   String age;
   String gender;
   String imageURL;
