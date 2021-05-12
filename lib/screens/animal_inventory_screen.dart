@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 //import 'package:cached_network_image/cached_network_image.dart';
@@ -109,6 +110,7 @@ Widget animalList(BuildContext context, String userType) {
 }
 
 Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
+  print('The animal id is ${animal.animalID}');
   return GestureDetector(
     onTap: () {
       Navigator.push(
@@ -157,18 +159,18 @@ Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
                           'Breed: ${animal.breed}',
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 20,
+                            fontSize: 18,
                           ),
                         ),
                         Text(
                           'Age: ${animal.age}',
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 20,
+                            fontSize: 18,
                           ),
                         ),
                         SizedBox(height: 10),
-                        animalInventoryLayout(userType, animal),
+                        animalInventoryLayout(userType, animal, context),
                       ],
                     ),
                   ),
@@ -182,13 +184,13 @@ Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
   );
 }
 
-Widget animalInventoryLayout(String userType, Animal animal) {
+Widget animalInventoryLayout(String userType, Animal animal, BuildContext context) {
   if (userType == 'admin') {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         editIcon(animal),
-        deleteIcon(animal),
+        deleteIcon(animal, context),
       ],
     );
   } else {
@@ -214,9 +216,57 @@ Widget editIcon(Animal animal) {
       icon: Icon(Icons.edit), tooltip: 'Edit animal', onPressed: () {});
 }
 
-Widget deleteIcon(Animal animal) {
+Widget deleteIcon(Animal animal, BuildContext context) {
   return IconButton(
-      icon: Icon(Icons.delete), tooltip: 'Remove animal', onPressed: () {});
+      icon: Icon(Icons.delete),
+      tooltip: 'Remove animal',
+      onPressed: () {
+        _showMyDialog(animal, context);
+
+        //FirebaseFirestore.instance
+        //    .collection('animals')
+        //    .doc(animal.animalID)
+        //    .delete();
+      });
+}
+
+//Reference: https://api.flutter.dev/flutter/material/AlertDialog-class.html
+Future<void> _showMyDialog(Animal animal, BuildContext context) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Delete this animal?'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: [
+              Text(
+                'Would you like to permanently remove this animal from the animal inventory?'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () {
+              FirebaseFirestore.instance
+                .collection('animals')
+                .doc(animal.animalID)
+                .delete();
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 Widget noAnimalsFoundTile() {
