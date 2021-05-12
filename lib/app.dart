@@ -20,7 +20,7 @@ class PetMatcherApp extends StatelessWidget {
         ),
         StreamProvider(
           create: (context) => locator<AnimalService>().animalStream(),
-          initialData: [Animal.nullAnimal()],
+          // initialData: [Animal.nullAnimal()],
         ),
       ],
       child: MaterialApp(
