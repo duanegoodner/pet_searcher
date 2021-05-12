@@ -30,7 +30,8 @@ class AnimalService {
         return snapshot.docs
             .map(
               (animalEntry) => Animal.fromJSON(
-                animalEntry.data(), animalEntry.id,
+                animalEntry.data(),
+                animalEntry.id,
               ),
             )
             .toList();
@@ -44,7 +45,8 @@ class AnimalService {
   Stream<List<Animal>> availableAnimalStream() {
     return _availableAnimalCollection.snapshots().map((snapshot) => snapshot
         .docs
-        .map((animalEntry) => Animal.fromJSON(animalEntry.data(), animalEntry.id))
+        .map((animalEntry) =>
+            Animal.fromJSON(animalEntry.data(), animalEntry.id))
         .toList());
   }
 
@@ -59,15 +61,15 @@ class AnimalService {
     });
 
     return animals
-        .map((animal) {
+        ?.map((animal) {
           if (queriedParams.entries.every((entry) =>
-              meetsCriteria(animal.toJson()[entry.key], entry.value))) {
+              meetsCriteria(animal.toJson()[entry?.key], entry?.value))) {
             return animal;
           }
         })
-        .toList()
-        .whereType<Animal>()
-        .toList();
+        ?.toList()
+        ?.whereType<Animal>()
+        ?.toList();
   }
 
   bool meetsCriteria(dynamic animalValue, dynamic searchValue) {

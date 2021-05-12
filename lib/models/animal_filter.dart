@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/services/animal_service.dart';
+import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/services/animal_search_terms_dto.dart';
+import 'package:pet_matcher/locator.dart';
 
 class AnimalFilter extends ChangeNotifier {
   AnimalFilter();
+
+  List<Animal> _incomingList;
+  List<Animal> _outputList;
 
   final _searchCriteria = AnimalSearchTermsDTO().toJson();
 
@@ -12,17 +18,33 @@ class AnimalFilter extends ChangeNotifier {
 
   String get sortCriteria => _sortCriteria;
 
-  void update(Map<String, dynamic> newCriteria) {
+  List<Animal> get outputList => _outputList;
+
+  void computeOutputList() {
+    _outputList = locator<AnimalService>()
+        ?.filterAnimalList(_searchCriteria, _incomingList);
+    _outputList?.sort((a, b) =>
+        a.toJson()[_sortCriteria].compareTo(b.toJson()[_sortCriteria]));
+  }
+
+  void updateIncomingList(List<Animal> newAnimalList) {
+    _incomingList = newAnimalList;
+    computeOutputList();
+    notifyListeners();
+  }
+
+  void updateSearchCriteria({Map<String, dynamic> newCriteria}) {
     newCriteria.forEach((property, function) {
       _searchCriteria[property] = newCriteria[property];
+      computeOutputList();
+      notifyListeners();
     });
     notifyListeners();
   }
 
-  // The call to re-sort takes place in selected item callback
-  // So really only using notifyListeners here, but may change later
   void updateSortCriteria(String newCriteria) {
     _sortCriteria = newCriteria;
+    computeOutputList();
     notifyListeners();
   }
 }
