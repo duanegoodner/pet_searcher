@@ -117,7 +117,7 @@ class AdminDrawer extends StatelessWidget {
   }
 
   void pushAnimalInventoryScreen(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed(AnimalInventoryScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(AnimalInventoryScreen.routeName, arguments: 'admin');
   }
 
   void pushChooseAnimalTypeScreen(BuildContext context) {

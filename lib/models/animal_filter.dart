@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pet_matcher/models/animal.dart';
+import 'package:pet_matcher/services/animal_search_terms_dto.dart';
 
 class AnimalFilter extends ChangeNotifier {
   AnimalFilter();
 
-  Map<String, dynamic> _searchCriteria = Map.fromIterable(
-    Animal.allFields,
-    key: (field) => field,
-    value: (field) => null,
-  );
+  final _searchCriteria = AnimalSearchTermsDTO().toJson();
 
   String _sortCriteria = 'dateAdded';
 
@@ -23,6 +19,8 @@ class AnimalFilter extends ChangeNotifier {
     notifyListeners();
   }
 
+  // The call to re-sort takes place in selected item callback
+  // So really only using notifyListeners here, but may change later
   void updateSortCriteria(String newCriteria) {
     _sortCriteria = newCriteria;
     notifyListeners();
