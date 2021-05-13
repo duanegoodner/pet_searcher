@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 // import 'package:pet_matcher/screens/user_home_screen.dart';
 // import 'package:pet_matcher/screens/add_news_item_screen.dart';
 import 'package:pet_matcher/models/animal.dart';
+import 'package:pet_matcher/screens/admin_home_screen.dart';
+import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
@@ -31,7 +33,7 @@ class PetMatcherApp extends StatelessWidget {
         // home: startupScreenSelector(context),
         routes: RouteNames.routes,
         initialRoute: StartUpScreenController.routeName,
-        //initialRoute: UserHomeScreen.routeName,
+        //initialRoute: AdminHomeScreen.routeName,
       ),
     );
   }

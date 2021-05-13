@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:pet_matcher/screens/animal_detail_screen.dart';
+import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:share/share.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
@@ -34,7 +36,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           children: [
             headingText('News Feed:'),
             buildListFromStream(context),
-            //addNewsItemButton(),
             headingText('Manage Inventory:'),
             inventoryCard(),
             headingText('Featured Animals:'),
@@ -183,13 +184,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         });
   }
 
-
-  Widget addNewsItemButton() {
-    return elevatedButtonStandard('Add News Post', () {
-      Navigator.of(context).pushNamed(AddNewsItemScreen.routeName);
-    });
-  }
-
   Widget inventoryCard() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
@@ -212,7 +206,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    //Animal inventory page?
+                    Navigator.of(context)
+                        .pushNamed(AnimalInventoryScreen.routeName);
                   },
                 ),
               ],
@@ -256,7 +251,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   child: IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      //Animal inventory page?
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AnimalDetailScreen(animal: animal)),
+                      );
                     },
                   ),
                 ),
@@ -275,11 +274,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
+  // This is for inventory
   Widget editIcon() {
     return  IconButton(
       icon: Icon(Icons.edit_outlined),
       onPressed: () {
-        //NOTE: Still need to allow for editing article
+        Navigator.of(context)
+            .pushNamed(AnimalInventoryScreen.routeName);
       },
     );
   }
@@ -287,6 +288,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget articleIconLayout(NewsItem post) {
     return Row(
       children: [
+        addIcon(),
         editNewsIcon(post),
         shareIcon(post),
       ],
@@ -301,6 +303,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             'Check out this article from Pet Matcher!\n\n${post.body} ' +
                 '\n\n${post.date}.',
             subject: '${post.title}');
+      },
+    );
+  }
+
+  Widget addIcon() {
+    return IconButton(
+      icon: Icon(Icons.add),
+      onPressed: () {
+        Navigator.of(context)
+            .pushNamed(AddNewsItemScreen.routeName);
       },
     );
   }

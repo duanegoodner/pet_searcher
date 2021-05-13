@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
-import 'package:pet_matcher/widgets/elevated_button.dart';
+import 'package:pet_matcher/widgets/contact_form.dart';
 
 class AnimalDetailScreen extends StatefulWidget {
   static const routename = 'animal_detail_screen';
@@ -34,12 +34,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         child: Center(
             child: Column(
           children: <Widget>[
-            displayImage(widget.animal),
+            displayImage(widget.animal, userType),
             headingText('${widget.animal.name}\'s Ideal Match:'),
             datingBlerb(widget.animal),
             headingText('The Lowdown:'),
             detailsBox(widget.animal),
-            submitButton(context),
+            submitButton(context, widget.animal),
           ],
         )),
       ),
@@ -55,7 +55,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     }
   }
 
-  Widget displayImage(Animal animal) {
+  Widget displayImage(Animal animal, userType) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       width: 350,
@@ -90,7 +90,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               ),
             ),
           ]),
-          temperamentRow(animal),
+          displayEditIcon(animal, userType),
+          //temperamentRow(animal),
+          //editIcon(userType),
         ]),
       ),
     );
@@ -161,6 +163,33 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       ]),
     );
   }
+
+  Widget displayEditIcon(Animal animal, userType) {
+    if (userType == 'admin') {
+      return Column(
+        children: <Widget>[
+        temperamentRow(animal),
+        editIcon(),
+        ],
+      );
+    }
+    else{
+      return Column(
+        children: <Widget>[
+          temperamentRow(animal)
+        ]
+      );
+    }
+  }
+
+  Widget editIcon() {
+      return IconButton(
+        icon: Icon(Icons.edit_outlined),
+        onPressed: () {
+          //need to edit animal
+        },
+      );
+    }
 
   Widget displayRow1(Animal animal) {
     return Container(
@@ -238,11 +267,26 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     );
   }
 
-  Widget submitButton(BuildContext context) {
-    return addPadding(
-      elevatedButtonStandard('Meet Me', requestInfo),
+  Widget submitButton(BuildContext context, Animal animal) {
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => ContactForm(animal: animal),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.only(top: 8, bottom: 8, left: 15, right: 15),
+        child: Text('Meet Me!'),
+      ),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.grey,
+        onPrimary: Colors.white,
+        textStyle: TextStyle(color: Colors.white, fontSize: 28),
+        shadowColor: Colors.black,
+        elevation: 8,
+      ),
     );
   }
 
-  void requestInfo() {}
 }
