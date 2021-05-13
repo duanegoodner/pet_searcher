@@ -63,7 +63,7 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
         if (_formKey.currentState.validate()) {
           collectDispositions();
           Provider.of<AnimalFilter>(context, listen: false)
-              .update(searchTerms.toJson());
+              .updateSearchCriteria(newCriteria: searchTerms.toJson());
           Navigator.of(context).pop();
         }
       },

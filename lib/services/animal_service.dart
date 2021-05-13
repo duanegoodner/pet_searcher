@@ -31,6 +31,7 @@ class AnimalService {
             .map(
               (animalEntry) => Animal.fromJSON(
                 animalEntry.data(),
+                animalEntry.id,
               ),
             )
             .toList();
@@ -44,7 +45,8 @@ class AnimalService {
   Stream<List<Animal>> availableAnimalStream() {
     return _availableAnimalCollection.snapshots().map((snapshot) => snapshot
         .docs
-        .map((animalEntry) => Animal.fromJSON(animalEntry.data()))
+        .map((animalEntry) =>
+            Animal.fromJSON(animalEntry.data(), animalEntry.id))
         .toList());
   }
 
@@ -59,15 +61,15 @@ class AnimalService {
     });
 
     return animals
-        .map((animal) {
+        ?.map((animal) {
           if (queriedParams.entries.every((entry) =>
-              meetsCriteria(animal.toJson()[entry.key], entry.value))) {
+              meetsCriteria(animal.toJson()[entry?.key], entry?.value))) {
             return animal;
           }
         })
-        .toList()
-        .whereType<Animal>()
-        .toList();
+        ?.toList()
+        ?.whereType<Animal>()
+        ?.toList();
   }
 
   bool meetsCriteria(dynamic animalValue, dynamic searchValue) {
@@ -105,7 +107,7 @@ class AnimalService {
         .map((animalEntry) {
           if (queriedParams.entries
               .every((entry) => animalEntry[entry.key] == entry.value)) {
-            return Animal.fromJSON(animalEntry.data());
+            return Animal.fromJSON(animalEntry.data(), animalEntry.id);
           }
         })
         .toList()
@@ -117,7 +119,7 @@ class AnimalService {
     return _animalCollection.snapshots().map((snapshot) => snapshot.docs
         .map((animalEntry) {
           if (animalEntry['type'] == 'Dog') {
-            return Animal.fromJSON(animalEntry.data());
+            return Animal.fromJSON(animalEntry.data(), animalEntry.id);
           }
         })
         .toList()

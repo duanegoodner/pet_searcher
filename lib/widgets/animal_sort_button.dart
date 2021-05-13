@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/models/animal_filter.dart';
 
-class AnimalFilterButton extends StatelessWidget {
-  const AnimalFilterButton({Key key}) : super(key: key);
+class AnimalSortButton extends StatelessWidget {
+  const AnimalSortButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class AnimalFilterButton extends StatelessWidget {
           ),
         ),
         onSelected: (String value) {
-          Provider.of<List<Animal>>(context, listen: false)
-              .sort((a, b) => a.toJson()[value].compareTo(b.toJson()[value]));
+          // Provider.of<List<Animal>>(context, listen: false)
+          //     .sort((a, b) => a.toJson()[value].compareTo(b.toJson()[value]));
           Provider.of<AnimalFilter>(context, listen: false)
               .updateSortCriteria(value);
         },
