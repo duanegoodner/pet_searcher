@@ -8,6 +8,7 @@ import 'package:pet_matcher/services/new_animal_dto.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_dropdown_box.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
+import 'package:pet_matcher/widgets/standard_multi_select_chip_field.dart';
 
 class AddPetScreen extends StatefulWidget {
   static const routeName = 'addPetScreen';
@@ -63,6 +64,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                 animalGenderDropdownField(context, gender),
                 animalStatusField(context, adoptionStatus),
                 animalDispositionField(),
+                // animalDispositionField(),
                 addAnimalButton(context),
               ],
             ),
@@ -154,47 +156,46 @@ class _AddPetScreenState extends State<AddPetScreen> {
     );
   }
 
-  //NOTE: This is the single-option dropdown version originally used
-  // Widget animalDispositionField(context, categories) {
-  //   return standardDropdownBox(
-  //     labelText: 'Disposition',
-  //     validatorPrompt: 'Select all that apply.',
-  //     validatorCondition: (value) => value.isEmpty,
-  //     onSaved: (value) {
-  //       newAnimalData.disposition = value;
-  //     },
-  //     items: categories,
-  //   );
-  // }
-
   Widget animalDispositionField() {
-    return ListView(
-      shrinkWrap: true,
-      children: dispositionValues.keys.map(
-        (key) {
-          return CheckboxListTile(
-            title: Text(key),
-            value: dispositionValues[key],
-            onChanged: (value) {
-              setState(
-                () {
-                  dispositionValues[key] = value;
-                },
-              );
-            },
-          );
-        },
-      ).toList(),
+    return addPadding(
+      DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            color: Colors.white,
+          ),
+        ),
+        child: Column(
+          children: [
+            dispositionHeader(),
+            dispositionMultiSelect(),
+          ],
+        ),
+      ),
     );
   }
 
-  void collectDispositions() {
-    dispositionValues.forEach(
-      (key, value) {
-        if (value) {
-          newAnimalData.disposition.add(key.toString());
-        }
+  Widget dispositionHeader() {
+    return Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: Text(
+        'Disposition (select all that apply)',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+        ),
+      ),
+    );
+  }
+
+  Widget dispositionMultiSelect() {
+    return standardMultiSelectChipField(
+      options: disposition,
+      onTap: (values) {
+        newAnimalData.disposition = values;
       },
+      validatorCondition: (values) => values == null || values.length == 0,
+      validatorPrompt: 'Please select at least one disposition',
     );
   }
 
@@ -207,7 +208,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
       try {
         //save form
         formKey.currentState.save();
-        collectDispositions();
         //add animal to database
         FirebaseFirestore.instance.collection('animals').add({
           'name': newAnimalData.name,
