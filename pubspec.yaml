@@ -53,6 +53,9 @@ dependencies:
   #share
   share: ^2.0.1
 
+  #forms
+  flutter_form_builder: ^6.0.0
+
   multi_select_flutter: ^4.0.0
 
 dev_dependencies:
