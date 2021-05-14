@@ -5,6 +5,7 @@ import 'package:pet_matcher/models/animal_category_constants.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/services/image_service.dart';
 import 'package:pet_matcher/services/new_animal_dto.dart';
+import 'package:pet_matcher/widgets/animal_disposition_field.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_dropdown_box.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
@@ -157,45 +158,15 @@ class _AddPetScreenState extends State<AddPetScreen> {
   }
 
   Widget animalDispositionField() {
-    return addPadding(
-      DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-            color: Colors.white,
-          ),
-        ),
-        child: Column(
-          children: [
-            dispositionHeader(),
-            dispositionMultiSelect(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget dispositionHeader() {
-    return Padding(
-      padding: EdgeInsets.only(top: 10),
-      child: Text(
-        'Disposition (select all that apply)',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-        ),
-      ),
-    );
-  }
-
-  Widget dispositionMultiSelect() {
-    return standardMultiSelectChipField(
+    return standardDispositionField(
+      headerTitle: 'Disposition (select all that apply)',
       options: disposition,
       onTap: (values) {
         newAnimalData.disposition = values;
       },
       validatorCondition: (values) => values == null || values.length == 0,
       validatorPrompt: 'Please select at least one disposition',
+      extraPadding: 10,
     );
   }
 

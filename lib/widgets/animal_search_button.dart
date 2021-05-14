@@ -11,11 +11,12 @@ class AnimalSearchButton extends StatefulWidget {
 }
 
 class _AnimalSearchButtonState extends State<AnimalSearchButton> {
-  Future<void> showInformationDialog(BuildContext context) async {
+  Future<void> showInformationBottomSheet(BuildContext context) async {
     AnimalFilter animalFilter =
         Provider.of<AnimalFilter>(context, listen: false);
 
-    return await showDialog(
+    return await showModalBottomSheet(
+      backgroundColor: Colors.blue[300].withOpacity(0.7),
       context: context,
       builder: (context) {
         return StatefulBuilder(
@@ -23,7 +24,9 @@ class _AnimalSearchButtonState extends State<AnimalSearchButton> {
             Widget searchForm = AnimalSearchForm();
             return ChangeNotifierProvider<AnimalFilter>.value(
               value: animalFilter,
-              child: searchForm,
+              child: SingleChildScrollView(
+                child: searchForm,
+              ),
             );
           },
         );
@@ -37,7 +40,7 @@ class _AnimalSearchButtonState extends State<AnimalSearchButton> {
         icon: Icon(Icons.search),
         tooltip: 'Search',
         onPressed: () async {
-          await showInformationDialog(context);
+          await showInformationBottomSheet(context);
         });
   }
 }
