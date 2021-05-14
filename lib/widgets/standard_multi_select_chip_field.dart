@@ -6,6 +6,7 @@ Widget standardMultiSelectChipField({
   Function onTap,
   Function validatorCondition,
   String validatorPrompt,
+  List<dynamic> initialValues,
 }) {
   return MultiSelectChipField(
     decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
@@ -17,6 +18,7 @@ Widget standardMultiSelectChipField({
     selectedTextStyle: TextStyle(
         color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
     items: options.map((key) => MultiSelectItem(key, key)).toList(),
+    initialValue: initialValues,
     onTap: onTap,
     validator: (values) {
       if (validatorCondition(values)) {
