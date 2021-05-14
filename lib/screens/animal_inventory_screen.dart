@@ -198,7 +198,7 @@ Widget animalInventoryLayout(
     String userType, Animal animal, BuildContext context) {
   if (userType == 'admin') {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         editIcon(animal),
         deleteIcon(animal, context),
