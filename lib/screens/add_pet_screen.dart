@@ -46,9 +46,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
       receivedAnimal.animalID = null;
       receivedAnimal.imageURL = imageUrl;
       receivedAnimal.type = '$receivedArgument';
-    } 
+    }
     //if receivedArgument is an Animal object, the animal already exists in database
-    else { 
+    else {
       receivedAnimal = ModalRoute.of(context).settings.arguments;
     }
     receivedAnimal.dateAdded = DateTime.now();
@@ -234,11 +234,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
       },
       validatorCondition: (values) => values == null || values.length == 0,
       validatorPrompt: 'Please select at least one disposition',
-<<<<<<< HEAD
       initialValues: initialValues,
-=======
-      extraPadding: 10,
->>>>>>> inventory_modifications
     );
   }
 
@@ -283,19 +279,19 @@ class _AddPetScreenState extends State<AddPetScreen> {
         formKey.currentState.save();
         //edit/update animal in the database
         FirebaseFirestore.instance
-          .collection('animals')
-          .doc('${receivedAnimal.animalID}')
-          .set({
-            'name': receivedAnimal.name,
-            'dateAdded': DateTime.parse('${receivedAnimal.dateAdded}'),
-            'type': receivedAnimal.type,
-            'breed': receivedAnimal.breed,
-            'age': receivedAnimal.age,
-            'gender': receivedAnimal.gender,
-            'status': receivedAnimal.status,
-            'disposition': receivedAnimal.disposition,
-            'imageURL': receivedAnimal.imageURL,
-          });
+            .collection('animals')
+            .doc('${receivedAnimal.animalID}')
+            .set({
+          'name': receivedAnimal.name,
+          'dateAdded': DateTime.parse('${receivedAnimal.dateAdded}'),
+          'type': receivedAnimal.type,
+          'breed': receivedAnimal.breed,
+          'age': receivedAnimal.age,
+          'gender': receivedAnimal.gender,
+          'status': receivedAnimal.status,
+          'disposition': receivedAnimal.disposition,
+          'imageURL': receivedAnimal.imageURL,
+        });
         //navigate back to admin home screen
         Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);
       } catch (e) {
