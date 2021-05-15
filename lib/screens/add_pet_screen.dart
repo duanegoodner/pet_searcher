@@ -234,7 +234,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
       },
       validatorCondition: (values) => values == null || values.length == 0,
       validatorPrompt: 'Please select at least one disposition',
+<<<<<<< HEAD
       initialValues: initialValues,
+=======
+      extraPadding: 10,
+>>>>>>> inventory_modifications
     );
   }
 

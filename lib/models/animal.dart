@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Animal {
   String animalID;
   String name;
@@ -81,4 +83,6 @@ class Animal {
         'gender': gender,
         'imageURL': imageURL
       };
+
+  String get formattedDateAdded => DateFormat.yMMMd().format(dateAdded);
 }

@@ -171,28 +171,23 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     if (userType == 'admin') {
       return Column(
         children: <Widget>[
-        temperamentRow(animal),
-        editIcon(),
+          temperamentRow(animal),
+          editIcon(),
         ],
       );
-    }
-    else{
-      return Column(
-        children: <Widget>[
-          temperamentRow(animal)
-        ]
-      );
+    } else {
+      return Column(children: <Widget>[temperamentRow(animal)]);
     }
   }
 
   Widget editIcon() {
-      return IconButton(
-        icon: Icon(Icons.edit_outlined),
-        onPressed: () {
-          //need to edit animal
-        },
-      );
-    }
+    return IconButton(
+      icon: Icon(Icons.edit_outlined),
+      onPressed: () {
+        //need to edit animal
+      },
+    );
+  }
 
   Widget displayRow1(Animal animal) {
     return Container(
@@ -291,5 +286,4 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       ),
     );
   }
-
 }
