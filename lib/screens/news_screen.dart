@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/add_news_item_screen.dart';
 import 'package:share/share.dart';
+import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/models/news_item.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
@@ -17,7 +19,7 @@ class NewsScreen extends StatefulWidget {
 class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
-    String userType = ModalRoute.of(context).settings.arguments;
+    String userType = Provider.of<AppUser>(context).role;
 
     return Scaffold(
       appBar: AppBar(
