@@ -9,8 +9,8 @@ import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/animal_detail_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
-import 'package:pet_matcher/widgets/animal_sort_button.dart';
 import 'package:pet_matcher/widgets/animal_search_button.dart';
+import 'package:pet_matcher/widgets/animal_sort_button.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -154,30 +154,36 @@ Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
                     padding: const EdgeInsets.all(10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           '${animal.name}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 30,
+                            fontSize: 20,
                           ),
                         ),
                         Text(
                           'Breed: ${animal.breed}',
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 18,
+                            fontSize: 15,
                           ),
                         ),
                         Text(
                           'Age: ${animal.age}',
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
-                            fontSize: 18,
+                            fontSize: 15,
                           ),
                         ),
-                        SizedBox(height: 10),
+                        Text(
+                          '\nDate Added:\n${animal.formattedDateAdded}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 13,
+                          ),
+                        ),
                         animalInventoryLayout(userType, animal, context),
                       ],
                     ),
@@ -196,7 +202,7 @@ Widget animalInventoryLayout(
     String userType, Animal animal, BuildContext context) {
   if (userType == 'admin') {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         editIcon(animal, context),
         deleteIcon(animal, context),

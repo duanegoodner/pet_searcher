@@ -3,6 +3,8 @@ import 'package:pet_matcher/services/animal_search_terms_dto.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_matcher/models/animal_category_constants.dart';
 import 'package:pet_matcher/models/animal_filter.dart';
+import 'package:pet_matcher/widgets/animal_disposition_field.dart';
+import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/filter_dropdown_box.dart';
 
 class AnimalSearchForm extends StatefulWidget {
@@ -29,9 +31,9 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.blue[50],
-      content: Container(
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
         width: double.maxFinite,
         child: Form(
           key: _formKey,
@@ -39,35 +41,33 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
             mainAxisSize: MainAxisSize.min,
             children: [
               typeField(),
-              SizedBox(height: 5),
+              SizedBox(height: 10),
               breedField(),
-              SizedBox(height: 5),
+              SizedBox(height: 10),
               genderField(),
-              SizedBox(height: 5),
-              dispositionField(),
+              SizedBox(height: 10),
+              animalDispositionField(),
+              SizedBox(height: 10),
+              searchButton(
+                context,
+              ),
             ],
           ),
         ),
       ),
-      title: Text('Search for Animals'),
-      actions: <Widget>[
-        searchButton(context),
-      ],
     );
   }
 
   Widget searchButton(BuildContext context) {
-    return ElevatedButton(
-      child: Text('Submit'),
-      onPressed: () {
-        if (_formKey.currentState.validate()) {
-          collectDispositions();
-          Provider.of<AnimalFilter>(context, listen: false)
-              .updateSearchCriteria(newCriteria: searchTerms.toJson());
-          Navigator.of(context).pop();
-        }
-      },
-    );
+    return elevatedButtonStandard('Search', searchFunction);
+  }
+
+  void searchFunction() {
+    if (_formKey.currentState.validate()) {
+      Provider.of<AnimalFilter>(context, listen: false)
+          .updateSearchCriteria(newCriteria: searchTerms.toJson());
+      Navigator.of(context).pop();
+    }
   }
 
   Widget typeField() {
@@ -139,6 +139,18 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
           );
         },
       ).toList(),
+    );
+  }
+
+  Widget animalDispositionField() {
+    return standardDispositionField(
+      headerTitle: 'Disposition',
+      options: disposition,
+      onTap: (values) {
+        searchTerms.disposition = values;
+      },
+      validatorCondition: (values) => false,
+      validatorPrompt: '',
     );
   }
 
