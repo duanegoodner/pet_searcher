@@ -102,13 +102,11 @@ class UserDrawer extends StatelessWidget {
   }
 
   void pushSearchAnimals(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed(AnimalInventoryScreen.routeName,
-        arguments: 'user');
+    Navigator.of(context).pushReplacementNamed(AnimalInventoryScreen.routeName);
   }
 
   void pushNewsScreen(BuildContext context) {
-    Navigator.of(context)
-        .pushReplacementNamed(NewsScreen.routeName, arguments: 'user');
+    Navigator.of(context).pushReplacementNamed(NewsScreen.routeName);
   }
 
   /*void pushFavoritesScreen(BuildContext context) {

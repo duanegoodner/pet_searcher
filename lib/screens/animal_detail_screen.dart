@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:pet_matcher/models/animal.dart';
+import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:pet_matcher/widgets/contact_form.dart';
@@ -21,7 +23,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String userType = ModalRoute.of(context).settings.arguments;
+    String userType = Provider.of<AppUser>(context).role;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
