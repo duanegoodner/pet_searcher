@@ -2,12 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-//import 'package:cached_network_image/cached_network_image.dart';
-//import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:pet_matcher/models/animal.dart';
-//import 'package:pet_matcher/models/animal_category_constants.dart';
 import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/models/app_user.dart';
+import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/animal_detail_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
@@ -116,10 +114,13 @@ Widget animalList(BuildContext context, String userType) {
 }
 
 Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
-  // print('The animal id is ${animal.animalID}');
-
   return GestureDetector(
     onTap: () {
+      //Question: Should we do this instead and just use the back button?
+      //People browsing animals would probably not like going to the drawer 
+      //in between each animal detail
+      //Navigator.of(context)
+      //    .pushNamed(AnimalDetailScreen.routename, arguments: animal);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -197,7 +198,7 @@ Widget animalInventoryLayout(
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        editIcon(animal),
+        editIcon(animal, context),
         deleteIcon(animal, context),
       ],
     );
@@ -219,9 +220,14 @@ Widget favoriteIcon(Animal animal) {
   );
 }
 
-Widget editIcon(Animal animal) {
+Widget editIcon(Animal animal, BuildContext context) {
   return IconButton(
-      icon: Icon(Icons.edit), tooltip: 'Edit animal', onPressed: () {});
+      icon: Icon(Icons.edit),
+      tooltip: 'Edit animal',
+      onPressed: () {
+        Navigator.of(context)
+            .pushNamed(AddPetScreen.routeName, arguments: animal);
+      });
 }
 
 Widget deleteIcon(Animal animal, BuildContext context) {
@@ -230,11 +236,6 @@ Widget deleteIcon(Animal animal, BuildContext context) {
       tooltip: 'Remove animal',
       onPressed: () {
         _showMyDialog(animal, context);
-
-        //FirebaseFirestore.instance
-        //    .collection('animals')
-        //    .doc(animal.animalID)
-        //    .delete();
       });
 }
 

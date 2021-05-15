@@ -58,7 +58,6 @@ class Animal {
         imageURL = '';
 
   Animal.fromJSON(Map<String, dynamic> json, String id) {
-    animalID = id;
     name = json['name'];
     dateAdded = DateTime.fromMicrosecondsSinceEpoch(
         json['dateAdded'].microsecondsSinceEpoch);
@@ -72,7 +71,6 @@ class Animal {
   }
 
   Map<String, dynamic> toJson() => {
-        //'animalID': animalID,
         'name': name,
         'dateAdded': dateAdded,
         'type': type,

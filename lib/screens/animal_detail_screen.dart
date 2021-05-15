@@ -39,7 +39,10 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             datingBlerb(widget.animal),
             headingText('The Lowdown:'),
             detailsBox(widget.animal),
-            submitButton(context, widget.animal),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: submitButton(context, widget.animal),
+            )
           ],
         )),
       ),
@@ -59,7 +62,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       width: 350,
-      height: 325,
+      height: 435,
       child: Card(
         color: Colors.white,
         elevation: 0,
@@ -68,7 +71,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             Card(
                 child: Wrap(children: <Widget>[
               Image.network(animal.imageURL,
-                  height: 225,
+                  height: 300,
                   width: 350,
                   fit: BoxFit.fill, loadingBuilder: (BuildContext context,
                       Widget child, ImageChunkEvent loadingProgress) {
