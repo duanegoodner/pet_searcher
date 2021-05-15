@@ -253,10 +253,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   Widget featuredAnimalCard(BuildContext context, Animal animal) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AnimalDetailScreen(animal: animal)),
-        );
+        Navigator.of(context).pushNamed(AnimalDetailScreen.routename, arguments: animal);
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10.0),

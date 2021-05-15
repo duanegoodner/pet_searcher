@@ -116,16 +116,7 @@ Widget animalList(BuildContext context, String userType) {
 Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
   return GestureDetector(
     onTap: () {
-      //Question: Should we do this instead and just use the back button?
-      //People browsing animals would probably not like going to the drawer 
-      //in between each animal detail
-      //Navigator.of(context)
-      //    .pushNamed(AnimalDetailScreen.routename, arguments: animal);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AnimalDetailScreen(animal: animal)),
-      );
+      Navigator.of(context).pushNamed(AnimalDetailScreen.routename, arguments: animal);
     },
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),

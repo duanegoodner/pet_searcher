@@ -10,7 +10,6 @@ import 'package:pet_matcher/models/news_item.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/screens/add_news_item_screen.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
-import 'package:pet_matcher/widgets/elevated_button.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   static const routeName = 'adminHome';
@@ -251,11 +250,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   child: IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AnimalDetailScreen(animal: animal)),
-                      );
+                     Navigator.of(context).pushNamed(AnimalDetailScreen.routename, arguments: animal);
                     },
                   ),
                 ),
