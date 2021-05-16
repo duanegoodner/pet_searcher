@@ -7,12 +7,10 @@ import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:pet_matcher/widgets/contact_form.dart';
 
+import 'add_pet_screen.dart';
+
 class AnimalDetailScreen extends StatefulWidget {
   static const routename = 'animal_detail_screen';
-
-  final Animal animal;
-
-  AnimalDetailScreen({Key key, @required this.animal}) : super(key: key);
 
   @override
   _AnimalDetailScreenState createState() => _AnimalDetailScreenState();
@@ -23,11 +21,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Animal receivedAnimal = ModalRoute.of(context).settings.arguments;
     String userType = Provider.of<AppUser>(context).role;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Meet ${widget.animal.name}!'),
+        title: Text('Meet ${receivedAnimal.name}!'),
         backgroundColor: Colors.blue[300],
       ),
       drawer: getDrawerType(userType),
@@ -36,14 +35,14 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         child: Center(
             child: Column(
           children: <Widget>[
-            displayImage(widget.animal, userType),
-            headingText('${widget.animal.name}\'s Ideal Match:'),
-            datingBlerb(widget.animal),
+            displayImage(receivedAnimal, userType),
+            headingText('${receivedAnimal.name}\'s Ideal Match:'),
+            datingBlerb(receivedAnimal),
             headingText('The Lowdown:'),
-            detailsBox(widget.animal),
+            detailsBox(receivedAnimal),
             Padding(
               padding: EdgeInsets.only(bottom: 10),
-              child: submitButton(context, widget.animal),
+              child: submitButton(context, receivedAnimal),
             )
           ],
         )),
@@ -62,25 +61,30 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
   Widget displayImage(Animal animal, userType) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      width: 350,
-      height: 435,
-      child: Card(
+      child: Padding(
+        padding: EdgeInsets.all(25),
+        child: Card(
         color: Colors.white,
         elevation: 0,
-        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          Stack(children: <Widget>[
-            Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min, 
+          children: <Widget>[
+            Stack(children: <Widget>[
+              Card(
                 child: Wrap(children: <Widget>[
-              Image.network(animal.imageURL,
-                  height: 300,
-                  width: 350,
-                  fit: BoxFit.fill, loadingBuilder: (BuildContext context,
+                  Image.network(animal.imageURL,
+                    height: 300,
+                    width: 350,
+                    fit: BoxFit.fill, 
+                    loadingBuilder: (BuildContext context,
                       Widget child, ImageChunkEvent loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(child: CircularProgressIndicator());
-              }),
-            ])),
+                        if (loadingProgress == null) return child;
+                        return Center(child: CircularProgressIndicator());
+                      }
+                  ),
+                ]
+              )
+            ),
             Padding(
               padding: EdgeInsets.only(top: 5.0, left: 285.0),
               child: IconButton(
@@ -100,8 +104,73 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
           //editIcon(userType),
         ]),
       ),
+      ),
     );
   }
+  
+
+/*NOTE: Working on this: Trying to fix image distortion while still keeping Erica's design
+  Widget displayImage(Animal animal, userType) {
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Card(
+          color: Colors.white,
+          elevation: 0,
+          child: animalWithFavoriteIconCard(animal, userType),
+          ),
+      ),
+    );
+  }
+
+  Widget animalWithFavoriteIconCard(Animal animal, userType){
+    return Column(
+            mainAxisSize: MainAxisSize.min, 
+            children: [
+              Stack(
+                children: [
+                  Card(
+                    child: Wrap(children: [Align(
+                        alignment: Alignment.bottomCenter,
+                        child: AspectRatio(
+                        aspectRatio: 1/1,
+                        //aspectRatio: 487 / 451,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.fitWidth,
+                              alignment: FractionalOffset.topCenter,
+                              image: NetworkImage('${animal.imageURL}'),
+                            )
+                          ),
+                        ),
+                      ),  
+                  )
+                  ],)     
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0, left: 300.0),
+                  child: IconButton(
+                    icon: Icon(Icons.favorite),
+                    color: _isFavorite ? Colors.red : Colors.white,
+                    onPressed: () => {
+                      setState(() {
+                        _isFavorite = !_isFavorite;
+                        //Add logic for saving a favorite
+                      })
+                    },
+                  ),
+                ),
+              ]
+            ),
+            displayEditIcon(animal, userType),
+            //temperamentRow(animal),
+            //editIcon(userType),
+          ]
+        );
+  }
+  */
+  
 
   Widget temperamentRow(Animal animal) {
     return Container(
@@ -112,7 +181,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               return ListTile(
                 leading: setIcon(animal.disposition[index]),
                 title: Align(
-                  alignment: Alignment(-1.5, 0),
+                  alignment: Alignment(-1.25, 0),
                   child: Text('${animal.disposition[index]}',
                       style: TextStyle(
                         fontSize: 14,
@@ -174,7 +243,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       return Column(
         children: <Widget>[
           temperamentRow(animal),
-          editIcon(),
+          editIcon(animal),
         ],
       );
     } else {
@@ -182,11 +251,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     }
   }
 
-  Widget editIcon() {
+  Widget editIcon(Animal animal) {
     return IconButton(
       icon: Icon(Icons.edit_outlined),
       onPressed: () {
-        //need to edit animal
+        Navigator.of(context)
+            .pushNamed(AddPetScreen.routeName, arguments: animal);
       },
     );
   }

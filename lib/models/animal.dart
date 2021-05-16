@@ -60,6 +60,7 @@ class Animal {
         imageURL = '';
 
   Animal.fromJSON(Map<String, dynamic> json, String id) {
+    animalID = id;
     name = json['name'];
     dateAdded = DateTime.fromMicrosecondsSinceEpoch(
         json['dateAdded'].microsecondsSinceEpoch);

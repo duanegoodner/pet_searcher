@@ -131,7 +131,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
       },
       chosenResponse: initialValue,
       items: categories,
-      //value: initialValue,
     );
   }
 
