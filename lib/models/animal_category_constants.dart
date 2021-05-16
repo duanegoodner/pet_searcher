@@ -40,7 +40,7 @@ List<String> dogBreeds = [
   'English Springer Spaniel',
   'Foxhound',
   'French Bulldog'
-  'German Shepherd Dog',
+      'German Shepherd Dog',
   'German Shorthaired Pointer',
   'Golden Retriever',
   'Great Dane',
@@ -67,6 +67,7 @@ List<String> dogBreeds = [
   'Siberian Husky',
   'Shiba Inu',
   'Schnauzer',
+  'Terrier',
   'Vizsla',
   'Weimaraner',
   'Whippet',
@@ -74,7 +75,7 @@ List<String> dogBreeds = [
 
 List<String> catBreeds = [
   'Abyssinian'
-  'American Shorthair',
+      'American Shorthair',
   'Bengal',
   'British Shorthair',
   'Burmese',
