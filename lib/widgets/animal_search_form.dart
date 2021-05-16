@@ -24,6 +24,8 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
   String breedFieldLabel = 'Choose animal type to view breeds';
   Function breedOnChanged;
 
+  String dateRangeDisplay = 'Tap to select';
+
   // Use a map of disposition values when form is active
   // Will collect any keys w/ val == true into List<String> upon Submit
   Map<String, bool> dispositionValues =
@@ -47,6 +49,8 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
               genderField(),
               SizedBox(height: 10),
               animalDispositionField(),
+              SizedBox(height: 10),
+              dateRangeField(context),
               SizedBox(height: 10),
               searchButton(
                 context,
@@ -87,6 +91,22 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
     );
   }
 
+  Widget dateRangeField(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        searchTerms.dateAdded = await showDateRangePicker(
+            context: context,
+            firstDate: DateTime.utc(2018),
+            lastDate: DateTime.now());
+        dateRangeDisplay = searchTerms.formattedDate;
+        setState(() {});
+      },
+      child: Text(
+        'Date Range: $dateRangeDisplay',
+      ),
+    );
+  }
+
   Widget breedField() {
     return filterDropDownBox(
       key: breedFieldKey,
@@ -118,6 +138,22 @@ class _AnimalSearchFormState extends State<AnimalSearchForm> {
       onChanged: (value) {
         searchTerms.gender = value;
       },
+    );
+  }
+
+  Widget fromDateField() {
+    return InputDatePickerFormField(
+      fieldLabelText: 'Start',
+      firstDate: DateTime.utc(2019, 1, 1),
+      lastDate: DateTime.now(),
+    );
+  }
+
+  Widget toDateField() {
+    return InputDatePickerFormField(
+      fieldLabelText: 'Start',
+      firstDate: DateTime.utc(2019, 1, 1),
+      lastDate: DateTime.now(),
     );
   }
 

@@ -82,6 +82,14 @@ class AnimalService {
       }
       return (animalValue.any((item) => searchValue.contains(item)));
     }
+    if (animalValue is DateTime) {
+      if ((searchValue.start != null &&
+              animalValue.isBefore(searchValue.start)) ||
+          (searchValue.end != null && animalValue.isAfter(searchValue.end))) {
+        return false;
+      }
+      return true;
+    }
     return animalValue == searchValue;
   }
 
