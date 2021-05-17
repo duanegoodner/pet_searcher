@@ -1,10 +1,9 @@
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/models/animal_category_constants.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/services/image_service.dart';
-import 'package:pet_matcher/services/new_animal_dto.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_dropdown_box.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
@@ -19,7 +18,8 @@ class AddPetScreen extends StatefulWidget {
 
 class _AddPetScreenState extends State<AddPetScreen> {
   final formKey = GlobalKey<FormState>();
-  final newAnimalData = AnimalDTO();
+  Animal receivedAnimal = Animal();
+
   final Map<String, bool> dispositionValues =
       Map.fromIterable(disposition, key: (e) => e, value: (e) => false);
   String imageUrl;
@@ -39,14 +39,24 @@ class _AddPetScreenState extends State<AddPetScreen> {
     if (imageUrl == null) {
       return Center(child: CircularProgressIndicator());
     }
-    String receivedAnimalType = ModalRoute.of(context).settings.arguments;
-    newAnimalData.dateAdded = DateTime.now();
-    newAnimalData.imageURL = imageUrl;
-    newAnimalData.type = '$receivedAnimalType';
+
+    var receivedArgument = ModalRoute.of(context).settings.arguments;
+    //if receivedArgument is String, the animal is a new animal
+    if (receivedArgument is String) {
+      receivedAnimal.animalID = null;
+      receivedAnimal.imageURL = imageUrl;
+      receivedAnimal.type = '$receivedArgument';
+    }
+    //if receivedArgument is an Animal object, the animal already exists in database
+    else {
+      receivedAnimal = ModalRoute.of(context).settings.arguments;
+    }
+    receivedAnimal.dateAdded = DateTime.now();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Add $receivedAnimalType'),
+        title: Text('Add ${receivedAnimal.type}'),
         backgroundColor: Colors.blue[300],
       ),
       backgroundColor: Colors.blue[300],
@@ -59,12 +69,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
               children: [
                 getChosenAnimalImage(),
                 animalNameField(context),
-                chooseAnimalBreedField(context, receivedAnimalType),
+                chooseAnimalBreedField(context, receivedAnimal.type),
                 animalAgeField(context, age),
                 animalGenderDropdownField(context, gender),
                 animalStatusField(context, adoptionStatus),
                 animalDispositionField(),
-                // animalDispositionField(),
                 addAnimalButton(context),
               ],
             ),
@@ -81,20 +90,19 @@ class _AddPetScreenState extends State<AddPetScreen> {
             height: 250, width: 200, fit: BoxFit.fitWidth));
   }
 
-  /*
-  Widget logo() {
-    return Image.asset('assets/images/paw_logo.png',
-        height: 250, width: 200, fit: BoxFit.fitWidth);
-  }
-  */
-
   Widget animalNameField(BuildContext context) {
+    String initialValue;
+    if (receivedAnimal.animalID != null) {
+      initialValue = receivedAnimal.name;
+    }
+
     return standardInputBoxWithoutFlex(
         labelText: 'Animal Name',
         validatorPrompt: 'Enter animal name.',
+        initialValue: initialValue,
         validatorCondition: (value) => value.isEmpty,
         onSaved: (value) {
-          newAnimalData.name = value;
+          receivedAnimal.name = value;
         });
   }
 
@@ -109,49 +117,73 @@ class _AddPetScreenState extends State<AddPetScreen> {
   }
 
   Widget animalBreedField(context, categories) {
+    String initialValue;
+    if (receivedAnimal.animalID != null) {
+      initialValue = receivedAnimal.breed;
+    }
+
     return standardDropdownBox(
       labelText: 'Breed',
       validatorPrompt: 'Select a breed/type.',
       validatorCondition: (value) => value.isEmpty,
       onSaved: (value) {
-        newAnimalData.breed = value;
+        receivedAnimal.breed = value;
       },
+      chosenResponse: initialValue,
       items: categories,
     );
   }
 
   Widget animalAgeField(context, categories) {
+    String initialValue;
+    if (receivedAnimal.animalID != null) {
+      initialValue = receivedAnimal.age;
+    }
+
     return standardDropdownBox(
       labelText: 'Age',
       validatorPrompt: 'Select age category.',
       validatorCondition: (value) => value.isEmpty,
       onSaved: (value) {
-        newAnimalData.age = value;
+        receivedAnimal.age = value;
       },
+      chosenResponse: initialValue,
       items: categories,
     );
   }
 
   Widget animalGenderDropdownField(BuildContext context, categories) {
+    String initialValue;
+    if (receivedAnimal.animalID != null) {
+      initialValue = receivedAnimal.gender;
+    }
+
     return standardDropdownBox(
       labelText: 'Gender',
       validatorPrompt: 'Select a gender.',
       validatorCondition: (value) => value.isEmpty,
       onSaved: (value) {
-        newAnimalData.gender = value;
+        receivedAnimal.gender = value;
       },
+      chosenResponse: initialValue,
       items: categories,
     );
   }
 
   Widget animalStatusField(context, categories) {
+    String initialValue;
+    if (receivedAnimal.animalID != null) {
+      initialValue = receivedAnimal.status;
+    }
+
     return standardDropdownBox(
       labelText: 'Status',
       validatorPrompt: 'Select an animal status.',
       validatorCondition: (value) => value.isEmpty,
       onSaved: (value) {
-        newAnimalData.status = value;
+        receivedAnimal.status = value;
       },
+      chosenResponse: initialValue,
       items: categories,
     );
   }
@@ -189,18 +221,29 @@ class _AddPetScreenState extends State<AddPetScreen> {
   }
 
   Widget dispositionMultiSelect() {
+    List<dynamic> initialValues;
+    if (receivedAnimal.animalID != null) {
+      initialValues = receivedAnimal.disposition;
+    }
+
     return standardMultiSelectChipField(
       options: disposition,
       onTap: (values) {
-        newAnimalData.disposition = values;
+        receivedAnimal.disposition = values;
       },
       validatorCondition: (values) => values == null || values.length == 0,
       validatorPrompt: 'Please select at least one disposition',
+      initialValues: initialValues,
     );
   }
 
   Widget addAnimalButton(BuildContext context) {
-    return addPadding(elevatedButtonStandard('Add animal', createAnimal));
+    //determine if a new animal is being added or a previous animal is being edited
+    if (receivedAnimal.animalID == null) {
+      return addPadding(elevatedButtonStandard('Submit', createAnimal));
+    } else {
+      return addPadding(elevatedButtonStandard('Submit', editAnimal));
+    }
   }
 
   Future<void> createAnimal() async {
@@ -210,15 +253,43 @@ class _AddPetScreenState extends State<AddPetScreen> {
         formKey.currentState.save();
         //add animal to database
         FirebaseFirestore.instance.collection('animals').add({
-          'name': newAnimalData.name,
-          'dateAdded': DateTime.parse('${newAnimalData.dateAdded}'),
-          'type': newAnimalData.type,
-          'breed': newAnimalData.breed,
-          'age': newAnimalData.age,
-          'gender': newAnimalData.gender,
-          'status': newAnimalData.status,
-          'disposition': newAnimalData.disposition,
-          'imageURL': newAnimalData.imageURL,
+          'name': receivedAnimal.name,
+          'dateAdded': DateTime.parse('${receivedAnimal.dateAdded}'),
+          'type': receivedAnimal.type,
+          'breed': receivedAnimal.breed,
+          'age': receivedAnimal.age,
+          'gender': receivedAnimal.gender,
+          'status': receivedAnimal.status,
+          'disposition': receivedAnimal.disposition,
+          'imageURL': receivedAnimal.imageURL,
+        });
+        //navigate back to admin home screen
+        Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> editAnimal() async {
+    if (formKey.currentState.validate()) {
+      try {
+        //save form
+        formKey.currentState.save();
+        //edit/update animal in the database
+        FirebaseFirestore.instance
+            .collection('animals')
+            .doc('${receivedAnimal.animalID}')
+            .set({
+          'name': receivedAnimal.name,
+          'dateAdded': DateTime.parse('${receivedAnimal.dateAdded}'),
+          'type': receivedAnimal.type,
+          'breed': receivedAnimal.breed,
+          'age': receivedAnimal.age,
+          'gender': receivedAnimal.gender,
+          'status': receivedAnimal.status,
+          'disposition': receivedAnimal.disposition,
+          'imageURL': receivedAnimal.imageURL,
         });
         //navigate back to admin home screen
         Navigator.of(context).pushReplacementNamed(AdminHomeScreen.routeName);

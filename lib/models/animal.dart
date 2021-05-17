@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Animal {
   String animalID;
   String name;
@@ -72,7 +74,6 @@ class Animal {
   }
 
   Map<String, dynamic> toJson() => {
-        //'animalID': animalID,
         'name': name,
         'dateAdded': dateAdded,
         'type': type,
@@ -83,4 +84,6 @@ class Animal {
         'gender': gender,
         'imageURL': imageURL
       };
+
+  String get formattedDateAdded => DateFormat.yMMMd().format(dateAdded);
 }
