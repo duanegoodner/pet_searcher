@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pet_matcher/models/animal.dart';
@@ -11,6 +10,7 @@ import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/animal_search_button.dart';
 import 'package:pet_matcher/widgets/animal_sort_button.dart';
+import 'package:pet_matcher/widgets/delete_dialog.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -229,49 +229,11 @@ Widget editIcon(Animal animal, BuildContext context) {
 
 Widget deleteIcon(Animal animal, BuildContext context) {
   return IconButton(
-      icon: Icon(Icons.delete),
-      tooltip: 'Remove animal',
-      onPressed: () {
-        _showMyDialog(animal, context);
-      });
-}
-
-//Reference: https://api.flutter.dev/flutter/material/AlertDialog-class.html
-Future<void> _showMyDialog(Animal animal, BuildContext context) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Delete this animal?'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: [
-              Text(
-                  'Would you like to permanently remove this animal from the animal inventory?'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            child: Text('No'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('Yes'),
-            onPressed: () {
-              FirebaseFirestore.instance
-                  .collection('animals')
-                  .doc(animal.animalID)
-                  .delete();
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
+    icon: Icon(Icons.delete),
+    tooltip: 'Remove animal',
+    onPressed: () {
+      showMyDialog('animals', animal, context);
+    }
   );
 }
 

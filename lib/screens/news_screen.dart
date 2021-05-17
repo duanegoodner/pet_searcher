@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pet_matcher/widgets/delete_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_matcher/screens/add_news_item_screen.dart';
 import 'package:share/share.dart';
@@ -139,9 +140,9 @@ class _NewsScreenState extends State<NewsScreen> {
     if (userType == 'admin') {
       return Row(
         children: [
-          favoriteIcon(),
           shareIcon(post),
           editIcon(post),
+          deleteIcon(post, context),
         ],
       );
     } else {
@@ -153,6 +154,15 @@ class _NewsScreenState extends State<NewsScreen> {
       );
     }
   }
+
+  Widget deleteIcon(NewsItem post, BuildContext context) {
+  return IconButton(
+      icon: Icon(Icons.delete),
+      tooltip: 'Remove post',
+      onPressed: () {
+        showMyDialog('newsPost', post, context);
+      });
+}
 
   Widget favoriteIcon() {
     return IconButton(
