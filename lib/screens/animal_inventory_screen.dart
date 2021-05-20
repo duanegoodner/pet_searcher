@@ -162,12 +162,7 @@ Widget animalPhotoTile(String userType, Animal animal, BuildContext context) {
           ),
         ),
       ),
-      Positioned(
-        child: animalInventoryLayout(userType, animal, context),
-        bottom: 0,
-        left: 0,
-        right: 0,
-      ),
+      animalInventoryLayout(userType, animal, context),
     ],
   );
 }
@@ -223,30 +218,44 @@ Widget animalInfoText(Animal animal) {
 Widget animalInventoryLayout(
     String userType, Animal animal, BuildContext context) {
   if (userType == 'admin') {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        editIcon(animal, context),
-        deleteIcon(animal, context),
-      ],
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          editIcon(animal, context),
+          deleteIcon(animal, context),
+        ],
+      ),
     );
   } else {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [favoriteIcon(animal)]);
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [favoriteIcon(animal)]),
+    );
   }
 }
 
 Widget favoriteIcon(Animal animal) {
-  return IconButton(
-    icon: Icon(Icons.favorite_border_outlined),
-    tooltip: 'Save animal',
-    onPressed: () {
-      //NOTE: Still need to allow for selecting favorites
-      //and adding to favorite screen if we want to do that
-    },
-  );
+  return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          icon: Icon(Icons.favorite, color: Colors.white),
+          tooltip: 'Save animal',
+          onPressed: () {
+            //NOTE: Still need to allow for selecting favorites
+            //and adding to favorite screen if we want to do that
+          },
+        ),
+      ]);
 }
 
 Widget editIcon(Animal animal, BuildContext context) {
