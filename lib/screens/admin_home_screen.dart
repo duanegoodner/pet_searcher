@@ -1,15 +1,13 @@
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
-import 'package:pet_matcher/screens/animal_detail_screen.dart';
-import 'package:pet_matcher/screens/animal_inventory_screen.dart';
-import 'package:share/share.dart';
-import 'package:pet_matcher/locator.dart';
-import 'package:pet_matcher/models/animal.dart';
-import 'package:pet_matcher/models/news_item.dart';
-import 'package:pet_matcher/services/animal_service.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/screens/add_news_item_screen.dart';
+import 'package:pet_matcher/screens/animal_inventory_screen.dart';
+import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
+import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
+import 'package:pet_matcher/widgets/background_image.dart';
+import 'package:pet_matcher/widgets/standard_tile.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   static const routeName = 'adminHome';
@@ -19,323 +17,96 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
+  //final FirebaseAuth auth = FirebaseAuth.instance;
+  //String userID = '';
 
   @override
   Widget build(BuildContext context) {
+    //NOTE: Should personalize and get admin's name
+    String userName = 'ADMIN';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Admin'),
-        backgroundColor: Colors.blue[300],
+        title: Text('Pet Matcher'),
+        backgroundColor: Colors.blue,
       ),
       drawer: AdminDrawer(),
-      backgroundColor: Colors.blue[300],
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            headingText('News Feed:'),
-            buildListFromStream(context),
-            headingText('Manage Inventory:'),
-            inventoryCard(),
-            headingText('Featured Animals:'),
-            buildFeaturedAnimalsCard(context),
-          ],
-        ),
+      body: Stack(
+        children: [
+          backgroundImage('assets/images/dog_shaking_hands.jpg'),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              welcomeText(userName),
+              gridView(),
+            ],
+          )
+        ],
       ),
     );
   }
 
-  Widget headingText(String heading) {
-    return Container(
-      margin: EdgeInsets.only(top: 20.0),
+/*
+  void getUserFirstName() async {
+    final User user = auth.currentUser;
+    userID = user.uid;
+  }
+*/
+
+  Widget welcomeText(String userName) {
+    return Padding(
+      padding: EdgeInsets.only(top: 60, left: 20, bottom: 40),
       child: Text(
-        '$heading',
+        'WELCOME $userName',
         style: TextStyle(
-          fontSize: 26,
-          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
         ),
       ),
     );
   }
 
-  Widget buildListFromStream(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('newsPost')
-            .orderBy('date', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData &&
-              snapshot.data.docs != null &&
-              snapshot.data.docs.length > 0) {
-            return Padding(
-              padding: EdgeInsets.all(10),
-              child: SizedBox(
-                height: 300,
-                child: ListView.builder(
-                  itemCount: 1,
-                  itemBuilder: (context, index) => _buildNewsItem(
-                      context, snapshot.data.docs[index]),
-                ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Text('Error!');
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-
-  Widget _buildNewsItem(
-      BuildContext context, DocumentSnapshot document) {
-    DateTime date = convertTimestampToDateTime(document['date']);
-
-    NewsItem post = NewsItem.fromMap({
-      'date': date,
-      'imageUrl': document['imageUrl'],
-      'title': document['title'],
-      'body': document['body'],
-    });
-
-    return newsCard(post);
-  }
-
-  Widget newsCard(NewsItem post) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      width: 275,
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(child: Image.network('${post.imageUrl}')),
-            ListTile(
-                title: addPadding(
-                  Text(
-                    '${post.title}',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 26,
-                    ),
-                  ),
-                ),
-                subtitle: addPadding(
-                  Text(
-                    '${post.body}',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                )),
-            Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Text(
-                      '${formatDate(post.date)}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  articleIconLayout(post)
-                ],
-              ),
-            ),
-          ],
-        ),
+  Widget gridView() {
+    return Expanded(
+      child: GridView.count(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        padding: EdgeInsets.all(10),
+        children: [
+          standardTile(
+            icon: Icons.rss_feed, 
+            text: 'News Feed', 
+            routeToNewScreen: () {
+              Navigator.of(context).pushReplacementNamed(NewsScreen.routeName);
+            }
+          ),
+          standardTile(
+            icon: FontAwesomeIcons.newspaper, 
+            text: 'Add News Post', 
+            routeToNewScreen: () {
+              Navigator.of(context).pushNamed(AddNewsItemScreen.routeName);
+            }
+          ),
+          standardTile(
+            icon: FontAwesomeIcons.paw, 
+            text: 'Inventory', 
+            routeToNewScreen: () {
+              Navigator.of(context)
+                .pushReplacementNamed(AnimalInventoryScreen.routeName);
+            }
+          ),
+          standardTile(
+            icon: FontAwesomeIcons.dog, 
+            text: 'Add New Animal', 
+            routeToNewScreen: () {
+              Navigator.of(context).pushNamed(ChooseAnimalTypeScreen.routeName);
+            }
+          ),
+        ],
       ),
     );
   }
 
-  Widget buildFeaturedAnimalsCard(BuildContext context) {
-    Stream animalListStream = locator<AnimalService>().availableAnimalStream();
-
-    return StreamBuilder(
-        stream: animalListStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData &&
-              snapshot.data != null &&
-              snapshot.data.length > 0) {
-            return Padding(
-              padding: EdgeInsets.all(10),
-              child: SizedBox(
-                height: 320,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    Animal animal = snapshot.data[index];
-                    return featuredAnimalCard(animal);
-                  },
-                ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Text('Error!');
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-
-  Widget inventoryCard() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      width: 275,
-      height: 265,
-      child: Card(
-        color: Colors.white,
-        elevation: 0,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Card(
-                child: Wrap(children: <Widget>[
-              Image.asset('assets/images/frenchie_in_costume.jpg',
-                  height: 200, width: 275, fit: BoxFit.fitWidth),
-            ])),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(AnimalInventoryScreen.routeName);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget featuredAnimalCard(Animal animal) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      width: 160,
-      child: Card(
-        color: Colors.white,
-        elevation: 0,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              child: Card(
-                  child: Wrap(children: <Widget>[
-                    Image.network(animal.imageURL,
-                        height: 165, width: 275, fit: BoxFit.fitHeight),
-                  ])),
-            ),
-            Row(
-              children: <Widget>[animalCardText(animal.name, 16.0)],
-            ),
-            Row(
-              children: <Widget>[
-                animalCardText(animal.type, 14.0),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                animalCardText(animal.gender, 14.0),
-                Padding(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                     Navigator.of(context).pushNamed(AnimalDetailScreen.routename, arguments: animal);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget animalCardText(String animalText, double size) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text('$animalText', style: TextStyle(fontSize: size)),
-    );
-  }
-
-  // This is for inventory
-  Widget editIcon() {
-    return  IconButton(
-      icon: Icon(Icons.edit_outlined),
-      onPressed: () {
-        Navigator.of(context)
-            .pushNamed(AnimalInventoryScreen.routeName);
-      },
-    );
-  }
-
-  Widget articleIconLayout(NewsItem post) {
-    return Row(
-      children: [
-        addIcon(),
-        editNewsIcon(post),
-        shareIcon(post),
-      ],
-    );
-  }
-  
-  Widget shareIcon(NewsItem post) {
-    return IconButton(
-      icon: Icon(Icons.share_outlined),
-      onPressed: () {
-        Share.share(
-            'Check out this article from Pet Matcher!\n\n${post.body} ' +
-                '\n\n${post.date}.',
-            subject: '${post.title}');
-      },
-    );
-  }
-
-  Widget addIcon() {
-    return IconButton(
-      icon: Icon(Icons.add),
-      onPressed: () {
-        Navigator.of(context)
-            .pushNamed(AddNewsItemScreen.routeName);
-      },
-    );
-  }
-
-  Widget editNewsIcon(NewsItem post) {
-    return IconButton(
-      icon: Icon(Icons.edit_outlined),
-      onPressed: () {
-        Navigator.of(context)
-            .pushNamed(AddNewsItemScreen.routeName, arguments: post);
-      },
-    );
-  }
-
-  //function to convert Timestamp to DateTime
-  DateTime convertTimestampToDateTime(Timestamp time) {
-    return DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
-  }
-
-  //function to format date
-  String formatDate(DateTime date) {
-    return DateFormat.yMMMMd('en_US').format(date);
-  }
-
-  Widget addPadding(Widget item) {
-    return Padding(
-      padding: EdgeInsets.all(5),
-      child: item,
-    );
-  }
 }
