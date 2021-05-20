@@ -99,14 +99,22 @@ Widget animalList(BuildContext context, String userType) {
           ),
         );
       }
+
       return Expanded(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: animals.length,
-          itemBuilder: (context, index) {
-            Animal animal = animals[index];
-            return inventoryListTile(context, animal, userType);
-          },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 250,
+                childAspectRatio: 2.1 / 3,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5),
+            itemCount: animals.length,
+            itemBuilder: (context, index) {
+              Animal animal = animals[index];
+              return inventoryListTile(context, animal, userType);
+            },
+          ),
         ),
       );
     },
@@ -116,74 +124,92 @@ Widget animalList(BuildContext context, String userType) {
 Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
   return GestureDetector(
     onTap: () {
-      Navigator.of(context).pushNamed(AnimalDetailScreen.routename, arguments: animal);
+      Navigator.of(context)
+          .pushNamed(AnimalDetailScreen.routename, arguments: animal);
     },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: SizedBox(
-            height: 200,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: animal.imageURL,
-                      width: 100,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${animal.name}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          'Breed: ${animal.breed}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          'Age: ${animal.age}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          '\nDate Added:\n${animal.formattedDateAdded}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 13,
-                          ),
-                        ),
-                        animalInventoryLayout(userType, animal, context),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    child: Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      clipBehavior: Clip.hardEdge,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 7),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            animalPhotoTile(userType, animal, context),
+            animalInfoText(animal),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget animalPhotoTile(String userType, Animal animal, BuildContext context) {
+  return Stack(
+    alignment: AlignmentDirectional.center,
+    children: [
+      AspectRatio(
+        aspectRatio: 1.1,
+        child: ClipRRect(
+          clipBehavior: Clip.hardEdge,
+          // borderRadius: BorderRadius.circular(10.0),
+          child: CachedNetworkImage(
+            imageUrl: animal.imageURL,
+            // width: 180,
+            // height: 150,
+            fit: BoxFit.cover,
           ),
         ),
+      ),
+      animalInventoryLayout(userType, animal, context),
+    ],
+  );
+}
+
+Widget animalInfoText(Animal animal) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 10, bottom: 5, left: 5, right: 5),
+    child: Align(
+      alignment: Alignment.bottomLeft,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${animal.name}',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+          Text(
+            'Breed: ${animal.breed}',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 14,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            'Age: ${animal.age}',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 14,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            'Arrived: ${animal.formattedDateAdded}',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ),
     ),
   );
@@ -192,34 +218,53 @@ Widget inventoryListTile(BuildContext context, Animal animal, String userType) {
 Widget animalInventoryLayout(
     String userType, Animal animal, BuildContext context) {
   if (userType == 'admin') {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        editIcon(animal, context),
-        deleteIcon(animal, context),
-      ],
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          editIcon(animal, context),
+          deleteIcon(animal, context),
+        ],
+      ),
     );
   } else {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [favoriteIcon(animal)]);
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [favoriteIcon(animal)]),
+    );
   }
 }
 
 Widget favoriteIcon(Animal animal) {
-  return IconButton(
-    icon: Icon(Icons.favorite_border_outlined),
-    tooltip: 'Save animal',
-    onPressed: () {
-      //NOTE: Still need to allow for selecting favorites
-      //and adding to favorite screen if we want to do that
-    },
-  );
+  return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          icon: Icon(Icons.favorite, color: Colors.white),
+          tooltip: 'Save animal',
+          onPressed: () {
+            //NOTE: Still need to allow for selecting favorites
+            //and adding to favorite screen if we want to do that
+          },
+        ),
+      ]);
 }
 
 Widget editIcon(Animal animal, BuildContext context) {
   return IconButton(
-      icon: Icon(Icons.edit),
+      icon: Icon(
+        Icons.edit_outlined,
+        color: Colors.white,
+        size: 30,
+      ),
       tooltip: 'Edit animal',
       onPressed: () {
         Navigator.of(context)
@@ -229,12 +274,15 @@ Widget editIcon(Animal animal, BuildContext context) {
 
 Widget deleteIcon(Animal animal, BuildContext context) {
   return IconButton(
-    icon: Icon(Icons.delete),
-    tooltip: 'Remove animal',
-    onPressed: () {
-      showMyDialog('animals', animal, context);
-    }
-  );
+      icon: Icon(
+        Icons.delete_outlined,
+        color: Colors.red[400],
+        size: 30,
+      ),
+      tooltip: 'Remove animal',
+      onPressed: () {
+        showMyDialog('animals', animal, context);
+      });
 }
 
 Widget noAnimalsFoundTile() {
