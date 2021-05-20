@@ -29,7 +29,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         title: Text('Meet ${receivedAnimal.name}!'),
         backgroundColor: Colors.blue[300],
       ),
-      drawer: getDrawerType(userType),
+      // drawer: getDrawerType(userType),
       backgroundColor: Colors.blue[300],
       body: SingleChildScrollView(
         child: Center(
@@ -64,50 +64,43 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       child: Padding(
         padding: EdgeInsets.all(25),
         child: Card(
-        color: Colors.white,
-        elevation: 0,
-        child: Column(
-          mainAxisSize: MainAxisSize.min, 
-          children: <Widget>[
+          color: Colors.white,
+          elevation: 20,
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             Stack(children: <Widget>[
               Card(
-                child: Wrap(children: <Widget>[
-                  Image.network(animal.imageURL,
+                  child: Wrap(children: <Widget>[
+                Image.network(animal.imageURL,
                     height: 300,
                     width: 350,
-                    fit: BoxFit.fill, 
-                    loadingBuilder: (BuildContext context,
-                      Widget child, ImageChunkEvent loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(child: CircularProgressIndicator());
-                      }
-                  ),
-                ]
-              )
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5.0, left: 285.0),
-              child: IconButton(
-                icon: Icon(Icons.favorite),
-                color: _isFavorite ? Colors.red : Colors.white,
-                onPressed: () => {
-                  setState(() {
-                    _isFavorite = !_isFavorite;
-                    //Add logic for saving a favorite
-                  })
-                },
+                    fit: BoxFit.fill, loadingBuilder: (BuildContext context,
+                        Widget child, ImageChunkEvent loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(child: CircularProgressIndicator());
+                }),
+              ])),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0, left: 285.0),
+                child: IconButton(
+                  icon: Icon(Icons.favorite),
+                  color: _isFavorite ? Colors.red : Colors.white,
+                  onPressed: () => {
+                    setState(() {
+                      _isFavorite = !_isFavorite;
+                      //Add logic for saving a favorite
+                    })
+                  },
+                ),
               ),
-            ),
+            ]),
+            displayEditIcon(animal, userType),
+            //temperamentRow(animal),
+            //editIcon(userType),
           ]),
-          displayEditIcon(animal, userType),
-          //temperamentRow(animal),
-          //editIcon(userType),
-        ]),
-      ),
+        ),
       ),
     );
   }
-  
 
 /*NOTE: Working on this: Trying to fix image distortion while still keeping Erica's design
   Widget displayImage(Animal animal, userType) {
@@ -170,7 +163,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         );
   }
   */
-  
 
   Widget temperamentRow(Animal animal) {
     return Container(
