@@ -10,6 +10,8 @@ import 'package:pet_matcher/models/news_item.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 
+import '../styles.dart';
+
 class NewsScreen extends StatefulWidget {
   static const routeName = 'newsScreen';
 
@@ -26,10 +28,10 @@ class _NewsScreenState extends State<NewsScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('News Feed'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Styles.appBarColor,
       ),
       drawer: getDrawerType(userType),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: buildListFromStream(context, userType),
     );
   }
@@ -74,7 +76,6 @@ class _NewsScreenState extends State<NewsScreen> {
       BuildContext context, DocumentSnapshot document, String userType) {
     DateTime date = convertTimestampToDateTime(document['date']);
     String documentID = document.id;
-    //print('The document ID is: $documentID');
 
     NewsItem post = NewsItem.fromMap({
       'docID': documentID,
@@ -101,18 +102,14 @@ class _NewsScreenState extends State<NewsScreen> {
                   Text(
                     '${post.title}',
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 26,
-                    ),
+                    style: Styles.newsFeedTitleText,
                   ),
                 ),
                 subtitle: addPadding(
                   Text(
                     '${post.body}',
                     textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+                    style: Styles.newsFeedBodyText,
                   ),
                 )),
             Padding(
@@ -123,7 +120,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   Container(
                     child: Text(
                       '${formatDate(post.date)}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: Styles.newsFeedDateText,
                     ),
                   ),
                   articleIconLayout(userType, post)
@@ -148,7 +145,6 @@ class _NewsScreenState extends State<NewsScreen> {
     } else {
       return Row(
         children: [
-          favoriteIcon(),
           shareIcon(post),
         ],
       );
@@ -162,16 +158,6 @@ class _NewsScreenState extends State<NewsScreen> {
       onPressed: () {
         showMyDialog('newsPost', post, context);
       });
-}
-
-  Widget favoriteIcon() {
-    return IconButton(
-      icon: Icon(Icons.favorite_border_outlined),
-      onPressed: () {
-        //NOTE: Still need to allow for selecting favorites
-        //and adding to favorite screen if we want to do that
-      },
-    );
   }
 
   Widget shareIcon(NewsItem post) {

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
-
 import 'package:pet_matcher/screens/login_screen.dart';
 import 'package:pet_matcher/screens/account_setup_screen.dart';
+
+import '../styles.dart';
 
 class LandingScreen extends StatelessWidget {
   static const routeName = 'landingScreen';
@@ -12,7 +13,7 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,7 +32,7 @@ class LandingScreen extends StatelessWidget {
     return Flexible(
         flex: 1,
         child: addPadding(
-            Text(title, style: TextStyle(fontSize: 50, color: Colors.white))));
+            Text(title, style: Styles.landingPageTitleText)));
   }
 
   //Free Clip Art Reference: https://wikiclipart.com/dog-paw-prints-clip-art_37264/
@@ -61,7 +62,7 @@ class LandingScreen extends StatelessWidget {
           Navigator.of(context).pushNamed(AccountSetupScreen.routeName);
         },
         child: Text('Create Account',
-            style: TextStyle(fontSize: 18, color: Colors.white)),
+            style: Styles.subtitleTextWhite),
       )),
     );
   }

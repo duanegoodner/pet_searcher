@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../styles.dart';
+
 Widget standardLoadingScreen({String message}) {
   return Scaffold(
-    backgroundColor: Colors.blue[300],
+    backgroundColor: Styles.backgroundColor,
     body: Center(
       child: CircularProgressIndicator(),
     ),

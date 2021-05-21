@@ -7,6 +7,7 @@ import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:pet_matcher/widgets/contact_form.dart';
 
+import '../styles.dart';
 import 'add_pet_screen.dart';
 
 class AnimalDetailScreen extends StatefulWidget {
@@ -27,10 +28,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Meet ${receivedAnimal.name}!'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Styles.appBarColor,
       ),
-      // drawer: getDrawerType(userType),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: SingleChildScrollView(
         child: Center(
             child: Column(
@@ -73,7 +73,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 Image.network(animal.imageURL,
                     height: 300,
                     width: 350,
-                    fit: BoxFit.fill, loadingBuilder: (BuildContext context,
+                    fit: BoxFit.cover, loadingBuilder: (BuildContext context,
                         Widget child, ImageChunkEvent loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Center(child: CircularProgressIndicator());
@@ -94,75 +94,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               ),
             ]),
             displayEditIcon(animal, userType),
-            //temperamentRow(animal),
-            //editIcon(userType),
           ]),
         ),
       ),
     );
   }
-
-/*NOTE: Working on this: Trying to fix image distortion while still keeping Erica's design
-  Widget displayImage(Animal animal, userType) {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Card(
-          color: Colors.white,
-          elevation: 0,
-          child: animalWithFavoriteIconCard(animal, userType),
-          ),
-      ),
-    );
-  }
-
-  Widget animalWithFavoriteIconCard(Animal animal, userType){
-    return Column(
-            mainAxisSize: MainAxisSize.min, 
-            children: [
-              Stack(
-                children: [
-                  Card(
-                    child: Wrap(children: [Align(
-                        alignment: Alignment.bottomCenter,
-                        child: AspectRatio(
-                        aspectRatio: 1/1,
-                        //aspectRatio: 487 / 451,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.fitWidth,
-                              alignment: FractionalOffset.topCenter,
-                              image: NetworkImage('${animal.imageURL}'),
-                            )
-                          ),
-                        ),
-                      ),  
-                  )
-                  ],)     
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0, left: 300.0),
-                  child: IconButton(
-                    icon: Icon(Icons.favorite),
-                    color: _isFavorite ? Colors.red : Colors.white,
-                    onPressed: () => {
-                      setState(() {
-                        _isFavorite = !_isFavorite;
-                        //Add logic for saving a favorite
-                      })
-                    },
-                  ),
-                ),
-              ]
-            ),
-            displayEditIcon(animal, userType),
-            //temperamentRow(animal),
-            //editIcon(userType),
-          ]
-        );
-  }
-  */
 
   Widget temperamentRow(Animal animal) {
     return Container(
@@ -175,10 +111,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 title: Align(
                   alignment: Alignment(-1.25, 0),
                   child: Text('${animal.disposition[index]}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      )),
+                    style: Styles.detailTextBlack
+                  ),
                 ),
               );
             }));
@@ -192,10 +126,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         child: Text(
             '${animal.name} is looking for an active family to conquer the world with.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-            )),
+            style: Styles.animalDetailDatingBlurbText),
       ),
     );
   }
@@ -262,25 +193,24 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             Column(children: <Widget>[
               Icon(Icons.info_outlined, color: Colors.white),
               Text('${animal.type}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+                style: Styles.standardTextWhite
+              ),
             ]),
             Column(children: <Widget>[
               FaIcon(FontAwesomeIcons.paw, color: Colors.white),
               Text('${animal.breed}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+                style: Styles.standardTextWhite,
+              ),
             ]),
             Column(children: <Widget>[
               FaIcon(FontAwesomeIcons.venusMars, color: Colors.white),
               Text('${animal.gender}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
-            ]),
-          ]),
+                style: Styles.standardTextWhite,
+              ),
+            ]
+          ),
+        ]
+      ),
     );
   }
 
@@ -293,16 +223,14 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             Column(children: <Widget>[
               Icon(Icons.calendar_today, color: Colors.white),
               Text('${animal.age}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+                style: Styles.standardTextWhite
+              ),
             ]),
             Column(children: <Widget>[
               Icon(Icons.home_rounded, color: Colors.white),
               Text('${animal.status}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+                style: Styles.standardTextWhite
+              ),
             ]),
           ]),
     );
@@ -313,11 +241,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       margin: EdgeInsets.only(top: 20.0),
       child: Text(
         '$heading',
-        style: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
+        style: Styles.animalDetailHeadingText,
       ),
     );
   }
@@ -344,7 +268,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       style: ElevatedButton.styleFrom(
         primary: Colors.grey,
         onPrimary: Colors.white,
-        textStyle: TextStyle(color: Colors.white, fontSize: 28),
+        textStyle: Styles.elevatedButtonText,
         shadowColor: Colors.black,
         elevation: 8,
       ),

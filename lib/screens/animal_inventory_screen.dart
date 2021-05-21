@@ -14,6 +14,8 @@ import 'package:pet_matcher/widgets/delete_dialog.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:provider/provider.dart';
 
+import '../styles.dart';
+
 class AnimalInventoryScreen extends StatelessWidget {
   static const routeName = 'animalInventoryScreen';
   const AnimalInventoryScreen({Key key}) : super(key: key);
@@ -27,7 +29,7 @@ class AnimalInventoryScreen extends StatelessWidget {
       child: Scaffold(
         appBar: inventoryAppBar(context, userType),
         drawer: getDrawerType(userType),
-        backgroundColor: Colors.blue[200],
+        backgroundColor: Styles.backgroundColor,
         body: Column(
           children: [
             animalList(context, userType),
@@ -58,7 +60,7 @@ class AnimalInventoryScreen extends StatelessWidget {
         appBarTitle,
         textAlign: TextAlign.start,
       ),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.appBarColor,
       actions: addAppbarActions(context, userType),
     );
   }
@@ -153,11 +155,8 @@ Widget animalPhotoTile(String userType, Animal animal, BuildContext context) {
         aspectRatio: 1.1,
         child: ClipRRect(
           clipBehavior: Clip.hardEdge,
-          // borderRadius: BorderRadius.circular(10.0),
           child: CachedNetworkImage(
             imageUrl: animal.imageURL,
-            // width: 180,
-            // height: 150,
             fit: BoxFit.cover,
           ),
         ),
@@ -178,36 +177,24 @@ Widget animalInfoText(Animal animal) {
         children: [
           Text(
             '${animal.name}',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+            style: Styles.titleTextBlack,
           ),
           Text(
             'Breed: ${animal.breed}',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 14,
-            ),
+            style: Styles.detailTextBlack,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             'Age: ${animal.age}',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 14,
-            ),
+            style: Styles.detailTextBlack,
           ),
           SizedBox(
             height: 5,
           ),
           Text(
             'Arrived: ${animal.formattedDateAdded}',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 13,
-            ),
+            style: Styles.inventoryDateText,
           ),
         ],
       ),
@@ -304,10 +291,7 @@ Widget noAnimalsFoundTile() {
                     padding: const EdgeInsets.all(10),
                     child: Text(
                       'Sorry. No animals found.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
+                      style: Styles.titleTextBlack,
                     ),
                   ),
                 ),
