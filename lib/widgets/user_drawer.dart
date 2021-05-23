@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-//import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
-//import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
+import '../styles.dart';
 
 class UserDrawer extends StatelessWidget {
   @override
@@ -15,7 +14,7 @@ class UserDrawer extends StatelessWidget {
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[300],
+          color: Styles.backgroundColor,
         ),
         child: Column(
           children: <Widget>[
@@ -27,11 +26,7 @@ class UserDrawer extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Menu',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: Styles.drawerHeadingText,
               ),
             ),
             SizedBox(height: 10),
@@ -47,13 +42,6 @@ class UserDrawer extends StatelessWidget {
               icon: FontAwesomeIcons.paw,
               onTap: () {
                 pushSearchAnimals(context);
-              },
-            ),
-            buildListTile(
-              title: 'Featured Animals',
-              icon: FontAwesomeIcons.dog,
-              onTap: () {
-                pushUserHome(context);
               },
             ),
             buildListTile(
@@ -91,7 +79,7 @@ class UserDrawer extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white),
+        style: Styles.drawerListText,
       ),
       onTap: onTap,
     );

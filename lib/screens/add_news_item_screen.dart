@@ -6,6 +6,8 @@ import 'package:pet_matcher/services/image_service.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
 
+import '../styles.dart';
+
 class AddNewsItemScreen extends StatefulWidget {
   static const routeName = 'addNewsItemScreen';
 
@@ -37,9 +39,9 @@ class _AddNewsItemScreenState extends State<AddNewsItemScreen> {
         leading: BackButton(),
         centerTitle: true,
         title: Text('Add News Post'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Styles.appBarColor,
       ),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Form(
@@ -121,9 +123,7 @@ class _AddNewsItemScreenState extends State<AddNewsItemScreen> {
   }
 
   Widget addFABLabelText(BuildContext context, String text) {
-    return Text('$text',
-        style: TextStyle(
-            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold));
+    return Text('$text', style: Styles.fabText);
   }
 
   Widget postArticleButton(BuildContext context) {

@@ -4,6 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
 import 'package:pet_matcher/models/animal.dart';
 
+import '../styles.dart';
+
 class ContactForm extends StatefulWidget {
 
   final Animal animal;
@@ -21,7 +23,7 @@ class _ContactFormState extends State<ContactForm> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        backgroundColor: Colors.blue[200],
+        backgroundColor: Styles.popUpColor,
         content: Container(
             width: double.maxFinite,
             height: 450,
@@ -80,7 +82,7 @@ class _ContactFormState extends State<ContactForm> {
         style: ElevatedButton.styleFrom(
           primary: Colors.grey,
           onPrimary: Colors.white,
-          textStyle: TextStyle(color: Colors.white, fontSize: 28),
+          textStyle: Styles.elevatedButtonText,
           shadowColor: Colors.black,
           elevation: 8,
           minimumSize: Size(5, 5),
