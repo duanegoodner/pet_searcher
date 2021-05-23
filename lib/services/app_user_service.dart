@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,6 +46,31 @@ class AppUserService {
     });
   }
 
+  // Stream<AppUser> get authOrDataChange {
+  //   return Rx.combineLatest2(
+  //       firebaseAuth.authStateChanges(), _users.doc(firebaseAuth.authStateChanges().uid),
+  //       (User auth, QuerySnapshot allUsersData) {
+  //     if (auth == null) {
+  //       return AppUser.initial();
+  //     }
+  //     DocumentSnapshot userData =
+
+  //   });
+  // }
+
+  Stream<AppUser> get appUserDataChange {
+    return userDataStream.map((e) {
+      if (e == null) {
+        return AppUser.initial();
+      }
+      return AppUser.fromJSON(e.data());
+    });
+  }
+
+  Stream<DocumentSnapshot> get userDataStream {
+    return _users.doc(firebaseAuth.currentUser?.uid).snapshots();
+  }
+
   Future<String> get userRole async {
     AppUser appUser = await appUserSnapshot();
     String userRole = appUser?.role;
@@ -58,9 +85,15 @@ class AppUserService {
     );
   }
 
-  Stream<DocumentSnapshot> get userDataStream {
-    return _users.doc(firebaseAuth.currentUser.uid).snapshots();
-  }
+  // Stream<AppUser> get authOrDataChange {
+  //   return Rx.combineLatest2(firebaseAuth.authStateChanges(), userDataStream,
+  //       (User firebaseUser, DocumentSnapshot appUserData) {
+  //     if (firebaseUser == null || appUserData == null) {
+  //       return AppUser.initial();
+  //     }
+  //     return AppUser.fromJSON(appUserData.data());
+  //   });
+  // }
 
   // Stream<AppUser> get currentAppUser async* {
   //   AppUser appUser = await appUserSnapshot();
