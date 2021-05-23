@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/screens/login_screen.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
 import 'package:pet_matcher/services/new_app_user_dto.dart';
@@ -19,7 +20,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
   bool adminChecked = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final newAppUserData = NewAppUserDTO();
+  final newAppUserData = AppUser();
   final firebaseAuth = fb_auth.FirebaseAuth.instance;
 
   @override

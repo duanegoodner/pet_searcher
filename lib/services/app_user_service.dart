@@ -13,7 +13,7 @@ class AppUserService {
 
   AppUserService({this.firebaseAuth});
 
-  Future<void> uploadNewUser(NewAppUserDTO newAppUserData, String uid) async {
+  Future<void> uploadNewUser(AppUser newAppUserData, String uid) async {
     await _users.doc(uid).set(newAppUserData.toJson());
   }
 
