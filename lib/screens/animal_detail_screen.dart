@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   Widget build(BuildContext context) {
     Animal receivedAnimal = ModalRoute.of(context).settings.arguments;
     String userType = Provider.of<AppUser>(context).role;
+    List userFavorites = Provider.of<AppUser>(context).favorites;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -35,7 +38,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         child: Center(
             child: Column(
           children: <Widget>[
-            displayImage(receivedAnimal, userType),
+            displayImage(context, receivedAnimal, userType, userFavorites),
             headingText('${receivedAnimal.name}\'s Ideal Match:'),
             datingBlerb(receivedAnimal),
             headingText('The Lowdown:'),
@@ -48,10 +51,10 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         )),
       ),
     );
-  }
+    }
 
-  //function returning user or admin drawer
-  Widget getDrawerType(userType) {
+    //function returning user or admin drawer
+    Widget getDrawerType(userType) {
     if (userType == 'admin') {
       return AdminDrawer();
     } else {
@@ -59,7 +62,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     }
   }
 
-  Widget displayImage(Animal animal, userType) {
+  Widget displayImage(BuildContext context, Animal animal, userType, userFavorites) {
     return Container(
       child: Padding(
         padding: EdgeInsets.all(25),
@@ -73,8 +76,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               Card(
                 child: Wrap(children: <Widget>[
                   Image.network(animal.imageURL,
-                    height: 300,
-                    width: 350,
+                    //height: 300,
+                    //width: 350,
                     fit: BoxFit.fill, 
                     loadingBuilder: (BuildContext context,
                       Widget child, ImageChunkEvent loadingProgress) {
@@ -92,8 +95,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 color: _isFavorite ? Colors.red : Colors.white,
                 onPressed: () => {
                   setState(() {
+                    setFavorite(context, animal.name, userFavorites);
                     _isFavorite = !_isFavorite;
-                    //Add logic for saving a favorite
                   })
                 },
               ),
@@ -357,5 +360,31 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         elevation: 8,
       ),
     );
+  }
+
+  Future<void> setFavorite(BuildContext context, String name, userFavorites) async {
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = auth.currentUser;
+    DocumentReference userInfo = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+
+    // Favorites list not always updating, cause it's a snapshot from provider??
+    // Will work the first time the animal inventory page is visited
+
+    // If favorites array does not exist in firestore, create it
+    if(userFavorites == null) {
+      userInfo.update({'favorites': FieldValue.arrayUnion([name])});
+    }
+
+    if(userFavorites.isNotEmpty){
+      if (userFavorites.indexWhere((i) => i == name) != -1) {
+        userInfo.update({'favorites': FieldValue.arrayRemove([name])});
+      } else {
+        userInfo.update({'favorites': FieldValue.arrayUnion([name])});
+      }
+    } else {
+      userInfo.update({'favorites': FieldValue.arrayUnion([name])});
+    }
   }
 }
