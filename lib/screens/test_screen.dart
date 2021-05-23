@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 
+import '../styles.dart';
+
 //import '../models/app_user.dart';
 
 class TestScreen extends StatelessWidget {
@@ -15,7 +17,7 @@ class TestScreen extends StatelessWidget {
     final firebaseAuth =
         Provider.of<fb_auth.FirebaseAuth>(context, listen: false);
     return Scaffold(
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       appBar: AppBar(
         leading: Container(),
         title: Text(

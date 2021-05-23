@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 
+import '../styles.dart';
+
 class UserHomeScreen extends StatefulWidget {
   static const routeName = 'userHomeScreen';
 
@@ -22,7 +24,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Pet Matcher'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Styles.appBarColor,
       ),
       drawer: UserDrawer(),
       body: Stack(
@@ -43,11 +45,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       padding: EdgeInsets.only(top: 60, left: 230, bottom: 40),
       child: Text(
         'WELCOME $userName',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
+        style: Styles.titleTextBlack,
       ),
     );
   }

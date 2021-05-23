@@ -9,6 +9,8 @@ import 'package:pet_matcher/widgets/standard_dropdown_box.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
 import 'package:pet_matcher/widgets/standard_multi_select_chip_field.dart';
 
+import '../styles.dart';
+
 class AddPetScreen extends StatefulWidget {
   static const routeName = 'addPetScreen';
 
@@ -57,9 +59,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Add ${receivedAnimal.type}'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Styles.appBarColor,
       ),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Form(
@@ -212,10 +214,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
       padding: EdgeInsets.only(top: 10),
       child: Text(
         'Disposition (select all that apply)',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-        ),
+        style: Styles.dispositionHeaderWhite,
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../styles.dart';
+
 Widget filterDropDownBox({
   String labelText,
   EdgeInsets addPadding = const EdgeInsets.all(3),
@@ -22,9 +24,7 @@ Widget filterDropDownBox({
         decoration: InputDecoration(
           border: InputBorder.none,
           labelText: labelText,
-          labelStyle: TextStyle(
-            fontSize: 13,
-          ),
+          labelStyle: Styles.dropdownText,
         ),
         value: value,
         items: items.map<DropdownMenuItem<String>>((String value) {
@@ -32,7 +32,7 @@ Widget filterDropDownBox({
             value: value,
             child: Text(
               value,
-              style: TextStyle(fontSize: 13),
+              style: Styles.dropdownText,
             ),
           );
         }).toList(),

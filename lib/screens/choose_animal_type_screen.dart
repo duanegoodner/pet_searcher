@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 
+import '../styles.dart';
+
 class ChooseAnimalTypeScreen extends StatefulWidget {
   static const routeName = 'chooseAnimalTypeScreen';
 
@@ -17,10 +19,10 @@ class _ChooseAnimalTypeScreenState extends State<ChooseAnimalTypeScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Add a New Animal'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Styles.appBarColor,
       ),
       drawer: AdminDrawer(),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: [
@@ -59,13 +61,10 @@ class _ChooseAnimalTypeScreenState extends State<ChooseAnimalTypeScreen> {
                       padding: const EdgeInsets.all(10),
                       child: Text(
                         'Add New $text',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                        style: Styles.titleTextBlack,
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),

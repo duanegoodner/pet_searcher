@@ -85,5 +85,5 @@ class Animal {
         'imageURL': imageURL
       };
 
-  String get formattedDateAdded => DateFormat.yMMMd().format(dateAdded);
+  String get formattedDateAdded => DateFormat.yMd().format(dateAdded);
 }

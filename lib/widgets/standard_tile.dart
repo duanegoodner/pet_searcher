@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../styles.dart';
+
 Widget standardTile({
   @required var icon, 
   @required String text, 
@@ -9,7 +11,7 @@ Widget standardTile({
     child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.transparent),
-          color: Colors.blue.withOpacity(.80),
+          color: Styles.tileColor,
         ),
         padding: EdgeInsets.all(10),
         child: Column(
@@ -23,11 +25,7 @@ Widget standardTile({
               padding: EdgeInsets.all(10),
               child: Text(
                 '$text',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: Styles.subtitleTextWhiteBold, 
               ),
             )
           ],

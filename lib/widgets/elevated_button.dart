@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../styles.dart';
+
 Widget elevatedButtonStandard(String buttonText, var buttonFunction) {
   return ElevatedButton(
     onPressed: buttonFunction,
@@ -10,7 +12,7 @@ Widget elevatedButtonStandard(String buttonText, var buttonFunction) {
     style: ElevatedButton.styleFrom(
       primary: Colors.grey,
       onPrimary: Colors.white,
-      textStyle: TextStyle(color: Colors.white, fontSize: 28),
+      textStyle: Styles.elevatedButtonText,
       shadowColor: Colors.black,
       elevation: 8,
     ),
