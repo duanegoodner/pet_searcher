@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
+import '../styles.dart';
+
 Widget standardMultiSelectChipField({
   List<String> options,
   Function onTap,
@@ -13,10 +15,9 @@ Widget standardMultiSelectChipField({
     showHeader: false,
     scroll: false,
     chipColor: Colors.grey[100],
-    textStyle: TextStyle(color: Colors.grey[600], fontSize: 13),
+    textStyle: Styles.multiSelectChipText,
     selectedChipColor: Colors.blue[800],
-    selectedTextStyle: TextStyle(
-        color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+    selectedTextStyle: Styles.multiSelectChipSelectedText,
     items: options.map((key) => MultiSelectItem(key, key)).toList(),
     initialValue: initialValues,
     onTap: onTap,

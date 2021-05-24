@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
@@ -9,8 +7,8 @@ import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
 import 'package:pet_matcher/locator.dart';
-
 import 'package:pet_matcher/services/app_user_service.dart';
+import 'package:pet_matcher/styles.dart';
 
 class AdminDrawer extends StatelessWidget {
   @override
@@ -18,7 +16,7 @@ class AdminDrawer extends StatelessWidget {
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.blue[300],
+          color: Styles.backgroundColor,
         ),
         child: Column(
           children: <Widget>[
@@ -30,11 +28,7 @@ class AdminDrawer extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Menu',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: Styles.drawerHeadingText,
               ),
             ),
             SizedBox(height: 10),
@@ -101,7 +95,7 @@ class AdminDrawer extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(color: Colors.white),
+        style: Styles.drawerListText,
       ),
       onTap: onTap,
     );

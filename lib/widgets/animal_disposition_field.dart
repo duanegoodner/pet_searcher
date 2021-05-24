@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/widgets/standard_multi_select_chip_field.dart';
 
+import '../styles.dart';
+
 Widget standardDispositionField({
   String headerTitle,
   List<String> options,
@@ -37,10 +39,7 @@ Widget dispositionHeader({String headerTitle}) {
     padding: EdgeInsets.only(top: 10),
     child: Text(
       headerTitle,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 24,
-      ),
+      style: Styles.dispositionHeader, 
     ),
   );
 }

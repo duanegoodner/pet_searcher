@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +9,7 @@ import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:pet_matcher/widgets/contact_form.dart';
 
+import '../styles.dart';
 import 'add_pet_screen.dart';
 
 class AnimalDetailScreen extends StatefulWidget {
@@ -17,25 +20,25 @@ class AnimalDetailScreen extends StatefulWidget {
 }
 
 class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
-  bool _isFavorite = false;
+  // bool _isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
     Animal receivedAnimal = ModalRoute.of(context).settings.arguments;
     String userType = Provider.of<AppUser>(context).role;
+    List userFavorites = Provider.of<AppUser>(context).favorites;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('Meet ${receivedAnimal.name}!'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Styles.appBarColor,
       ),
-      drawer: getDrawerType(userType),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: SingleChildScrollView(
         child: Center(
             child: Column(
           children: <Widget>[
-            displayImage(receivedAnimal, userType),
+            displayImage(context, receivedAnimal, userType),
             headingText('${receivedAnimal.name}\'s Ideal Match:'),
             datingBlerb(receivedAnimal),
             headingText('The Lowdown:'),
@@ -59,118 +62,53 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     }
   }
 
-  Widget displayImage(Animal animal, userType) {
+  Widget displayImage(BuildContext context, Animal animal, userType) {
     return Container(
       child: Padding(
         padding: EdgeInsets.all(25),
         child: Card(
-        color: Colors.white,
-        elevation: 0,
-        child: Column(
-          mainAxisSize: MainAxisSize.min, 
-          children: <Widget>[
+          color: Colors.white,
+          elevation: 20,
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             Stack(children: <Widget>[
               Card(
-                child: Wrap(children: <Widget>[
-                  Image.network(animal.imageURL,
+                  child: Wrap(children: <Widget>[
+                Image.network(animal.imageURL,
                     height: 300,
                     width: 350,
-                    fit: BoxFit.fill, 
-                    loadingBuilder: (BuildContext context,
-                      Widget child, ImageChunkEvent loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(child: CircularProgressIndicator());
-                      }
-                  ),
-                ]
-              )
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5.0, left: 285.0),
-              child: IconButton(
-                icon: Icon(Icons.favorite),
-                color: _isFavorite ? Colors.red : Colors.white,
-                onPressed: () => {
-                  setState(() {
-                    _isFavorite = !_isFavorite;
-                    //Add logic for saving a favorite
-                  })
-                },
+                    fit: BoxFit.cover, loadingBuilder: (BuildContext context,
+                        Widget child, ImageChunkEvent loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(child: CircularProgressIndicator());
+                }),
+              ])),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0, left: 285.0),
+                child: Consumer<AppUser>(
+                  builder: (context, appUser, __) {
+                    return IconButton(
+                      icon: Icon(Icons.favorite),
+                      color: appUser.favorites.contains(animal.animalID)
+                          ? Colors.red
+                          : Colors.white,
+                      onPressed: () => {
+                        setState(() {
+                          setFavorite(context, animal);
+                          // _isFavorite = !_isFavorite;
+                          //Add logic for saving a favorite
+                        })
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ]),
-          displayEditIcon(animal, userType),
-          //temperamentRow(animal),
-          //editIcon(userType),
-        ]),
-      ),
-      ),
-    );
-  }
-  
-
-/*NOTE: Working on this: Trying to fix image distortion while still keeping Erica's design
-  Widget displayImage(Animal animal, userType) {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Card(
-          color: Colors.white,
-          elevation: 0,
-          child: animalWithFavoriteIconCard(animal, userType),
-          ),
-      ),
-    );
-  }
-
-  Widget animalWithFavoriteIconCard(Animal animal, userType){
-    return Column(
-            mainAxisSize: MainAxisSize.min, 
-            children: [
-              Stack(
-                children: [
-                  Card(
-                    child: Wrap(children: [Align(
-                        alignment: Alignment.bottomCenter,
-                        child: AspectRatio(
-                        aspectRatio: 1/1,
-                        //aspectRatio: 487 / 451,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.fitWidth,
-                              alignment: FractionalOffset.topCenter,
-                              image: NetworkImage('${animal.imageURL}'),
-                            )
-                          ),
-                        ),
-                      ),  
-                  )
-                  ],)     
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0, left: 300.0),
-                  child: IconButton(
-                    icon: Icon(Icons.favorite),
-                    color: _isFavorite ? Colors.red : Colors.white,
-                    onPressed: () => {
-                      setState(() {
-                        _isFavorite = !_isFavorite;
-                        //Add logic for saving a favorite
-                      })
-                    },
-                  ),
-                ),
-              ]
-            ),
+            ]),
             displayEditIcon(animal, userType),
-            //temperamentRow(animal),
-            //editIcon(userType),
-          ]
-        );
+          ]),
+        ),
+      ),
+    );
   }
-  */
-  
 
   Widget temperamentRow(Animal animal) {
     return Container(
@@ -183,10 +121,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 title: Align(
                   alignment: Alignment(-1.25, 0),
                   child: Text('${animal.disposition[index]}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      )),
+                      style: Styles.detailTextBlack),
                 ),
               );
             }));
@@ -200,10 +135,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         child: Text(
             '${animal.name} is looking for an active family to conquer the world with.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-            )),
+            style: Styles.animalDetailDatingBlurbText),
       ),
     );
   }
@@ -269,24 +201,21 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
           children: <Widget>[
             Column(children: <Widget>[
               Icon(Icons.info_outlined, color: Colors.white),
-              Text('${animal.type}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+              Text('${animal.type}', style: Styles.standardTextWhite),
             ]),
             Column(children: <Widget>[
               FaIcon(FontAwesomeIcons.paw, color: Colors.white),
-              Text('${animal.breed}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+              Text(
+                '${animal.breed}',
+                style: Styles.standardTextWhite,
+              ),
             ]),
             Column(children: <Widget>[
               FaIcon(FontAwesomeIcons.venusMars, color: Colors.white),
-              Text('${animal.gender}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+              Text(
+                '${animal.gender}',
+                style: Styles.standardTextWhite,
+              ),
             ]),
           ]),
     );
@@ -300,17 +229,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
           children: <Widget>[
             Column(children: <Widget>[
               Icon(Icons.calendar_today, color: Colors.white),
-              Text('${animal.age}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+              Text('${animal.age}', style: Styles.standardTextWhite),
             ]),
             Column(children: <Widget>[
               Icon(Icons.home_rounded, color: Colors.white),
-              Text('${animal.status}',
-                  style: TextStyle(
-                    color: Colors.white,
-                  )),
+              Text('${animal.status}', style: Styles.standardTextWhite),
             ]),
           ]),
     );
@@ -321,11 +244,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       margin: EdgeInsets.only(top: 20.0),
       child: Text(
         '$heading',
-        style: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
+        style: Styles.animalDetailHeadingText,
       ),
     );
   }
@@ -352,10 +271,54 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       style: ElevatedButton.styleFrom(
         primary: Colors.grey,
         onPrimary: Colors.white,
-        textStyle: TextStyle(color: Colors.white, fontSize: 28),
+        textStyle: Styles.elevatedButtonText,
         shadowColor: Colors.black,
         elevation: 8,
       ),
     );
+  }
+
+  Future<void> setFavorite(BuildContext context, Animal animal) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = auth.currentUser;
+    DocumentReference userInfo =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    List<dynamic> userFavorites =
+        Provider.of<AppUser>(context, listen: false).favorites;
+
+    // Favorites list not always updating, cause it's a snapshot from provider??
+    // Will work the first time the animal inventory page is visited
+
+    // If favorites array does not exist in firestore, create it
+    if (Provider.of<AppUser>(context, listen: false).favorites == null) {
+      userInfo.update({'favorites': FieldValue.arrayUnion([])});
+    }
+
+    if (userFavorites.contains(animal.animalID)) {
+      userInfo.update({
+        'favorites': FieldValue.arrayRemove([animal.animalID])
+      });
+    } else {
+      userInfo.update({
+        'favorites': FieldValue.arrayUnion([animal.animalID])
+      });
+
+      // if (userFavorites.isNotEmpty) {
+      //   if (userFavorites.indexWhere((i) => i == animal) != -1) {
+      //     userInfo.update({
+      //       'favorites': FieldValue.arrayRemove([animal])
+      //     });
+      //   } else {
+      //     userInfo.update({
+      //       'favorites': FieldValue.arrayUnion([animal])
+      //     });
+      //   }
+      // } else {
+      //   userInfo.update({
+      //     'favorites': FieldValue.arrayUnion([name])
+      //   });
+      // }
+    }
   }
 }

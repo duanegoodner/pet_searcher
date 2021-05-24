@@ -9,6 +9,8 @@ import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/background_image.dart';
 import 'package:pet_matcher/widgets/standard_tile.dart';
 
+import '../styles.dart';
+
 class AdminHomeScreen extends StatefulWidget {
   static const routeName = 'adminHome';
 
@@ -28,7 +30,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Pet Matcher'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Styles.appBarColor,
       ),
       drawer: AdminDrawer(),
       body: Stack(
@@ -58,11 +60,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       padding: EdgeInsets.only(top: 60, left: 20, bottom: 40),
       child: Text(
         'WELCOME $userName',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
+        style: Styles.titleTextBlack
       ),
     );
   }

@@ -8,6 +8,8 @@ import 'package:pet_matcher/services/app_user_service.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
 
+import '../styles.dart';
+
 class LoginScreen extends StatefulWidget {
   static const routeName = 'loginScreen';
 
@@ -24,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       appBar: AppBar(
         leading: BackButton(),
       ),
@@ -69,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: EdgeInsets.only(top: 5, bottom: 30, left: 10, right: 10),
         child: Text(
           'Pet Matcher',
-          style: TextStyle(fontSize: 35, color: Colors.white),
+          style: Styles.loginTitleText,
         ));
   }
 

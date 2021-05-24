@@ -6,6 +6,7 @@ class NewAppUserDTO {
   String state;
   int zipCode;
   String role = 'publicUser';
+  List<String> favorites = <String>[];
 
   Map<String, dynamic> toJson() => {
         'email': email,
@@ -15,5 +16,6 @@ class NewAppUserDTO {
         'state': state,
         'zipCode': zipCode,
         'role': role,
+        'favorites': favorites,
       };
 }

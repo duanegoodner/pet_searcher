@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/screens/login_screen.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
 import 'package:pet_matcher/services/new_app_user_dto.dart';
+import 'package:pet_matcher/styles.dart';
 import 'package:pet_matcher/widgets/elevated_button.dart';
 import 'package:pet_matcher/widgets/standard_input_box.dart';
 
@@ -27,9 +29,9 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Create New Account'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Styles.appBarColor,
       ),
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Styles.backgroundColor,
       body: Center(
         child: SingleChildScrollView(
           child: Form(
@@ -172,8 +174,7 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
             },
           ),
         ),
-        Text('I am a shelter admin',
-            style: TextStyle(fontSize: 18, color: Colors.white)),
+        Text('I am a shelter admin', style: Styles.subtitleTextWhite),
       ],
     );
   }
@@ -188,14 +189,10 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     if (formKey.currentState.validate()) {
       try {
         formKey.currentState.save();
-        fb_auth.UserCredential newUserCredential =
-            await firebaseAuth.createUserWithEmailAndPassword(
-                email: _emailController.text,
-                password: _passwordController.text);
-        fb_auth.User newFirebaseUser = newUserCredential.user;
-        newAppUserData.email = newFirebaseUser.email;
-        final appUserService = AppUserService(firebaseAuth: firebaseAuth);
-        await appUserService.uploadNewUser(newAppUserData, newFirebaseUser.uid);
+        await locator<AppUserService>().createNewUser(
+            email: _emailController.text,
+            password: _passwordController.text,
+            newAppUserData: newAppUserData);
         Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
       } catch (e) {
         print(e);
