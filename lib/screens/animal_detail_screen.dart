@@ -20,7 +20,7 @@ class AnimalDetailScreen extends StatefulWidget {
 }
 
 class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
-  bool _isFavorite = false;
+  // bool _isFavorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         child: Center(
             child: Column(
           children: <Widget>[
-            displayImage(context, receivedAnimal, userType, userFavorites),
+            displayImage(context, receivedAnimal, userType),
             headingText('${receivedAnimal.name}\'s Ideal Match:'),
             datingBlerb(receivedAnimal),
             headingText('The Lowdown:'),
@@ -62,8 +62,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     }
   }
 
-  Widget displayImage(
-      BuildContext context, Animal animal, userType, userFavorites) {
+  Widget displayImage(BuildContext context, Animal animal, userType) {
     return Container(
       child: Padding(
         padding: EdgeInsets.all(25),
@@ -85,14 +84,21 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               ])),
               Padding(
                 padding: EdgeInsets.only(top: 5.0, left: 285.0),
-                child: IconButton(
-                  icon: Icon(Icons.favorite),
-                  color: _isFavorite ? Colors.red : Colors.white,
-                  onPressed: () => {
-                    setState(() {
-                      _isFavorite = !_isFavorite;
-                      //Add logic for saving a favorite
-                    })
+                child: Consumer<AppUser>(
+                  builder: (context, appUser, __) {
+                    return IconButton(
+                      icon: Icon(Icons.favorite),
+                      color: appUser.favorites.contains(animal.animalID)
+                          ? Colors.red
+                          : Colors.white,
+                      onPressed: () => {
+                        setState(() {
+                          setFavorite(context, animal);
+                          // _isFavorite = !_isFavorite;
+                          //Add logic for saving a favorite
+                        })
+                      },
+                    );
                   },
                 ),
               ),
@@ -272,37 +278,47 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     );
   }
 
-  Future<void> setFavorite(
-      BuildContext context, String name, userFavorites) async {
+  Future<void> setFavorite(BuildContext context, Animal animal) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser;
     DocumentReference userInfo =
         FirebaseFirestore.instance.collection('users').doc(user.uid);
 
+    List<dynamic> userFavorites =
+        Provider.of<AppUser>(context, listen: false).favorites;
+
     // Favorites list not always updating, cause it's a snapshot from provider??
     // Will work the first time the animal inventory page is visited
 
     // If favorites array does not exist in firestore, create it
-    if (userFavorites == null) {
-      userInfo.update({
-        'favorites': FieldValue.arrayUnion([name])
-      });
+    if (Provider.of<AppUser>(context, listen: false).favorites == null) {
+      userInfo.update({'favorites': FieldValue.arrayUnion([])});
     }
 
-    if (userFavorites.isNotEmpty) {
-      if (userFavorites.indexWhere((i) => i == name) != -1) {
-        userInfo.update({
-          'favorites': FieldValue.arrayRemove([name])
-        });
-      } else {
-        userInfo.update({
-          'favorites': FieldValue.arrayUnion([name])
-        });
-      }
+    if (userFavorites.contains(animal.animalID)) {
+      userInfo.update({
+        'favorites': FieldValue.arrayRemove([animal.animalID])
+      });
     } else {
       userInfo.update({
-        'favorites': FieldValue.arrayUnion([name])
+        'favorites': FieldValue.arrayUnion([animal.animalID])
       });
+
+      // if (userFavorites.isNotEmpty) {
+      //   if (userFavorites.indexWhere((i) => i == animal) != -1) {
+      //     userInfo.update({
+      //       'favorites': FieldValue.arrayRemove([animal])
+      //     });
+      //   } else {
+      //     userInfo.update({
+      //       'favorites': FieldValue.arrayUnion([animal])
+      //     });
+      //   }
+      // } else {
+      //   userInfo.update({
+      //     'favorites': FieldValue.arrayUnion([name])
+      //   });
+      // }
     }
   }
 }

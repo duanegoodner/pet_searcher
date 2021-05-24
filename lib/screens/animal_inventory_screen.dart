@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/models/app_user.dart';
+import 'package:pet_matcher/models/user_favorites.dart';
 import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/animal_detail_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
+import 'package:pet_matcher/services/app_user_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/animal_search_button.dart';
 import 'package:pet_matcher/widgets/animal_sort_button.dart';
@@ -23,9 +26,17 @@ class AnimalInventoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String userType = Provider.of<AppUser>(context).role;
-    return ChangeNotifierProxyProvider<List<Animal>, AnimalFilter>(
-      create: (_) => AnimalFilter(),
-      update: (_, animals, filter) => filter..updateIncomingList(animals),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProxyProvider<List<Animal>, AnimalFilter>(
+          create: (_) => AnimalFilter(),
+          update: (_, animals, filter) => filter..updateIncomingList(animals),
+        ),
+        StreamProvider<UserFavorites>(
+          create: (_) => locator<AppUserService>().favoritesOnDataChange(),
+          initialData: UserFavorites.initial(),
+        ),
+      ],
       child: Scaffold(
         appBar: inventoryAppBar(context, userType),
         drawer: getDrawerType(userType),
@@ -224,22 +235,27 @@ Widget animalInventoryLayout(
       right: 0,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [favoriteIcon(animal)]),
+          children: [favoriteIcon(context, animal)]),
     );
   }
 }
 
-Widget favoriteIcon(Animal animal) {
+Widget favoriteIcon(BuildContext context, Animal animal) {
   return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-          icon: Icon(Icons.favorite, color: Colors.white),
+          icon: Icon(Icons.favorite,
+              color: Provider.of<UserFavorites>(context)
+                      .favorites
+                      .contains(animal.animalID)
+                  ? Colors.red
+                  : Colors.white),
           tooltip: 'Save animal',
           onPressed: () {
-            //NOTE: Still need to allow for selecting favorites
-            //and adding to favorite screen if we want to do that
+            locator<AppUserService>().updateFavorites(
+                animal, Provider.of<UserFavorites>(context, listen: false));
           },
         ),
       ]);
