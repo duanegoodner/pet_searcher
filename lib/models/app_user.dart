@@ -7,8 +7,8 @@ class AppUser {
   String city;
   String state;
   int zipCode;
-  String role;
-  List favorites;
+  String role = 'publicUser';
+  List<dynamic> favorites = [];
 
   AppUser({
     this.email,
@@ -30,7 +30,6 @@ class AppUser {
         zipCode = 0,
         role = '',
         favorites = [];
-
 
   AppUser.fromJSON(Map<String, dynamic> json) {
     email = json['email'];
