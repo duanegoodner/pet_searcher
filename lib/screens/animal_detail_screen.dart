@@ -24,7 +24,6 @@ class AnimalDetailScreen extends StatefulWidget {
 }
 
 class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
-
   @override
   Widget build(BuildContext context) {
     Animal receivedAnimal = ModalRoute.of(context).settings.arguments;
@@ -91,21 +90,22 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               ])),
               Padding(
                 padding: EdgeInsets.only(top: 5.0, left: 285.0),
-                child: Consumer<AppUser>(
-                  builder: (context, appUser, __) {
+                child: Consumer<UserFavorites>(
+                  builder: (context, userFavorites, __) {
                     return IconButton(
-                      icon: Icon(Icons.favorite),
-                      color: appUser.favorites.contains(animal.animalID)
-                          ? Colors.red
-                          : Colors.white,
-                      onPressed: () {
-                        locator<AppUserService>().updateFavorites(
-                          animal, Provider.of<UserFavorites>(context, listen: false));
-                        }
-                      );
-                    },
-                  ),
+                        icon: Icon(Icons.favorite),
+                        color: userFavorites.favorites.contains(animal.animalID)
+                            ? Colors.red
+                            : Colors.white,
+                        onPressed: () {
+                          locator<AppUserService>().updateFavorites(
+                              animal,
+                              Provider.of<UserFavorites>(context,
+                                  listen: false));
+                        });
+                  },
                 ),
+              ),
             ]),
             displayEditIcon(animal, userType),
           ]),
