@@ -1,6 +1,6 @@
-//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/screens/add_news_item_screen.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
@@ -8,6 +8,7 @@ import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/background_image.dart';
 import 'package:pet_matcher/widgets/standard_tile.dart';
+import 'package:provider/provider.dart';
 
 import '../styles.dart';
 
@@ -19,13 +20,9 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
-  //final FirebaseAuth auth = FirebaseAuth.instance;
-  //String userID = '';
-
   @override
   Widget build(BuildContext context) {
-    //NOTE: Should personalize and get admin's name
-    String userName = 'ADMIN';
+    String userName = Provider.of<AppUser>(context).firstName.toUpperCase();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -47,13 +44,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       ),
     );
   }
-
-/*
-  void getUserFirstName() async {
-    final User user = auth.currentUser;
-    userID = user.uid;
-  }
-*/
 
   Widget welcomeText(String userName) {
     return Padding(

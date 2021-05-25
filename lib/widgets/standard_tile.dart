@@ -18,7 +18,7 @@ Widget standardTile({
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
               child: Icon(icon, size: 75, color: Colors.white),
             ),
             Padding(
