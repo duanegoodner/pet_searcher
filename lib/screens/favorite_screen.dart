@@ -27,9 +27,7 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userType = Provider
-        .of<AppUser>(context)
-        .role;
+    String userType = Provider.of<AppUser>(context).role;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -56,48 +54,52 @@ class FavoriteScreen extends StatelessWidget {
   }
 
   Widget animalList(BuildContext context, String userType) {
-    // List<Animal> allAnimals = Provider.of<List<Animal>>(context)
-   /*List animals = Provider
-        .of<AppUser>(context)
-        .favorites;*/
-    AppUser user = Provider.of<AppUser>(context);
-    Animal animal = Animal();
+    List<Animal> allAnimals = Provider.of<List<Animal>>(context);
+    List<dynamic> favAnimalIDs = Provider.of<AppUser>(context).favorites;
 
-    if (user == null) {
-      return Expanded(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
+    List<Animal> favAnimals = allAnimals
+        ?.where((animal) => favAnimalIDs.contains(animal.animalID.toString()))
+        ?.toList();
+
+    // AppUser user = Provider.of<AppUser>(context);
+    // Animal animal = Animal();
+
+    // if (user == null) {
+    //   return Expanded(
+    //     child: Center(
+    //       child: CircularProgressIndicator(),
+    //     ),
+    //   );
+    // }
 
     return Expanded(
       child: Padding(
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              child: ListView.builder(
-                itemCount: user.favorites.length,
-                itemBuilder: (context, index) {
-                  animal.animalID = user.favorites[index];
-                  var favAnimal = FirebaseFirestore.instance
-                    .collection('animals')
-                    .doc('${animal.animalID}')
-                    .get();
-                  return inventoryListTile(context, favAnimal);
-                },
-              ),
-            ),
-      );
+        padding: const EdgeInsets.only(left: 5, right: 5),
+        child: ListView.builder(
+          itemCount: favAnimals?.length ?? 0,
+          itemBuilder: (context, index) {
+            // animal.animalID = user.favorites[index];
+            // var favAnimalData = await FirebaseFirestore.instance
+            //     .collection('animals')
+            //     .doc(user.favorites[index])
+            //     .get();
+            Animal favAnimal = favAnimals[index];
+            return inventoryListTile(context, favAnimal);
+          },
+        ),
+      ),
+    );
   }
 
   Widget inventoryListTile(BuildContext context, favAnimal) {
     return GestureDetector(
       onTap: () {
-       /*Navigator.of(context)
+        /*Navigator.of(context)
             .pushNamed(AnimalDetailScreen.routename, arguments: animal);*/
       },
       child: Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         clipBehavior: Clip.hardEdge,
         child: Padding(
           padding: EdgeInsets.only(bottom: 7),
@@ -114,7 +116,7 @@ class FavoriteScreen extends StatelessWidget {
     );
   }
 
-  Widget animalPhotoTile(animal, BuildContext context) {
+  Widget animalPhotoTile(Animal animal, BuildContext context) {
     return Stack(
       alignment: AlignmentDirectional.center,
       children: [
@@ -123,7 +125,7 @@ class FavoriteScreen extends StatelessWidget {
           child: ClipRRect(
             clipBehavior: Clip.hardEdge,
             child: CachedNetworkImage(
-              imageUrl: animal['imageURL'],
+              imageUrl: animal.imageURL,
               fit: BoxFit.cover,
             ),
           ),
@@ -133,7 +135,7 @@ class FavoriteScreen extends StatelessWidget {
     );
   }
 
-  Widget animalInfoText(animal) {
+  Widget animalInfoText(Animal animal) {
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 5, left: 5, right: 5),
       child: Align(
@@ -143,24 +145,24 @@ class FavoriteScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${animal['name']}',
+              '${animal.name}',
               style: Styles.titleTextBlack,
             ),
             Text(
-              'Breed: ${animal['breed']}',
+              'Breed: ${animal.breed}',
               style: Styles.detailTextBlack,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              'Age: ${animal['breed']}',
+              'Age: ${animal.breed}',
               style: Styles.detailTextBlack,
             ),
             SizedBox(
               height: 5,
             ),
             Text(
-              'Arrived: ${animal['formattedDateAdded']}',
+              'Arrived: ${animal.formattedDateAdded}',
               style: Styles.inventoryDateText,
             ),
           ],
@@ -168,5 +170,4 @@ class FavoriteScreen extends StatelessWidget {
       ),
     );
   }
-
 }
