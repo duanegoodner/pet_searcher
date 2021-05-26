@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_matcher/screens/favorite_screen.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:pet_matcher/widgets/background_image.dart';
 import 'package:pet_matcher/widgets/standard_tile.dart';
@@ -79,7 +80,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               text: 'Favorites',
               routeToNewScreen: () {
                 //NOTE: need to change to favorites screen once it is created
-                Navigator.of(context).pushNamed(UserHomeScreen.routeName);
+                Navigator.of(context).pushNamed(FavoriteScreen.routeName);
               }),
         ],
       ),

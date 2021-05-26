@@ -11,6 +11,7 @@ import '../screens/landing_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/news_screen.dart';
 import '../screens/user_home_screen.dart';
+import '../screens/favorite_screen.dart';
 
 class RouteNames {
   static final routes = {
@@ -26,5 +27,6 @@ class RouteNames {
     AnimalInventoryScreen.routeName: (context) => AnimalInventoryScreen(),
     AnimalDetailScreen.routename: (context) => AnimalDetailScreen(),
     NewsScreen.routeName: (context) => NewsScreen(),
+    FavoriteScreen.routeName: (context) => FavoriteScreen(),
   };
 }
