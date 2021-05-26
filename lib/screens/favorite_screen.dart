@@ -28,18 +28,22 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String userType = Provider.of<AppUser>(context).role;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Your Matches!'),
-        backgroundColor: Styles.appBarColor,
-      ),
-      drawer: getDrawerType(userType),
-      backgroundColor: Styles.backgroundColor,
-      body: Column(
-        children: [
-          animalList(context, userType),
-        ],
+    return StreamProvider<UserFavorites>(
+      create: (_) => locator<AppUserService>().favoritesOnDataChange(),
+      initialData: UserFavorites.initial(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Your Matches!'),
+          backgroundColor: Styles.appBarColor,
+        ),
+        drawer: getDrawerType(userType),
+        backgroundColor: Styles.backgroundColor,
+        body: Column(
+          children: [
+            animalList(context, userType),
+          ],
+        ),
       ),
     );
   }
@@ -55,47 +59,42 @@ class FavoriteScreen extends StatelessWidget {
 
   Widget animalList(BuildContext context, String userType) {
     List<Animal> allAnimals = Provider.of<List<Animal>>(context);
-    List<dynamic> favAnimalIDs = Provider.of<AppUser>(context).favorites;
-
-    List<Animal> favAnimals = allAnimals
-        ?.where((animal) => favAnimalIDs.contains(animal.animalID.toString()))
-        ?.toList();
-
-    // AppUser user = Provider.of<AppUser>(context);
-    // Animal animal = Animal();
-
-    // if (user == null) {
-    //   return Expanded(
-    //     child: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   );
-    // }
 
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(left: 5, right: 5),
-        child: ListView.builder(
-          itemCount: favAnimals?.length ?? 0,
-          itemBuilder: (context, index) {
-            // animal.animalID = user.favorites[index];
-            // var favAnimalData = await FirebaseFirestore.instance
-            //     .collection('animals')
-            //     .doc(user.favorites[index])
-            //     .get();
-            Animal favAnimal = favAnimals[index];
-            return inventoryListTile(context, favAnimal);
+        child: Consumer<UserFavorites>(
+          builder: (context, userFavorites, __) {
+            List<dynamic> favAnimalIDs = userFavorites.favorites;
+            List<Animal> favAnimals = allAnimals
+                ?.where((animal) =>
+                    favAnimalIDs.contains(animal.animalID.toString()))
+                ?.toList();
+            if (favAnimals == null) {
+              return Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return ListView.builder(
+              itemCount: favAnimals.length,
+              itemBuilder: (context, index) {
+                Animal favAnimal = favAnimals[index];
+                return inventoryListTile(context, favAnimal);
+              },
+            );
           },
         ),
       ),
     );
   }
 
-  Widget inventoryListTile(BuildContext context, favAnimal) {
+  Widget inventoryListTile(BuildContext context, Animal favAnimal) {
     return GestureDetector(
       onTap: () {
-        /*Navigator.of(context)
-            .pushNamed(AnimalDetailScreen.routename, arguments: animal);*/
+        Navigator.of(context)
+            .pushNamed(AnimalDetailScreen.routename, arguments: favAnimal);
       },
       child: Card(
         shape:
