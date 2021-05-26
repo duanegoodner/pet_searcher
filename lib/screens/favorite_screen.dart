@@ -1,20 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/models/animal.dart';
-import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/models/app_user.dart';
 import 'package:pet_matcher/models/user_favorites.dart';
-import 'package:pet_matcher/screens/add_pet_screen.dart';
 import 'package:pet_matcher/screens/animal_detail_screen.dart';
-import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
-import 'package:pet_matcher/widgets/animal_search_button.dart';
-import 'package:pet_matcher/widgets/animal_sort_button.dart';
-import 'package:pet_matcher/widgets/delete_dialog.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:provider/provider.dart';
 
