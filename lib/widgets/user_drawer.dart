@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
+import 'package:pet_matcher/screens/favorite_screen.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
 import 'package:pet_matcher/locator.dart';
 import 'package:pet_matcher/screens/user_home_screen.dart';
@@ -54,7 +55,7 @@ class UserDrawer extends StatelessWidget {
               title: 'View Favorites',
               icon: Icons.favorite,
               onTap: () {
-                //pushFavoritesScreen(context);
+                pushFavoritesScreen(context);
               },
             ),
             buildListTile(
@@ -97,9 +98,9 @@ class UserDrawer extends StatelessWidget {
     Navigator.of(context).pushReplacementNamed(NewsScreen.routeName);
   }
 
-  /*void pushFavoritesScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(FavoritePets.routeName);
-  }*/
+  void pushFavoritesScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(FavoriteScreen.routeName);
+  }
 
   void logout(BuildContext context) async {
     await locator<AppUserService>().firebaseAuth.signOut();
