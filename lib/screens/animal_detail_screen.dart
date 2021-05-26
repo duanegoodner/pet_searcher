@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:pet_matcher/locator.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pet_matcher/models/user_favorites.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/models/app_user.dart';
+import 'package:pet_matcher/models/user_favorites.dart';
+import 'package:pet_matcher/services/app_user_service.dart';
 import 'package:pet_matcher/widgets/admin_drawer.dart';
 import 'package:pet_matcher/widgets/user_drawer.dart';
 import 'package:pet_matcher/widgets/contact_form.dart';
@@ -20,35 +24,37 @@ class AnimalDetailScreen extends StatefulWidget {
 }
 
 class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
-  // bool _isFavorite = false;
-
   @override
   Widget build(BuildContext context) {
     Animal receivedAnimal = ModalRoute.of(context).settings.arguments;
     String userType = Provider.of<AppUser>(context).role;
-    List userFavorites = Provider.of<AppUser>(context).favorites;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Meet ${receivedAnimal.name}!'),
-        backgroundColor: Styles.appBarColor,
-      ),
-      backgroundColor: Styles.backgroundColor,
-      body: SingleChildScrollView(
-        child: Center(
-            child: Column(
-          children: <Widget>[
-            displayImage(context, receivedAnimal, userType),
-            headingText('${receivedAnimal.name}\'s Ideal Match:'),
-            datingBlerb(receivedAnimal),
-            headingText('The Lowdown:'),
-            detailsBox(receivedAnimal),
-            Padding(
-              padding: EdgeInsets.only(bottom: 10),
-              child: submitButton(context, receivedAnimal),
-            )
-          ],
-        )),
+    //List userFavorites = Provider.of<AppUser>(context).favorites;
+    return StreamProvider<UserFavorites>(
+      create: (_) => locator<AppUserService>().favoritesOnDataChange(),
+      initialData: UserFavorites.initial(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Meet ${receivedAnimal.name}!'),
+          backgroundColor: Styles.appBarColor,
+        ),
+        backgroundColor: Styles.backgroundColor,
+        body: SingleChildScrollView(
+          child: Center(
+              child: Column(
+            children: <Widget>[
+              displayImage(context, receivedAnimal, userType),
+              headingText('${receivedAnimal.name}\'s Ideal Match:'),
+              datingBlerb(receivedAnimal),
+              headingText('The Lowdown:'),
+              detailsBox(receivedAnimal),
+              Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: submitButton(context, receivedAnimal),
+              )
+            ],
+          )),
+        ),
       ),
     );
   }
@@ -84,21 +90,19 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               ])),
               Padding(
                 padding: EdgeInsets.only(top: 5.0, left: 285.0),
-                child: Consumer<AppUser>(
-                  builder: (context, appUser, __) {
+                child: Consumer<UserFavorites>(
+                  builder: (context, userFavorites, __) {
                     return IconButton(
-                      icon: Icon(Icons.favorite),
-                      color: appUser.favorites.contains(animal.animalID)
-                          ? Colors.red
-                          : Colors.white,
-                      onPressed: () => {
-                        setState(() {
-                          setFavorite(context, animal);
-                          // _isFavorite = !_isFavorite;
-                          //Add logic for saving a favorite
-                        })
-                      },
-                    );
+                        icon: Icon(Icons.favorite),
+                        color: userFavorites.favorites.contains(animal.animalID)
+                            ? Colors.red
+                            : Colors.white,
+                        onPressed: () {
+                          locator<AppUserService>().updateFavorites(
+                              animal,
+                              Provider.of<UserFavorites>(context,
+                                  listen: false));
+                        });
                   },
                 ),
               ),
@@ -278,7 +282,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     );
   }
 
-  Future<void> setFavorite(BuildContext context, Animal animal) async {
+  /*Future<void> setFavorite(BuildContext context, Animal animal) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User user = auth.currentUser;
     DocumentReference userInfo =
@@ -303,22 +307,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       userInfo.update({
         'favorites': FieldValue.arrayUnion([animal.animalID])
       });
-
-      // if (userFavorites.isNotEmpty) {
-      //   if (userFavorites.indexWhere((i) => i == animal) != -1) {
-      //     userInfo.update({
-      //       'favorites': FieldValue.arrayRemove([animal])
-      //     });
-      //   } else {
-      //     userInfo.update({
-      //       'favorites': FieldValue.arrayUnion([animal])
-      //     });
-      //   }
-      // } else {
-      //   userInfo.update({
-      //     'favorites': FieldValue.arrayUnion([name])
-      //   });
-      // }
     }
-  }
+  }*/
 }

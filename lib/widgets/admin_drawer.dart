@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_matcher/screens/animal_inventory_screen.dart';
 import 'package:pet_matcher/screens/choose_animal_type_screen.dart';
 import 'package:pet_matcher/screens/news_screen.dart';
-import 'package:pet_matcher/services/animal_service.dart';
+//import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/screens/admin_home_screen.dart';
 import 'package:pet_matcher/screens/landing_screen.dart';
 import 'package:pet_matcher/locator.dart';
@@ -54,25 +54,12 @@ class AdminDrawer extends StatelessWidget {
               },
             ),
             buildListTile(
-              title: 'Featured Animals',
-              icon: FontAwesomeIcons.dog,
-              onTap: () {
-                pushAdminHome(context);
-              },
-            ),
-            buildListTile(
               title: 'Add New Animal',
               icon: FontAwesomeIcons.star,
               onTap: () {
                 pushChooseAnimalTypeScreen(context);
               },
             ),
-            buildListTile(
-                title: 'Reset Animal Options',
-                icon: FontAwesomeIcons.database,
-                onTap: () {
-                  resetAnimalAttributes(context);
-                }),
             buildListTile(
               title: 'Log Out',
               icon: Icons.logout,
@@ -118,9 +105,11 @@ class AdminDrawer extends StatelessWidget {
         .pushReplacementNamed(ChooseAnimalTypeScreen.routeName);
   }
 
+/*
   void resetAnimalAttributes(BuildContext context) async {
     locator<AnimalService>().resetAttributes();
   }
+*/
 
   void logout(BuildContext context) async {
     await locator<AppUserService>().firebaseAuth.signOut();
