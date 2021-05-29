@@ -3,6 +3,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 //Reference for ImageServices Code: https://dev.to/rrtutors/upload-image-to-firebase-storage-flutter-android-ios-3f35
+class ImageService {
+  ImageService();
+}
+
 Future<String> retrieveImageUrl() async {
   final picker = ImagePicker();
   String imageUrl = "";

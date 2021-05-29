@@ -7,6 +7,7 @@ import 'package:pet_matcher/models/animal_filter.dart';
 import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/services/app_user_service.dart';
+import 'package:pet_matcher/services/image_service.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -20,8 +21,7 @@ void setupLocator() {
 
   locator.registerFactory(() => AnimalFilter());
 
-  // locator.registerFactoryParam<AnimalFilter, String, void>(
-  //     (screenName, _) => AnimalFilter(screenName: screenName));
-
   locator.registerSingleton(() => StartUpScreenController());
+
+  locator.registerLazySingleton(() => ImageService());
 }
