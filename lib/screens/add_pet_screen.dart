@@ -35,6 +35,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
   // }
 
   void getImageUrl() async {
+    _imageLoading = true;
+    setState(() {});
     receivedAnimal.imageURL = await retrieveImageUrl();
     _imageLoading = false;
     setState(() {});
