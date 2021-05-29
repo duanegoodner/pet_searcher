@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/models/animal.dart';
@@ -21,39 +22,41 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final formKey = GlobalKey<FormState>();
   Animal receivedAnimal = Animal();
+  bool _imageLoading = false;
 
   final Map<String, bool> dispositionValues =
       Map.fromIterable(disposition, key: (e) => e, value: (e) => false);
   String imageUrl;
 
-  @override
-  void initState() {
-    super.initState();
-    getImageUrl();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getImageUrl();
+  // }
 
   void getImageUrl() async {
-    imageUrl = await retrieveImageUrl();
+    _imageLoading = true;
+    setState(() {});
+    receivedAnimal.imageURL = await retrieveImageUrl();
+    _imageLoading = false;
     setState(() {});
   }
 
   Widget build(BuildContext context) {
-    if (imageUrl == null) {
-      return Center(child: CircularProgressIndicator());
-    }
+    // if (imageUrl == null) {
+    //   return Center(child: CircularProgressIndicator());
+    // }
 
     var receivedArgument = ModalRoute.of(context).settings.arguments;
     //if receivedArgument is String, the animal is a new animal
     if (receivedArgument is String) {
-      receivedAnimal.animalID = null;
-      receivedAnimal.imageURL = imageUrl;
       receivedAnimal.type = '$receivedArgument';
+      receivedAnimal.dateAdded = DateTime.now();
     }
     //if receivedArgument is an Animal object, the animal already exists in database
     else {
-      receivedAnimal = ModalRoute.of(context).settings.arguments;
+      receivedAnimal = receivedArgument;
     }
-    receivedAnimal.dateAdded = DateTime.now();
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +72,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                getChosenAnimalImage(),
+                imageField(),
                 animalNameField(context),
                 chooseAnimalBreedField(context, receivedAnimal.type),
                 animalAgeField(context, age),
@@ -88,8 +91,76 @@ class _AddPetScreenState extends State<AddPetScreen> {
   Widget getChosenAnimalImage() {
     return Padding(
         padding: EdgeInsets.only(top: 20, bottom: 10),
-        child: Image.network('$imageUrl',
-            height: 250, width: 200, fit: BoxFit.fitWidth));
+        child: SizedBox(
+          height: 250,
+          width: 200,
+          child: Icon(Icons.image_search),
+        ));
+  }
+
+  Widget imageField() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20, bottom: 10),
+      child: GestureDetector(
+        onTap: getImageUrl,
+        child: imageDisplaySelector(),
+      ),
+    );
+  }
+
+  // Widget displayedImage() {
+  //   return Padding(
+  //       padding: EdgeInsets.only(top: 20, bottom: 10),
+  //       child: SizedBox(
+  //         height: 250,
+  //         width: 200,
+  //         child: imageDisplaySelector(),
+  //       ));
+
+  //   // return Padding(
+  //   //     padding: EdgeInsets.only(top: 20, bottom: 10),
+  //   //     child: Image.network(receivedAnimal.imageURL,
+  //   //         height: 250, width: 200, fit: BoxFit.fitWidth));
+  // }
+
+  Widget imageDisplaySelector() {
+    if (_imageLoading) {
+      return SizedBox(
+        height: 250,
+        width: 250,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (receivedAnimal.imageURL == null) {
+      return SizedBox(
+        height: 250,
+        width: 250,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.image_search, size: 100),
+            Text('Select an Image'),
+          ],
+        ),
+      );
+    }
+    return Column(
+      children: [
+        SizedBox(
+          height: 250,
+          width: 250,
+          child: CachedNetworkImage(
+              placeholder: (_, __) =>
+                  Center(child: CircularProgressIndicator()),
+              imageUrl: receivedAnimal.imageURL,
+              fit: BoxFit.cover),
+        ),
+        Text('Tap on Image to Edit')
+      ],
+    );
   }
 
   Widget animalNameField(BuildContext context) {
