@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     return StreamProvider<UserFavorites>(
       create: (_) => locator<AppUserService>().favoritesOnDataChange(),
       initialData: UserFavorites.initial(),
+      catchError: (_, __) => UserFavorites.initial(),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -79,38 +81,54 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             Stack(children: <Widget>[
               Card(
                   child: Wrap(children: <Widget>[
-                Image.network(animal.imageURL,
-                    height: 300,
-                    width: 350,
-                    fit: BoxFit.cover, loadingBuilder: (BuildContext context,
-                        Widget child, ImageChunkEvent loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(child: CircularProgressIndicator());
-                }),
+                CachedNetworkImage(
+                  imageUrl: animal.imageURL,
+                  height: 300,
+                  width: 350,
+                  fit: BoxFit.cover,
+                )
               ])),
-              Padding(
-                padding: EdgeInsets.only(top: 5.0, left: 285.0),
-                child: Consumer<UserFavorites>(
-                  builder: (context, userFavorites, __) {
-                    return IconButton(
-                        icon: Icon(Icons.favorite),
-                        color: userFavorites.favorites.contains(animal.animalID)
-                            ? Colors.red
-                            : Colors.white,
-                        onPressed: () {
-                          locator<AppUserService>().updateFavorites(
-                              animal,
-                              Provider.of<UserFavorites>(context,
-                                  listen: false));
-                        });
-                  },
-                ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: userType == 'admin'
+                    ? editIcon(animal)
+                    : favoriteIcon(context, animal),
               ),
             ]),
-            displayEditIcon(animal, userType),
+            temperamentRow(animal),
           ]),
         ),
       ),
+    );
+  }
+
+  Widget favoriteIcon(BuildContext context, Animal animal) {
+    return Consumer<UserFavorites>(
+      builder: (context, userFavorites, __) {
+        return IconButton(
+            icon: Icon(Icons.favorite),
+            color: userFavorites.favorites.contains(animal.animalID)
+                ? Colors.red
+                : Colors.white,
+            onPressed: () {
+              locator<AppUserService>().updateFavorites(
+                  animal, Provider.of<UserFavorites>(context, listen: false));
+            });
+      },
+    );
+  }
+
+  Widget editIcon(Animal animal) {
+    return IconButton(
+      icon: Icon(
+        Icons.edit_outlined,
+        color: Colors.white,
+      ),
+      onPressed: () {
+        Navigator.of(context)
+            .pushNamed(AddPetScreen.routeName, arguments: animal);
+      },
     );
   }
 
@@ -171,29 +189,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         displayRow1(animal),
         displayRow2(animal),
       ]),
-    );
-  }
-
-  Widget displayEditIcon(Animal animal, userType) {
-    if (userType == 'admin') {
-      return Column(
-        children: <Widget>[
-          temperamentRow(animal),
-          editIcon(animal),
-        ],
-      );
-    } else {
-      return Column(children: <Widget>[temperamentRow(animal)]);
-    }
-  }
-
-  Widget editIcon(Animal animal) {
-    return IconButton(
-      icon: Icon(Icons.edit_outlined),
-      onPressed: () {
-        Navigator.of(context)
-            .pushNamed(AddPetScreen.routeName, arguments: animal);
-      },
     );
   }
 
@@ -281,32 +276,4 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       ),
     );
   }
-
-  /*Future<void> setFavorite(BuildContext context, Animal animal) async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User user = auth.currentUser;
-    DocumentReference userInfo =
-        FirebaseFirestore.instance.collection('users').doc(user.uid);
-
-    List<dynamic> userFavorites =
-        Provider.of<AppUser>(context, listen: false).favorites;
-
-    // Favorites list not always updating, cause it's a snapshot from provider??
-    // Will work the first time the animal inventory page is visited
-
-    // If favorites array does not exist in firestore, create it
-    if (Provider.of<AppUser>(context, listen: false).favorites == null) {
-      userInfo.update({'favorites': FieldValue.arrayUnion([])});
-    }
-
-    if (userFavorites.contains(animal.animalID)) {
-      userInfo.update({
-        'favorites': FieldValue.arrayRemove([animal.animalID])
-      });
-    } else {
-      userInfo.update({
-        'favorites': FieldValue.arrayUnion([animal.animalID])
-      });
-    }
-  }*/
 }
