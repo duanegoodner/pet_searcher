@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -96,7 +97,10 @@ class _NewsScreenState extends State<NewsScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(child: Image.network('${post.imageUrl}')),
+            Container(
+                child: CachedNetworkImage(
+              imageUrl: post.imageUrl,
+            )),
             ListTile(
                 title: addPadding(
                   Text(
@@ -152,12 +156,12 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Widget deleteIcon(NewsItem post, BuildContext context) {
-  return IconButton(
-      icon: Icon(Icons.delete),
-      tooltip: 'Remove post',
-      onPressed: () {
-        showMyDialog('newsPost', post, context);
-      });
+    return IconButton(
+        icon: Icon(Icons.delete),
+        tooltip: 'Remove post',
+        onPressed: () {
+          showMyDialog('newsPost', post, context);
+        });
   }
 
   Widget shareIcon(NewsItem post) {

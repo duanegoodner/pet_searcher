@@ -54,7 +54,10 @@ class AppUserService {
   }
 
   Stream<UserFavorites> favoritesOnDataChange() {
-    return _users.doc(firebaseAuth.currentUser.uid).snapshots().map((userDoc) {
+    return _users
+        .doc(firebaseAuth?.currentUser?.uid)
+        ?.snapshots()
+        ?.map((userDoc) {
       if (userDoc == null) {
         return UserFavorites.initial();
       }

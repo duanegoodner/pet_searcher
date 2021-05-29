@@ -24,6 +24,7 @@ class FavoriteScreen extends StatelessWidget {
     return StreamProvider<UserFavorites>(
       create: (_) => locator<AppUserService>().favoritesOnDataChange(),
       initialData: UserFavorites.initial(),
+      catchError: (_, __) => UserFavorites.initial(),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,

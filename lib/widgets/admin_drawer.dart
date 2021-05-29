@@ -112,8 +112,8 @@ class AdminDrawer extends StatelessWidget {
 */
 
   void logout(BuildContext context) async {
-    await locator<AppUserService>().firebaseAuth.signOut();
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.of(context).pushReplacementNamed(LandingScreen.routeName);
+    await locator<AppUserService>().firebaseAuth.signOut();
   }
 }

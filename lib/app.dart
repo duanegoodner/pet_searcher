@@ -1,7 +1,7 @@
 import 'package:pet_matcher/navigation/routes.dart';
 import 'package:pet_matcher/navigation/startup_screen_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_matcher/screens/favorite_screen.dart';
+import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/services/animal_service.dart';
 import 'package:pet_matcher/styles.dart';
 import 'package:provider/provider.dart';

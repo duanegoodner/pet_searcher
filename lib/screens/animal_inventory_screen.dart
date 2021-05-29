@@ -35,6 +35,7 @@ class AnimalInventoryScreen extends StatelessWidget {
         StreamProvider<UserFavorites>(
           create: (_) => locator<AppUserService>().favoritesOnDataChange(),
           initialData: UserFavorites.initial(),
+          catchError: (_, __) => UserFavorites.initial(),
         ),
       ],
       child: Scaffold(
