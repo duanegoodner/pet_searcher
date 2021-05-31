@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_matcher/models/animal.dart';
 import 'package:pet_matcher/models/animal_category_constants.dart';
@@ -263,19 +264,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
   Widget animalDispositionField() {
     return addPadding(
-      DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-            color: Colors.white,
-          ),
-        ),
-        child: Column(
-          children: [
-            dispositionHeader(),
-            dispositionMultiSelect(),
-          ],
-        ),
+      Column(
+        children: [
+          // dispositionHeader(),
+          dispositionMultiSelect(),
+        ],
       ),
     );
   }
@@ -290,15 +283,58 @@ class _AddPetScreenState extends State<AddPetScreen> {
     );
   }
 
+  Widget standardMultiSelectDialog({
+    List<String> options,
+    Function validatorCondition,
+    String validatorPrompt,
+    Function onConfirm,
+    List<dynamic> initialValues,
+  }) {
+    return MultiSelectDialogField(
+        backgroundColor: Colors.blue[100],
+        initialValue: initialValues,
+        buttonIcon: Icon(
+          Icons.mood,
+          color: Colors.blue,
+        ),
+        height: 200,
+        buttonText: Text('Tap to select disposition(s)'),
+        decoration: BoxDecoration(
+            color: Colors.lightBlue[100],
+            borderRadius: BorderRadius.circular(20)),
+        items:
+            options.map((option) => MultiSelectItem(option, option)).toList(),
+        onConfirm: (values) {
+          receivedAnimal.disposition = values;
+        },
+        chipDisplay: MultiSelectChipDisplay(
+          items: receivedAnimal.disposition
+              ?.map((disposition) => MultiSelectItem(disposition, disposition))
+              ?.toList(),
+          onTap: (value) {
+            receivedAnimal.disposition.remove(value);
+            setState(() {});
+          },
+          icon: Icon(Icons.cancel),
+        ),
+        validator: (values) {
+          if (validatorCondition(values)) {
+            return validatorPrompt;
+          } else {
+            return null; //validation passed
+          }
+        });
+  }
+
   Widget dispositionMultiSelect() {
     List<dynamic> initialValues;
     if (receivedAnimal.animalID != null) {
       initialValues = receivedAnimal.disposition;
     }
 
-    return standardMultiSelectChipField(
+    return standardMultiSelectDialog(
       options: disposition,
-      onTap: (values) {
+      onConfirm: (values) {
         receivedAnimal.disposition = values;
       },
       validatorCondition: (values) => values == null || values.length == 0,

@@ -30,3 +30,21 @@ Widget standardMultiSelectChipField({
     },
   );
 }
+
+Widget standardMultiSelectDialog({
+  List<String> options,
+  Function validatorCondition,
+  String validatorPrompt,
+  Function onConfirm,
+}) {
+  return MultiSelectDialogField(
+      items: options.map((option) => MultiSelectItem(option, option)).toList(),
+      onConfirm: onConfirm,
+      validator: (values) {
+        if (validatorCondition(values)) {
+          return validatorPrompt;
+        } else {
+          return null; //validation passed
+        }
+      });
+}
