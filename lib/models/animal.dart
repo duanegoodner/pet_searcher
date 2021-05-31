@@ -12,19 +12,6 @@ class Animal {
   String gender;
   String imageURL;
 
-  static const allFields = [
-    'animalID',
-    'name',
-    'dateAdded',
-    'type',
-    'status',
-    'breed',
-    'disposition',
-    'age',
-    'gender',
-    'imageURL',
-  ];
-
   static const sortOptions = [
     {'name': 'Name'},
     {'dateAdded': 'Date Added'},

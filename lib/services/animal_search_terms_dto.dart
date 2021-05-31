@@ -28,7 +28,7 @@ class AnimalSearchTermsDTO {
 
   Map<String, dynamic> toJson() => {
         'type': type,
-        'breed:': breed,
+        'breed': breed,
         'gender': gender,
         'disposition': disposition,
         'dateAdded': dateAdded,

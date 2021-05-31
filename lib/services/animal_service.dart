@@ -5,9 +5,6 @@ import 'package:pet_matcher/models/animal.dart';
 //import 'package:flutter/services.dart';
 
 class AnimalService {
-  //static const _animal_schema_path = 'assets/db/schema/animal_attributes.json';
-  //final CollectionReference _schema =
-  //    FirebaseFirestore.instance.collection('schema');
   final CollectionReference _animalCollection =
       FirebaseFirestore.instance.collection('animals');
   final Query _availableAnimalCollection = FirebaseFirestore.instance
@@ -17,14 +14,6 @@ class AnimalService {
   final List<String> args;
 
   AnimalService({this.args});
-
-/*
-  void resetAttributes() async {
-    String _attributeData = await rootBundle.loadString(_animal_schema_path);
-    final _attributeJson = jsonDecode(_attributeData);
-    await _schema.doc('animals').set(_attributeJson);
-  }
-*/
 
   Stream<List<Animal>> animalStream() {
     return _animalCollection.snapshots().map((snapshot) {
@@ -56,7 +45,7 @@ class AnimalService {
       Map<String, dynamic> searchCriteria, List<Animal> animals) {
     Map<String, dynamic> queriedParams = Map();
 
-    Animal.allFields.forEach((property) {
+    searchCriteria.keys.forEach((property) {
       if (searchCriteria[property] != null) {
         queriedParams[property] = searchCriteria[property];
       }
