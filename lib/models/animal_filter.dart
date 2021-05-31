@@ -36,9 +36,9 @@ class AnimalFilter extends ChangeNotifier {
   void updateSearchCriteria({Map<String, dynamic> newCriteria}) {
     newCriteria.forEach((property, function) {
       _searchCriteria[property] = newCriteria[property];
-      computeOutputList();
-      notifyListeners();
     });
+    computeOutputList();
+    notifyListeners();
     notifyListeners();
   }
 
