@@ -45,7 +45,7 @@ class AnimalService {
       Map<String, dynamic> searchCriteria, List<Animal> animals) {
     Map<String, dynamic> queriedParams = Map();
 
-    Animal.allFields.forEach((property) {
+    searchCriteria.keys.forEach((property) {
       if (searchCriteria[property] != null) {
         queriedParams[property] = searchCriteria[property];
       }
